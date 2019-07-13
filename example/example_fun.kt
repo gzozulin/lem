@@ -1,4 +1,4 @@
-package com.blaster.platform
+package com.blaster.platform;
 
 import KotlinLexer
 import KotlinParser
@@ -14,7 +14,7 @@ fun main() {
      * We start by slurping the characters from a file, then we follow up with creating a lexer.
      * The main goal of lexer is to split our characters stream into independent tokens.
      */
-    val characters = CharStreams.fromFileName("example/example_fun.kt")
+    val characters = CharStreams.fromFileName("src/main/kotlin/com/blaster/platform/LemApp.kt")
     val lexer = KotlinLexer(characters)
     val tokens = CommonTokenStream(lexer)
 

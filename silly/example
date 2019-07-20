@@ -6,7 +6,9 @@ import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.tree.ParseTreeWalker
 
 fun main() {
-    /*val characters = CharStreams.fromFileName("example/example_fun.kt")
+
+
+    val characters = CharStreams.fromFileName("example/example_fun.kt")
     val lexer = KotlinLexer(characters)
     val tokens = CommonTokenStream(lexer)
 
@@ -17,5 +19,5 @@ fun main() {
     val listener = FunctionListener(article)
     ParseTreeWalker.DEFAULT.walk(listener, parser.kotlinFile())
 
-    System.out.println(article)*/
+    System.out.println(article)
 }

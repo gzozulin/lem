@@ -2,34 +2,72 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4cea87b5-a8f8-4782-8a06-279eb42d38d4" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/com/blaster/Article.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/com/blaster/FunctionBodyVisitor.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/com/blaster/IncludeInsert.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/com/blaster/ParagraphInsert.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/4.10/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.10/fileHashes/fileHashes.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/4.10/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.10/fileHashes/fileHashes.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/4.10/taskHistory/taskHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.10/taskHistory/taskHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/4.10/taskHistory/taskHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.10/taskHistory/taskHistory.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/generated-src/antlr/main/KotlinLexer.interp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/generated-src/antlr/main/KotlinLexer.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/generated-src/antlr/main/KotlinLexer.tokens" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/generated-src/antlr/main/KotlinParser.interp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/generated-src/antlr/main/KotlinParser.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/generated-src/antlr/main/KotlinParser.tokens" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/generated-src/antlr/main/KotlinParserBaseListener.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/generated-src/antlr/main/KotlinParserBaseVisitor.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/generated-src/antlr/main/KotlinParserListener.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/generated-src/antlr/main/KotlinParserVisitor.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/generated-src/antlr/main/UnicodeClasses.interp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/generated-src/antlr/main/UnicodeClasses.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/generated-src/antlr/main/UnicodeClasses.tokens" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/generated-src/antlr/main/antlr-4.7.2-complete.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/generated-src/antlr/main/example_fun.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/antlr/KotlinLexer.g4" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/antlr/KotlinLexer.tokens" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/antlr/KotlinParser.g4" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/antlr/UnicodeClasses.g4" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/com/blaster/platform/ClassListener.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/com/blaster/platform/FunctionListener.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/com/blaster/platform/LemApp.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/com/blaster/platform/LemApp.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/generated-src/antlr/main/SillyKotlin.interp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/generated-src/antlr/main/SillyKotlin.tokens" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/generated-src/antlr/main/SillyKotlinBaseListener.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/generated-src/antlr/main/SillyKotlinBaseVisitor.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/generated-src/antlr/main/SillyKotlinLexer.interp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/generated-src/antlr/main/SillyKotlinLexer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/generated-src/antlr/main/SillyKotlinLexer.tokens" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/generated-src/antlr/main/SillyKotlinListener.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/generated-src/antlr/main/SillyKotlinParser.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/generated-src/antlr/main/SillyKotlinVisitor.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/KotlinLexer.g4" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/KotlinParser.g4" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/UnicodeClasses.g4" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/classes/KotlinLexer.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/classes/KotlinLexer.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/classes/KotlinParser$ImportListContext.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/classes/KotlinParser$ImportListContext.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/classes/KotlinParser$KotlinFileContext.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/classes/KotlinParser$KotlinFileContext.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/classes/KotlinParser$PackageHeaderContext.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/classes/KotlinParser$PackageHeaderContext.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/classes/KotlinParser.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/classes/KotlinParser.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/classes/KotlinParserBaseListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/classes/KotlinParserBaseListener.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/classes/KotlinParserBaseVisitor.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/classes/KotlinParserBaseVisitor.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/classes/KotlinParserListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/classes/KotlinParserListener.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/classes/KotlinParserVisitor.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/classes/KotlinParserVisitor.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/classes/META-INF/gzozulin.ru.lem.main.kotlin_module" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/classes/com/blaster/data/Article.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/classes/com/blaster/data/Paragraph.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/classes/com/blaster/platform/ClassListener.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/classes/com/blaster/platform/FunctionListener.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/classes/com/blaster/platform/LemAppKt.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/silly/SillyLexer.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/silly/SillyLexer.g4" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/silly/SillyLexer.interp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/silly/SillyLexer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/silly/SillyLexer.tokens" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/silly/SillyParser$ClazzContext.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/silly/SillyParser$DeclarationsContext.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/silly/SillyParser$FileContext.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/silly/SillyParser$FunctionBodyContext.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/silly/SillyParser$FunctionContext.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/silly/SillyParser$FunctionDeclContext.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/silly/SillyParser$ImportsContext.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/silly/SillyParser$PackagesContext.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/silly/SillyParser.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/silly/SillyParser.g4" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/silly/SillyParser.interp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/silly/SillyParser.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/silly/SillyParser.tokens" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/silly/SillyParserBaseListener.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/silly/SillyParserBaseListener.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/silly/SillyParserListener.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/silly/SillyParserListener.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/silly/example" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/antlr/SillyKotlin.g4" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/com/blaster/data/Article.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/com/blaster/data/Paragraph.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/com/blaster/platform/LemApp.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/com/blaster/LemApp.kt" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/.gradle/" />
@@ -69,12 +107,6 @@
                 <item name="Tasks" type="e4a08cd1:TasksNode" />
                 <item name="build" type="c8890929:TasksNode$1" />
               </path>
-              <path>
-                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
-                <item name="lem" type="f1a62948:ProjectNode" />
-                <item name="Tasks" type="e4a08cd1:TasksNode" />
-                <item name="other" type="c8890929:TasksNode$1" />
-              </path>
             </expand>
             <select />
           </tree_state>
@@ -85,28 +117,37 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/silly/SillyLexer.g4">
+        <entry file="file://$PROJECT_DIR$/src/main/kotlin/com/blaster/LemApp.kt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="400">
-              <caret line="20" column="28" lean-forward="true" selection-start-line="20" selection-start-column="28" selection-end-line="20" selection-end-column="28" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/silly/SillyParser.g4">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="600">
-              <caret line="30" column="59" selection-start-line="30" selection-start-column="59" selection-end-line="30" selection-end-column="59" />
+            <state relative-caret-position="572">
+              <caret line="34" column="35" selection-start-line="34" selection-start-column="35" selection-end-line="34" selection-end-column="35" />
+              <folding>
+                <element signature="e#21#227#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/silly/example">
+        <entry file="file://$PROJECT_DIR$/src/main/kotlin/com/blaster/FunctionMainVisitor.kt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="180">
-              <caret line="9" selection-start-line="9" selection-end-line="9" />
+            <state relative-caret-position="220">
+              <caret line="11" column="26" selection-start-line="11" selection-start-column="26" selection-end-line="11" selection-end-column="26" />
+              <folding>
+                <element signature="e#21#117#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/kotlin/com/blaster/FunctionBodyVisitor.kt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="220">
+              <caret line="11" column="1" lean-forward="true" selection-start-line="11" selection-start-column="1" selection-end-line="11" selection-end-column="1" />
+              <folding>
+                <element signature="e#21#117#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -130,11 +171,12 @@
       <find>HIDDEN</find>
       <find>enterClass</find>
       <find>channel</find>
-      <find>mode</find>
       <find>/*</find>
       <find>DelimitedComment</find>
       <find>Hidden</find>
       <find>Inside</find>
+      <find>mode</find>
+      <find>identifier</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -149,7 +191,6 @@
         <option value="$PROJECT_DIR$/src/main/kotlin/platform/LemListener.kt" />
         <option value="$PROJECT_DIR$/src/main/kotlin/LemListener.kt" />
         <option value="$PROJECT_DIR$/src/main/kotlin/platform/LemApp.kt" />
-        <option value="$PROJECT_DIR$/build.gradle" />
         <option value="$PROJECT_DIR$/build/generated-src/antlr/main/KotlinParserBaseListener.java" />
         <option value="$PROJECT_DIR$/src/main/kotlin/com/blaster/platform/LemListener.kt" />
         <option value="$PROJECT_DIR$/src/main/kotlin/com/blaster/platform/KotlinVisitor.kt" />
@@ -172,8 +213,18 @@
         <option value="$PROJECT_DIR$/silly/SillyTokens.g4" />
         <option value="$PROJECT_DIR$/silly/SillyKotlin.g4" />
         <option value="$PROJECT_DIR$/silly/example" />
-        <option value="$PROJECT_DIR$/silly/SillyLexer.g4" />
         <option value="$PROJECT_DIR$/silly/SillyParser.g4" />
+        <option value="$PROJECT_DIR$/silly/SillyLexer.g4" />
+        <option value="$PROJECT_DIR$/build.gradle" />
+        <option value="$PROJECT_DIR$/src/main/kotlin/com/blaster/Article.kt" />
+        <option value="$PROJECT_DIR$/src/main/kotlin/com/blaster/Insert.kt" />
+        <option value="$PROJECT_DIR$/src/main/kotlin/com/blaster/Include.kt" />
+        <option value="$PROJECT_DIR$/src/main/kotlin/com/blaster/IncludeInsert.kt" />
+        <option value="$PROJECT_DIR$/src/main/kotlin/com/blaster/Paragraph.kt" />
+        <option value="$PROJECT_DIR$/src/main/kotlin/com/blaster/ParagraphInsert.kt" />
+        <option value="$PROJECT_DIR$/src/main/kotlin/com/blaster/FunctionMainVisitor.kt" />
+        <option value="$PROJECT_DIR$/src/main/kotlin/com/blaster/LemApp.kt" />
+        <option value="$PROJECT_DIR$/src/main/kotlin/com/blaster/FunctionBodyVisitor.kt" />
       </list>
     </option>
   </component>
@@ -217,12 +268,10 @@
             <path>
               <item name="lem" type="b2602c69:ProjectViewProjectNode" />
               <item name="lem" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="example" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="lem" type="b2602c69:ProjectViewProjectNode" />
-              <item name="lem" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="silly" type="462c0819:PsiDirectoryNode" />
+              <item name="build" type="462c0819:PsiDirectoryNode" />
+              <item name="generated-src" type="462c0819:PsiDirectoryNode" />
+              <item name="antlr" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
             </path>
             <path>
               <item name="lem" type="b2602c69:ProjectViewProjectNode" />
@@ -242,6 +291,21 @@
               <item name="main" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
               <item name="antlr" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="lem" type="b2602c69:ProjectViewProjectNode" />
+              <item name="lem" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="kotlin" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="lem" type="b2602c69:ProjectViewProjectNode" />
+              <item name="lem" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="kotlin" type="462c0819:PsiDirectoryNode" />
+              <item name="blaster" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
@@ -251,7 +315,7 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1563647254795" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1564085558882" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/example/example_fun.kt" />
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15" />
@@ -259,9 +323,8 @@
     <property name="settings.editor.selected.configurable" value="editor.preferences.gutterIcons" />
   </component>
   <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
+    <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\gzozulin\lem\silly" />
-      <recent name="C:\Users\gzozulin\lem\build\generated-src\antlr\main" />
       <recent name="C:\Users\gzozulin\lem\src\main\antlr" />
       <recent name="C:\Users\gzozulin\lem\src\main\kotlin\platform" />
     </key>
@@ -273,8 +336,10 @@
       <recent name="platform" />
       <recent name="" />
     </key>
-    <key name="CopyFile.RECENT_KEYS">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\gzozulin\lem\src\main\kotlin\com\blaster" />
       <recent name="C:\Users\gzozulin\lem\silly" />
+      <recent name="C:\Users\gzozulin\lem\build\generated-src\antlr\main" />
       <recent name="C:\Users\gzozulin\lem\src\main\antlr" />
       <recent name="C:\Users\gzozulin\lem\src\main\kotlin\platform" />
     </key>
@@ -291,7 +356,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Gradle.lem [generateGrammarSource]">
+  <component name="RunManager" selected="Kotlin.com.blaster.LemAppKt">
     <configuration name="lem [compileJava]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -349,14 +414,14 @@
       <GradleScriptDebugEnabled>true</GradleScriptDebugEnabled>
       <method v="2" />
     </configuration>
-    <configuration name="com.blaster.platform.LemAppKt" type="JetRunConfigurationType" factoryName="Kotlin" temporary="true" nameIsGenerated="true">
+    <configuration name="com.blaster.LemAppKt" type="JetRunConfigurationType" factoryName="Kotlin" temporary="true" nameIsGenerated="true">
       <module name="gzozulin.ru.lem.main" />
       <option name="VM_PARAMETERS" value="" />
       <option name="PROGRAM_PARAMETERS" value="" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" />
       <option name="PASS_PARENT_ENVS" value="true" />
-      <option name="MAIN_CLASS_NAME" value="com.blaster.platform.LemAppKt" />
+      <option name="MAIN_CLASS_NAME" value="com.blaster.LemAppKt" />
       <option name="WORKING_DIRECTORY" value="" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -365,12 +430,12 @@
     <list>
       <item itemvalue="Gradle.lem [compileJava]" />
       <item itemvalue="Gradle.lem [generateGrammarSource]" />
-      <item itemvalue="Kotlin.com.blaster.platform.LemAppKt" />
       <item itemvalue="Gradle.lem [generateTestGrammarSource]" />
+      <item itemvalue="Kotlin.com.blaster.LemAppKt" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Kotlin.com.blaster.platform.LemAppKt" />
+        <item itemvalue="Kotlin.com.blaster.LemAppKt" />
         <item itemvalue="Gradle.lem [generateGrammarSource]" />
         <item itemvalue="Gradle.lem [generateTestGrammarSource]" />
         <item itemvalue="Gradle.lem [compileJava]" />
@@ -394,7 +459,7 @@
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.19829424" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.20255864" />
       <window_info id="Image Layers" order="1" />
       <window_info id="Designer" order="2" />
       <window_info id="Capture Tool" order="3" />
@@ -420,7 +485,7 @@
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="right" id="Palette" order="3" />
       <window_info anchor="right" id="Maven" order="4" />
-      <window_info anchor="right" id="Gradle" order="5" visible="true" weight="0.21375267" />
+      <window_info anchor="right" id="Gradle" order="5" weight="0.21375267" />
       <window_info anchor="right" id="Theme Preview" order="6" />
       <window_info anchor="right" id="Capture Analysis" order="7" />
       <window_info anchor="right" id="Palette&#9;" order="8" />
@@ -434,16 +499,10 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/src/main/kotlin/com/blaster/platform/LemApp.kt</url>
-          <line>19</line>
+          <url>file://$PROJECT_DIR$/src/main/kotlin/com/blaster/FunctionBodyVisitor.kt</url>
+          <line>9</line>
           <properties />
-          <option name="timeStamp" value="22" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/src/main/kotlin/com/blaster/platform/LemApp.kt</url>
-          <line>12</line>
-          <properties />
-          <option name="timeStamp" value="24" />
+          <option name="timeStamp" value="34" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
@@ -454,6 +513,36 @@
   </component>
   <component name="debuggerHistoryManager">
     <expressions id="evaluateExpression">
+      <expression>
+        <expression-string>tokenStream.getHiddenTokensToRight(ctx.start.tokenIndex)</expression-string>
+        <language-id>kotlin</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>ctx.text</expression-string>
+        <language-id>kotlin</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>ctx.start</expression-string>
+        <language-id>kotlin</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>ctx!!.identifier().text</expression-string>
+        <language-id>kotlin</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>CharStreams.fromFileName(it.absolutePath)</expression-string>
+        <language-id>kotlin</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>it.absolutePath</expression-string>
+        <language-id>kotlin</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
       <expression>
         <expression-string>CommonTokenStream(lexer)</expression-string>
         <language-id>kotlin</language-id>
@@ -469,41 +558,11 @@
         <language-id>kotlin</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
-      <expression>
-        <expression-string>ctx.DelimitedComment().text</expression-string>
-        <language-id>kotlin</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>ctx.start.toString()</expression-string>
-        <language-id>kotlin</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>parser.classBody()</expression-string>
-        <language-id>kotlin</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
     </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/out/production/classes/LemAppKt.class">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/out/production/classes/LemApp.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="3" column="19" selection-start-line="3" selection-start-column="19" selection-end-line="3" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/build/generated-src/antlr/main/UnicodeClasses.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2780">
-          <caret line="18" column="76" lean-forward="true" selection-start-line="18" selection-start-column="76" selection-end-line="18" selection-end-column="76" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/out/production/classes/LemApp.class" />
+    <entry file="file://$PROJECT_DIR$/build/generated-src/antlr/main/UnicodeClasses.java" />
     <entry file="file://$PROJECT_DIR$/src/main/java/KotlinParserListener.java" />
     <entry file="file://$PROJECT_DIR$/src/main/java/UnicodeClasses.java" />
     <entry file="file://$PROJECT_DIR$/src/main/java/KotlinParserBaseListener.java" />
@@ -519,38 +578,13 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/build/generated-src/antlr/main/KotlinParserBaseListener.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="121">
-          <caret line="100" column="7" lean-forward="true" selection-start-line="100" selection-start-column="7" selection-end-line="100" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/build/generated-src/antlr/main/KotlinParserListener.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="340">
-          <caret line="17" column="60" selection-start-line="17" selection-start-column="60" selection-end-line="17" selection-end-column="60" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/kotlin/com/blaster/platform/LemListener.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="40">
-          <caret line="2" selection-start-line="2" selection-end-line="2" selection-end-column="31" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/build/generated-src/antlr/main/KotlinParserBaseListener.java" />
+    <entry file="file://$PROJECT_DIR$/build/generated-src/antlr/main/KotlinParserListener.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/kotlin/com/blaster/platform/LemListener.kt" />
     <entry file="jar://$PROJECT_DIR$/../.gradle/caches/modules-2/files-2.1/org.antlr/antlr4-runtime/4.7.2/14fff5b9b6c84f3b3a1fe0980e8560a555df07c0/antlr4-runtime-4.7.2-sources.jar!/org/antlr/v4/runtime/tree/ParseTreeVisitor.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="192">
           <caret line="24" column="6" selection-start-line="24" selection-start-column="6" selection-end-line="24" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/build/generated-src/antlr/main/KotlinParserBaseVisitor.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="291">
-          <caret line="95" column="78" selection-start-line="95" selection-start-column="78" selection-end-line="95" selection-end-column="78" />
         </state>
       </provider>
     </entry>
@@ -565,43 +599,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/kotlin/com/blaster/platform/LemBaseVisitor.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="40">
-          <caret line="2" selection-start-line="2" selection-end-line="2" selection-end-column="30" />
-          <folding>
-            <element signature="e#30#94#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/kotlin/com/blaster/platform/MethodVisitor.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="320">
-          <caret line="16" column="5" lean-forward="true" selection-start-line="16" selection-start-column="5" selection-end-line="16" selection-end-column="5" />
-          <folding>
-            <element signature="e#30#114#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/kotlin/com/blaster/platform/ClassVisitor.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="260">
-          <caret line="13" column="1" lean-forward="true" selection-start-line="13" selection-start-column="1" selection-end-line="13" selection-end-column="1" />
-          <folding>
-            <element signature="e#30#114#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/kotlin/com/blaster/platform/Main.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="40">
-          <caret line="2" selection-start-line="2" selection-end-line="2" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/kotlin/com/blaster/platform/LemBaseVisitor.kt" />
+    <entry file="file://$PROJECT_DIR$/src/main/kotlin/com/blaster/platform/MethodVisitor.kt" />
+    <entry file="file://$PROJECT_DIR$/src/main/kotlin/com/blaster/platform/ClassVisitor.kt" />
+    <entry file="file://$PROJECT_DIR$/src/main/kotlin/com/blaster/platform/Main.kt" />
     <entry file="jar://$PROJECT_DIR$/../.gradle/caches/modules-2/files-2.1/org.antlr/antlr4-runtime/4.7.2/14fff5b9b6c84f3b3a1fe0980e8560a555df07c0/antlr4-runtime-4.7.2-sources.jar!/org/antlr/v4/runtime/tree/Tree.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="440">
@@ -623,34 +624,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/kotlin/com/blaster/data/Paragraph.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="40">
-          <caret line="2" column="38" lean-forward="true" selection-start-line="2" selection-start-column="38" selection-end-line="2" selection-end-column="38" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/build/generated-src/antlr/main/KotlinLexer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-3640">
-          <caret line="11" column="13" selection-start-line="11" selection-start-column="13" selection-end-line="11" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/build/generated-src/antlr/main/KotlinParserVisitor.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
-          <caret line="15" column="7" lean-forward="true" selection-start-line="15" selection-start-column="7" selection-end-line="15" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/kotlin/com/blaster/data/Article.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="40">
-          <caret line="2" column="56" selection-start-line="2" selection-start-column="56" selection-end-line="2" selection-end-column="56" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/kotlin/com/blaster/data/Paragraph.kt" />
+    <entry file="file://$PROJECT_DIR$/build/generated-src/antlr/main/KotlinLexer.java" />
+    <entry file="file://$PROJECT_DIR$/build/generated-src/antlr/main/KotlinParserVisitor.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/kotlin/com/blaster/data/Article.kt" />
     <entry file="jar://$PROJECT_DIR$/../.gradle/caches/modules-2/files-2.1/org.antlr/antlr4-runtime/4.7.2/14fff5b9b6c84f3b3a1fe0980e8560a555df07c0/antlr4-runtime-4.7.2-sources.jar!/org/antlr/v4/runtime/BufferedTokenStream.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="244">
@@ -672,133 +649,105 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/build/generated-src/antlr/main/KotlinParser.java">
+    <entry file="file://$PROJECT_DIR$/build/generated-src/antlr/main/KotlinParser.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/antlr/KotlinLexer.g4" />
+    <entry file="file://$PROJECT_DIR$/src/main/antlr/KotlinLexer.tokens" />
+    <entry file="file://$PROJECT_DIR$/src/main/antlr/UnicodeClasses.g4" />
+    <entry file="file://$PROJECT_DIR$/build/generated-src/antlr/main/example_fun.kt" />
+    <entry file="file://$PROJECT_DIR$/src/main/kotlin/com/blaster/platform/ClassListener.kt" />
+    <entry file="file://$PROJECT_DIR$/src/main/kotlin/com/blaster/platform/FunctionListener.kt" />
+    <entry file="file://$PROJECT_DIR$/../Wallpaper/app/src/main/java/com/gzozulin/wallpaper/platform/MainActivity.kt">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/antlr/SillyKotlin.g4" />
+    <entry file="file://$PROJECT_DIR$/silly/example" />
+    <entry file="file://$PROJECT_DIR$/silly/SillyParser.g4" />
+    <entry file="file://$PROJECT_DIR$/silly/SillyLexer.g4" />
+    <entry file="file://$PROJECT_DIR$/example/KotlinParser.g4" />
+    <entry file="file://$PROJECT_DIR$/example/KotlinLexer.g4" />
+    <entry file="file://$PROJECT_DIR$/build.gradle">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="291">
-          <caret line="90" column="11" selection-start-line="90" selection-start-column="11" selection-end-line="90" selection-end-column="11" />
+        <state relative-caret-position="460">
+          <caret line="23" column="35" selection-start-line="23" selection-start-column="35" selection-end-line="23" selection-end-column="35" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/antlr/KotlinLexer.g4">
+    <entry file="file://$PROJECT_DIR$/src/main/kotlin/com/blaster/Article.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="340">
-          <caret line="17" column="11" lean-forward="true" selection-start-line="17" selection-start-column="11" selection-end-line="17" selection-end-column="11" />
+        <state relative-caret-position="40">
+          <caret line="2" column="13" selection-start-line="2" selection-start-column="13" selection-end-line="2" selection-end-column="13" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/antlr/KotlinLexer.tokens">
+    <entry file="file://$PROJECT_DIR$/src/main/kotlin/com/blaster/Insert.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="280">
-          <caret line="14" column="7" selection-start-line="14" selection-start-column="7" selection-end-line="14" selection-end-column="7" />
+        <state relative-caret-position="40">
+          <caret line="2" column="14" selection-start-line="2" selection-start-column="14" selection-end-line="2" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/kotlin/com/blaster/IncludeInsert.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="40">
+          <caret line="2" column="19" selection-start-line="2" selection-start-column="19" selection-end-line="2" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/kotlin/com/blaster/ParagraphInsert.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="40">
+          <caret line="2" column="30" lean-forward="true" selection-start-line="2" selection-start-column="30" selection-end-line="2" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$PROJECT_DIR$/../.gradle/caches/modules-2/files-2.1/io.reactivex.rxjava2/rxjava/2.2.2/6a392bf0e4ce5fc841bf22c419dfd873ec438355/rxjava-2.2.2-sources.jar!/io/reactivex/internal/operators/observable/ObservableMap.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="251">
+          <caret line="62" selection-start-line="62" selection-end-line="62" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/antlr/KotlinParser.g4">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="80">
-          <caret line="4" selection-start-line="4" selection-end-line="4" />
+        <state relative-caret-position="241">
+          <caret line="165" lean-forward="true" selection-start-line="165" selection-end-line="165" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/antlr/UnicodeClasses.g4">
+    <entry file="file://$PROJECT_DIR$/build/generated-src/antlr/main/KotlinParserBaseVisitor.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="655">
-          <caret line="1643" column="24" selection-start-line="1643" selection-start-column="24" selection-end-line="1643" selection-end-column="24" />
-          <folding>
-            <element signature="e#0#23131#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="171">
+          <caret line="18" selection-start-line="18" selection-end-line="18" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/build/generated-src/antlr/main/example_fun.kt">
+    <entry file="file://$PROJECT_DIR$/src/main/kotlin/com/blaster/FunctionMainVisitor.kt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="220">
-          <caret line="11" column="29" selection-start-line="11" selection-start-column="29" selection-end-line="11" selection-end-column="29" />
+          <caret line="11" column="26" selection-start-line="11" selection-start-column="26" selection-end-line="11" selection-end-column="26" />
           <folding>
-            <element signature="e#30#235#0" expanded="true" />
+            <element signature="e#21#117#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/kotlin/com/blaster/platform/ClassListener.kt">
+    <entry file="file://$PROJECT_DIR$/src/main/kotlin/com/blaster/LemApp.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="9" column="1" lean-forward="true" selection-start-line="9" selection-start-column="1" selection-end-line="9" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/kotlin/com/blaster/platform/FunctionListener.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="260">
-          <caret line="13" column="1" lean-forward="true" selection-start-line="13" selection-start-column="1" selection-end-line="13" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/build.gradle">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="420">
-          <caret line="21" lean-forward="true" selection-start-line="21" selection-end-line="21" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../Wallpaper/app/src/main/java/com/gzozulin/wallpaper/platform/MainActivity.kt">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/kotlin/com/blaster/platform/LemApp.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="340">
-          <caret line="17" column="56" lean-forward="true" selection-start-line="17" selection-start-column="56" selection-end-line="17" selection-end-column="56" />
+        <state relative-caret-position="572">
+          <caret line="34" column="35" selection-start-line="34" selection-start-column="35" selection-end-line="34" selection-end-column="35" />
           <folding>
-            <element signature="e#30#196#0" expanded="true" />
+            <element signature="e#21#227#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/antlr/SillyKotlin.g4">
+    <entry file="file://$PROJECT_DIR$/src/main/kotlin/com/blaster/FunctionBodyVisitor.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="320">
-          <caret line="16" selection-start-line="16" selection-end-line="16" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/example/KotlinLexer.g4">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="735">
-          <caret line="523" selection-start-line="523" selection-end-line="523" selection-end-column="18" />
+        <state relative-caret-position="220">
+          <caret line="11" column="1" lean-forward="true" selection-start-line="11" selection-start-column="1" selection-end-line="11" selection-end-column="1" />
           <folding>
-            <element signature="e#0#12086#0" expanded="true" />
+            <element signature="e#21#117#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/example/KotlinParser.g4">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="6" selection-start-line="6" selection-end-line="6" selection-end-column="37" />
-          <folding>
-            <element signature="e#0#16943#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/silly/example">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="9" selection-start-line="9" selection-end-line="9" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/silly/SillyLexer.g4">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="400">
-          <caret line="20" column="28" lean-forward="true" selection-start-line="20" selection-start-column="28" selection-end-line="20" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/silly/SillyParser.g4">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="600">
-          <caret line="30" column="59" selection-start-line="30" selection-start-column="59" selection-end-line="30" selection-end-column="59" />
         </state>
       </provider>
     </entry>

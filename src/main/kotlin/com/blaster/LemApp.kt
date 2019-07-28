@@ -2,6 +2,7 @@ package com.blaster
 
 import KotlinLexer
 import KotlinParser
+import com.blaster.inserts.Insert
 import io.reactivex.Completable
 import io.reactivex.Observable
 import org.antlr.v4.runtime.CharStream
@@ -17,30 +18,35 @@ fun main() {
      * This is a nasty comment
      */
 
-    /*
-     * This is another one
-     */
-
     Observable.fromIterable(listOf(File("src/main/kotlin/com/blaster/LemApp.kt")))
         .map { CharStreams.fromFileName(it.absolutePath) }
         .flatMap { renderMain(it) }
+        .flatMap { renderIncludes(it) }
         .flatMap { renderInserts(it) }
-        .flatMap { renderArticle(it) }
         .flatMapCompletable { printArticle(it) }
         .subscribe()
+
+    // Lets imagine, that we will do something additionally here
+    System.out.println("Done!")
+
+    System.out.println("No, seriously, done!")
 }
 
-fun renderMain(charStream: CharStream): Observable<List<Insert>> =
-    Observable.just(charStream)
+// Main to insert stream
+fun renderMain(charStream: CharStream): Observable<List<Insert>> = Observable.just(charStream)
         .map { tokens(charStream) }
         .map { it to parser(it) }
         .map { FunctionMainVisitor(it.first).visitKotlinFile(it.second.kotlinFile()) }
 
-fun renderInserts(inserts: List<Insert>): Observable<List<ParagraphInsert>> =
-    Observable.empty()
+// Swap includes
+fun renderIncludes(inserts: List<Insert>): Observable<List<Insert>> = Observable.just(inserts)
 
-fun renderArticle(paragraphs: List<ParagraphInsert>): Observable<Article> =
-    Observable.empty()
+// Inserts to article
+fun renderInserts(inserts: List<Insert>): Observable<Article> = Observable.fromIterable(inserts)
+        .doOnNext { System.out.println(it) }
+        .toList()
+        .toObservable()
+        .map { Article() }
 
-fun printArticle(article: Article): Completable =
-    Completable.complete()
+// Printing the article
+fun printArticle(article: Article): Completable = Completable.complete()

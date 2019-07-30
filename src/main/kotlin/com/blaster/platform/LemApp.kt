@@ -25,6 +25,7 @@ class LemApp {
 fun main() {
     /*
      * We start by creating our main class
+     * It is multiline, of course
      */
     val lemApp = LemApp()
 

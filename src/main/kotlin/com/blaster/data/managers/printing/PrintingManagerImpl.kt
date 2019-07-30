@@ -60,6 +60,7 @@ class PrintingManagerImpl : PrintingManager {
                 is InsertText -> textTemplate.process(hashMapOf("text" to insert.text), it)
                 is InsertCode -> codeTemplate.process(hashMapOf("code" to insert.code), it)
             }
+            it.write("\n")
         }
     }
 

@@ -17,27 +17,21 @@ class FunctionBodyVisitor(private val tokenStream: CommonTokenStream) : KotlinPa
     }
 
     override fun visitStatements(ctx: KotlinParser.StatementsContext?): List<Insert> {
-        val full = gatherTokens(tokenStream.getTokens(ctx!!.start.tokenIndex + 1, ctx.stop.tokenIndex - 1))
-
-        val lines = full.split("[\r]?[\n]".toRegex())
-
+        val statements = gatherTokens(tokenStream.getTokens(ctx!!.start.tokenIndex + 1, ctx.stop.tokenIndex - 1))
+        val lines = trimLines(statements.split("[\r]?[\n]".toRegex()))
         var isComment = false
-
         var currentComment = ""
         var currentCode = ""
-
         for (line in lines) {
-            val selector = line.trim()
-
             when {
-                selector.startsWith("//") -> {
+                line.startsWith("//") -> {
                     if (currentCode.isNotEmpty()) {
                         result.add(InsertCode(currentCode))
                         currentCode = ""
                     }
                     currentComment += line
                 }
-                selector.startsWith("/*") -> {
+                line.startsWith("/*") -> {
                     if (currentCode.isNotEmpty()) {
                         result.add(InsertCode(currentCode))
                         currentCode = ""
@@ -45,7 +39,7 @@ class FunctionBodyVisitor(private val tokenStream: CommonTokenStream) : KotlinPa
                     isComment = true
                     currentComment += line
                 }
-                selector.startsWith("*/") -> {
+                line.startsWith("*/") -> {
                     currentComment += line
                     if (currentComment.isNotEmpty()) {
                         result.add(InsertText(currentComment))
@@ -62,14 +56,31 @@ class FunctionBodyVisitor(private val tokenStream: CommonTokenStream) : KotlinPa
                 }
             }
         }
-
-        return listOf()
+        return result
     }
 
     private fun gatherTokens(tokens: List<Token>): String {
         var result = ""
         for (token in tokens) {
             result += token.text
+        }
+        return result
+    }
+
+    private fun trimLines(lines : List<String>): ArrayList<String> {
+        var min = Int.MAX_VALUE
+        for (line in lines) {
+            var index = 0
+            while (line[index] == ' ') {
+                index ++
+            }
+            if (index < min) {
+                min = index
+            }
+        }
+        val result = ArrayList<String>()
+        for (line in lines) {
+            result.add(line.substring(min, line.length))
         }
         return result
     }

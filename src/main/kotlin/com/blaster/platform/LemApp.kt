@@ -35,4 +35,14 @@ fun main() {
     lemApp.render()
 
     println("Done!")
+
+    val runnable = Runnable {
+        println("Runnable is good") // runnable is good!
+    }
+
+    Thread(runnable).start()
+
+    /**
+     And here we will put a comment as well
+     */
 }

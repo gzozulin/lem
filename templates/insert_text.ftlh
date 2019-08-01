@@ -1,3 +1,1 @@
-    <p style="white-space: pre-wrap;">
-        ${text}
-    </p>
+    <p style="white-space: pre-wrap;">${text}</p>

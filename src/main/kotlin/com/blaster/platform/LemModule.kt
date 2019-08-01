@@ -1,7 +1,6 @@
 package com.blaster.platform
 
-import com.blaster.business.ParseUseCase
-import com.blaster.business.PrintUseCase
+import com.blaster.business.*
 import com.blaster.data.managers.parsing.ParsingManager
 import com.blaster.data.managers.parsing.ParsingManagerImpl
 import com.blaster.data.managers.printing.PrintingManagerImpl
@@ -54,9 +53,25 @@ class LemModule {
 
     @Singleton
     @Provides
-    fun providesParseUseCase() = ParseUseCase()
+    fun providesParseUseCase() = ParseMethodUseCase()
 
     @Singleton
     @Provides
     fun providesPrintUseCase() = PrintUseCase()
+
+    @Singleton
+    @Provides
+    fun provideConvertInsertsUseCase() = ConvertInsertsUseCase()
+
+    @Singleton
+    @Provides
+    fun providesParseCommandUseCase() = ParseCommandUseCase()
+
+    @Singleton
+    @Provides
+    fun providesParseCommentUseCase() = ParseCommentUseCase()
+
+    @Singleton
+    @Provides
+    fun providesParseClassUseCase() = ParseClassUseCase()
 }

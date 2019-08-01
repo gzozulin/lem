@@ -2,7 +2,8 @@ package com.blaster.data.managers.parsing
 
 import com.blaster.data.entities.Insert
 import com.blaster.data.entities.InsertCode
-import com.blaster.data.entities.InsertText
+import com.blaster.data.entities.InsertCommand
+import com.blaster.data.entities.InsertComment
 import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.Token
 
@@ -25,15 +26,21 @@ class FunctionBodyVisitor(private val tokenStream: CommonTokenStream) : KotlinPa
             when {
                 trimmed.startsWith("//") -> {
                     flushCurrentCode()
-                    currentCommentLines.add(line)
-                    flushCurrentComment()
+                    if (trimmed.startsWith("// include")) {
+                        result.add(InsertCommand(trimmed))
+                    } else {
+                        currentCommentLines.add(line)
+                        flushCurrentComment()
+                    }
                 }
-                trimmed.startsWith("/*") -> {
+                trimmed.startsWith("/*") -> { // todo: this marker can be on the same line
+                    check(!isComment) { "Comment is already started!" }
                     flushCurrentCode()
                     isComment = true
                     currentCommentLines.add(line)
                 }
-                trimmed.startsWith("*/") -> {
+                trimmed.startsWith("*/") -> { // todo: this marker can be on the same line
+                    check(isComment) { "Comment is not started yet!" }
                     currentCommentLines.add(line)
                     flushCurrentComment()
                     isComment = false
@@ -71,7 +78,7 @@ class FunctionBodyVisitor(private val tokenStream: CommonTokenStream) : KotlinPa
                 comment += commentLine + "\n"
             }
             comment = comment.dropLast(1)
-            result.add(InsertText(comment))
+            result.add(InsertComment(comment))
             currentCommentLines.clear()
         }
     }

@@ -1,14 +1,15 @@
 package com.blaster.data.managers.storing
 
+import com.blaster.business.LocatedInfo
 import com.blaster.data.entities.Insert
 import java.io.File
 
 class StoringManagerImpl : StoringManager {
-    private val insertsMap = HashMap<File, List<Insert>>()
+    private val insertsMap = HashMap<LocatedInfo, List<Insert>>()
 
-    override fun storeInserts(root: File, inserts: List<Insert>) {
-        insertsMap[root] = inserts
+    override fun storeInserts(located: LocatedInfo, inserts: List<Insert>) {
+        insertsMap[located] = inserts
     }
 
-    override fun getInserts(): Map<File, List<Insert>> = insertsMap
+    override fun getInserts(): Map<LocatedInfo, List<Insert>> = insertsMap
 }

@@ -21,7 +21,7 @@ class PrintUseCase {
     fun printArticles() {
         val inserts = storingManager.getInserts()
         for (insert in inserts) {
-            printArticle(insert.key, insert.value)
+            printArticle(insert.key.file, insert.value)
         }
     }
 

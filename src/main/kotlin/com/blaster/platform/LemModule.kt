@@ -41,6 +41,10 @@ class LemModule {
 
     @Singleton
     @Provides
+    fun providesLocatorUseCse() = LocatorUseCase()
+
+    @Singleton
+    @Provides
     fun providePrintingManager() : PrintingManager = PrintingManagerImpl()
 
     @Singleton

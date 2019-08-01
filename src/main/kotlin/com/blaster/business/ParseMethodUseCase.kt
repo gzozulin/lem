@@ -3,10 +3,12 @@ package com.blaster.business
 import com.blaster.data.managers.parsing.ParsingManager
 import com.blaster.data.managers.storing.StoringManager
 import com.blaster.platform.LEM_COMPONENT
-import java.io.File
 import javax.inject.Inject
 
 class ParseMethodUseCase {
+    @Inject
+    lateinit var locatorUseCase: LocatorUseCase
+
     @Inject
     lateinit var parsingManager: ParsingManager
 
@@ -20,15 +22,12 @@ class ParseMethodUseCase {
         LEM_COMPONENT.inject(this)
     }
 
-    fun parseMethods(roots: List<File>) {
-        roots.forEach { parseMethod(it) }
-    }
-
-    fun parseMethod(root: File) {
-        val tokenStream = parsingManager.createTokenStream(root)
+    fun parseMethod(methodpath: String) {
+        val located = locatorUseCase.locate(methodpath)
+        val tokenStream = parsingManager.createTokenStream(located.file)
         val parser = parsingManager.createParser(tokenStream)
-        val inserts = parsingManager.parseMain(tokenStream, parser)
+        val inserts = parsingManager.parseMethod(tokenStream, parser, located.clazz, located.member)
         val converted = convertInsertsUseCase.convertInserts(inserts)
-        storingManager.storeInserts(root, converted)
+        storingManager.storeInserts(located, converted)
     }
 }

@@ -11,6 +11,12 @@ class ParsingManagerImpl : ParsingManager {
 
     override fun createParser(tokenStream: CommonTokenStream) = KotlinParser(tokenStream)
 
-    override fun parseMain(tokenStream: CommonTokenStream, parser: KotlinParser): List<Insert> =
-        FunctionMainVisitor(tokenStream).visitKotlinFile(parser.kotlinFile())
+    override fun parseMethod(tokenStream: CommonTokenStream, parser: KotlinParser, clazz: String?, method: String): List<Insert> {
+        if (clazz != null) {
+            // locate in class
+            throw NotImplementedError()
+        } else {
+            return GlobalMethodVisitor(tokenStream, method).visitKotlinFile(parser.kotlinFile())
+        }
+    }
 }

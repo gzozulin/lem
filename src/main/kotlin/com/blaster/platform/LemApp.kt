@@ -23,7 +23,7 @@ class LemApp {
      * And this is a main call for LemApp
      */
     fun render() {
-        parseMethodUseCase.parseMethods(listOf(File("src/main/kotlin/com/blaster/platform/LemApp.kt")))
+        parseMethodUseCase.parseMethod("src/main/kotlin/com/blaster/platform/LemApp.kt:-:main")
         printUseCase.printArticles()
     }
 }

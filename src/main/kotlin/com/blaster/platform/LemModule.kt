@@ -5,8 +5,6 @@ import com.blaster.data.managers.parsing.ParsingManager
 import com.blaster.data.managers.parsing.ParsingManagerImpl
 import com.blaster.data.managers.printing.PrintingManagerImpl
 import com.blaster.data.managers.printing.PrintingManager
-import com.blaster.data.managers.storing.StoringManager
-import com.blaster.data.managers.storing.StoringManagerImpl
 import dagger.Module
 import dagger.Provides
 import freemarker.template.Configuration
@@ -53,11 +51,7 @@ class LemModule {
 
     @Singleton
     @Provides
-    fun bindStoringManager() : StoringManager = StoringManagerImpl()
-
-    @Singleton
-    @Provides
-    fun providesParseUseCase() = ParseMethodUseCase()
+    fun providesParseUseCase() = ParseDefUseCase()
 
     @Singleton
     @Provides
@@ -65,17 +59,5 @@ class LemModule {
 
     @Singleton
     @Provides
-    fun provideConvertInsertsUseCase() = ConvertInsertsUseCase()
-
-    @Singleton
-    @Provides
-    fun providesParseCommandUseCase() = ParseCommandUseCase()
-
-    @Singleton
-    @Provides
-    fun providesParseCommentUseCase() = ParseCommentUseCase()
-
-    @Singleton
-    @Provides
-    fun providesParseClassUseCase() = ParseClassUseCase()
+    fun providesParseCommentUseCase() = ProcessCommentUseCase()
 }

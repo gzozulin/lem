@@ -8,5 +8,5 @@ import com.blaster.data.entities.Insert
 interface ParsingManager {
     fun createTokenStream(file: File): CommonTokenStream
     fun createParser(tokenStream: CommonTokenStream): KotlinParser
-    fun parseMethod(tokenStream: CommonTokenStream, parser: KotlinParser, clazz: String?, method: String) : List<Insert>
+    fun parseMethodDef(tokenStream: CommonTokenStream, parser: KotlinParser, clazz: String?, method: String) : List<Insert>
 }

@@ -11,12 +11,16 @@ class ParsingManagerImpl : ParsingManager {
 
     override fun createParser(tokenStream: CommonTokenStream) = KotlinParser(tokenStream)
 
-    override fun parseMethod(tokenStream: CommonTokenStream, parser: KotlinParser, clazz: String?, method: String): List<Insert> {
+    override fun parseMethodDef(
+        tokenStream: CommonTokenStream, parser: KotlinParser,
+        clazz: String?, method: String
+    ): List<Insert> =
         if (clazz != null) {
-            // locate in class
-            throw NotImplementedError()
+            val classBody = KotlinClassVisitor(clazz).visitKotlinFile(parser.kotlinFile())
+            val functionBody = KotlinFunctionVisitor(method).visitClassBody(classBody)
+            FunctionBodyVisitor(tokenStream).visit(functionBody)
         } else {
-            return GlobalMethodVisitor(tokenStream, method).visitKotlinFile(parser.kotlinFile())
+            val functionBody = KotlinFunctionVisitor(method).visitKotlinFile(parser.kotlinFile())
+            FunctionBodyVisitor(tokenStream).visit(functionBody)
         }
-    }
 }

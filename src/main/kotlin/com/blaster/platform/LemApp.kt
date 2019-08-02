@@ -1,8 +1,7 @@
 package com.blaster.platform
 
-import com.blaster.business.ParseMethodUseCase
+import com.blaster.business.ParseDefUseCase
 import com.blaster.business.PrintUseCase
-import java.io.File
 import javax.inject.Inject
 
 /*
@@ -10,7 +9,7 @@ import javax.inject.Inject
  */
 class LemApp {
     @Inject
-    lateinit var parseMethodUseCase: ParseMethodUseCase
+    lateinit var parseDefUseCase: ParseDefUseCase
 
     @Inject
     lateinit var printUseCase: PrintUseCase
@@ -23,8 +22,16 @@ class LemApp {
      * And this is a main call for LemApp
      */
     fun render() {
-        parseMethodUseCase.parseMethod("src/main/kotlin/com/blaster/platform/LemApp.kt:-:main")
-        printUseCase.printArticles()
+        /*
+        This method also will be randomly commented
+         */
+        val path = "src/main/kotlin/com/blaster/platform/LemApp.kt:-:main"
+        val parsed = parseDefUseCase.parseDef(path)
+
+        /*
+        And a last thing..
+         */
+        printUseCase.printArticle(path, parsed)
     }
 }
 
@@ -35,12 +42,10 @@ fun main() {
     */
     val lemApp = LemApp()
 
-    // and then we simply run render() on it
+    // We will include another method here because why not?
+    // include def src/main/kotlin/com/blaster/platform/LemApp.kt:LemApp:render
 
-    // and a second comment in a row
-    // include decl com.blaster.platform.LemModule
-    // include decl com.blaster.platform.LemModule::provideFreemarkerConfig
-    // and a third one
+    // and then we simply run render() on it
     lemApp.render()
 
     /*

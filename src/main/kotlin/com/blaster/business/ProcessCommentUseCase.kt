@@ -3,11 +3,11 @@ package com.blaster.business
 import com.blaster.data.entities.Insert
 import com.blaster.data.entities.InsertText
 
-class ParseCommentUseCase {
+class ProcessCommentUseCase {
     private val singleLineRegex = "^//(.*)\$".toRegex()
     private val delimitedRegex = "^/\\*((.*\\n?)+)\\*/\$".toRegex()
 
-    fun parseComment(comment: String): Insert {
+    fun processComment(comment: String): Insert {
         val singleLineMatch = singleLineRegex.find(comment)
         if (singleLineMatch != null) {
             return InsertText(singleLineMatch.groups[1]!!.value)

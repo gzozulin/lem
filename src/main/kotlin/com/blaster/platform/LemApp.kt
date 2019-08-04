@@ -1,7 +1,7 @@
 package com.blaster.platform
 
-import com.blaster.business.ParseDefUseCase
-import com.blaster.business.PrintUseCase
+import com.blaster.business.ParseInteractor
+import com.blaster.business.PrintInteractor
 import javax.inject.Inject
 
 /*
@@ -9,10 +9,10 @@ import javax.inject.Inject
  */
 class LemApp {
     @Inject
-    lateinit var parseDefUseCase: ParseDefUseCase
+    lateinit var parseInteractor: ParseInteractor
 
     @Inject
-    lateinit var printUseCase: PrintUseCase
+    lateinit var printInteractor: PrintInteractor
 
     init {
         LEM_COMPONENT.inject(this)
@@ -25,25 +25,29 @@ class LemApp {
         /*
         This method also will be randomly commented
          */
-        val path = "src/main/kotlin/com/blaster/platform/LemApp.kt:-:main"
-        val parsed = parseDefUseCase.parseDef(path)
+        val path = "com.blaster.platform.LemAppKt::main"
+        val parsed = parseInteractor.parseDef(path)
 
         /*
         And a last thing..
          */
-        printUseCase.printArticle(path, parsed)
+        printInteractor.printArticle(path, parsed)
     }
 }
 
+/*
+Our main global foo
+ */
 fun main() {
     /*
     We start by creating our main class
     It is multiline, of course
     */
+    // include decl com.blaster.platform.LemAppKt::main
     val lemApp = LemApp()
 
     // We will include another method here because why not?
-    // include def src/main/kotlin/com/blaster/platform/LemApp.kt:LemApp:render
+    // include def com.blaster.platform.LemApp::render
 
     // and then we simply run render() on it
     lemApp.render()

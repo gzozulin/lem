@@ -1,7 +1,8 @@
 package com.blaster.platform
 
-import com.blaster.business.ParseDefUseCase
-import com.blaster.business.PrintUseCase
+import com.blaster.business.LocatorInteractor
+import com.blaster.business.ParseInteractor
+import com.blaster.business.PrintInteractor
 import com.blaster.data.managers.printing.PrintingManagerImpl
 import dagger.Component
 import javax.inject.Singleton
@@ -10,9 +11,10 @@ import javax.inject.Singleton
 @Component(modules = [ LemModule::class ])
 interface LemComponent {
     fun inject(lemApp: LemApp)
-    fun inject(parseDefUseCase: ParseDefUseCase)
-    fun inject(printUseCase: PrintUseCase)
+    fun inject(parseInteractor: ParseInteractor)
+    fun inject(printInteractor: PrintInteractor)
     fun inject(printingManagerImpl: PrintingManagerImpl)
+    fun inject(locatorInteractor: LocatorInteractor)
 }
 
 val LEM_COMPONENT : LemComponent = DaggerLemComponent.builder().build()

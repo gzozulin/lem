@@ -1,40 +1,48 @@
 package com.blaster.business
 
-import com.blaster.data.entities.Insert
-import com.blaster.data.entities.InsertCommand
-import com.blaster.data.entities.InsertComment
+import com.blaster.data.inserts.Insert
+import com.blaster.data.inserts.InsertCommand
+import com.blaster.data.inserts.InsertComment
 import com.blaster.data.managers.parsing.ParsingManager
 import com.blaster.platform.LEM_COMPONENT
+import java.lang.UnsupportedOperationException
 import javax.inject.Inject
 
 const val INCLUDE_PREFIX = "// include "
 const val DEF_PREFIX = "def "
 const val DECL_PREFIX = "decl "
 
-class ParseDefUseCase {
+class ParseInteractor {
     @Inject
-    lateinit var locatorUseCase: LocatorUseCase
+    lateinit var locatorInteractor: LocatorInteractor
 
     @Inject
     lateinit var parsingManager: ParsingManager
 
     @Inject
-    lateinit var processCommentUseCase: ProcessCommentUseCase
+    lateinit var commentsInteractor: CommentsInteractor
 
     init {
         LEM_COMPONENT.inject(this)
     }
 
     fun parseDef(path: String): List<Insert> {
-        val located = locatorUseCase.locate(path)
-        val tokenStream = parsingManager.createTokenStream(located.file)
-        val parser = parsingManager.createParser(tokenStream)
-        val inserts = parsingManager.parseMethodDef(tokenStream, parser, located.clazz, located.member)
+        val inserts = when (val location = locatorInteractor.locate(path)) {
+            is GlobalLocation -> parsingManager.parseGlobalMethodDef(location)
+            is MemberLocation -> parsingManager.parseMemberMethodDef(location)
+            else -> throw UnsupportedOperationException()
+        }
         return processInserts(inserts)
     }
 
     private fun parseDecl(path: String): List<Insert> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val inserts = when (val location = locatorInteractor.locate(path)) {
+            is GlobalLocation -> parsingManager.parseGlobalDecl(location)
+            is MemberLocation -> parsingManager.parseMemberDecl(location)
+            is ClassLocation -> parsingManager.parseClassDecl(location)
+            else -> throw UnsupportedOperationException()
+        }
+        return processInserts(inserts)
     }
 
     private fun processInserts(inserts: List<Insert>) : List<Insert> {
@@ -45,7 +53,7 @@ class ParseDefUseCase {
                     result.addAll(processCommand(insert.command))
                 }
                 is InsertComment -> {
-                    result.add(processCommentUseCase.processComment(insert.comment))
+                    result.add(commentsInteractor.processComment(insert.comment))
                 }
                 else -> result.add(insert)
             }

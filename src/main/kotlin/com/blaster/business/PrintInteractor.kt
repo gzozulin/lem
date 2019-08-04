@@ -1,13 +1,13 @@
 package com.blaster.business
 
-import com.blaster.data.entities.Insert
+import com.blaster.data.inserts.Insert
 import com.blaster.data.managers.printing.PrintingManager
 import com.blaster.platform.LEM_COMPONENT
 import javax.inject.Inject
 
-class PrintUseCase {
+class PrintInteractor {
     @Inject
-    lateinit var locatorUseCase: LocatorUseCase
+    lateinit var locatorInteractor: LocatorInteractor
 
     @Inject
     lateinit var printingManager: PrintingManager
@@ -17,7 +17,7 @@ class PrintUseCase {
     }
 
     fun printArticle(path: String, parsed: List<Insert>) {
-        val located = locatorUseCase.locate(path)
+        val located = locatorInteractor.locate(path)
         printingManager.startArticleFor(located.file)
         for (insert in parsed) {
             printingManager.appendArticle(located.file, insert)

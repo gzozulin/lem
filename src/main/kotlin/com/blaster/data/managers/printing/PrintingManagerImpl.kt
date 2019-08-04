@@ -1,8 +1,8 @@
 package com.blaster.data.managers.printing
 
-import com.blaster.data.entities.Insert
-import com.blaster.data.entities.InsertCode
-import com.blaster.data.entities.InsertText
+import com.blaster.data.inserts.Insert
+import com.blaster.data.inserts.InsertCode
+import com.blaster.data.inserts.InsertText
 import com.blaster.platform.LEM_COMPONENT
 import freemarker.template.Configuration
 import freemarker.template.Template

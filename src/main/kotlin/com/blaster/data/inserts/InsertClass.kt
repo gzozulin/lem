@@ -1,3 +1,3 @@
-package com.blaster.data.entities
+package com.blaster.data.inserts
 
 class InsertClass(val classpath: String) : Insert

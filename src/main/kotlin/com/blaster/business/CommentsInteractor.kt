@@ -1,9 +1,9 @@
 package com.blaster.business
 
-import com.blaster.data.entities.Insert
-import com.blaster.data.entities.InsertText
+import com.blaster.data.inserts.Insert
+import com.blaster.data.inserts.InsertText
 
-class ProcessCommentUseCase {
+class CommentsInteractor {
     private val singleLineRegex = "^//(.*)\$".toRegex()
     private val delimitedRegex = "^/\\*((.*\\n?)+)\\*/\$".toRegex()
 

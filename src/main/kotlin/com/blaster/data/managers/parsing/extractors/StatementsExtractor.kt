@@ -1,26 +1,27 @@
-package com.blaster.data.managers.parsing
+package com.blaster.data.managers.parsing.extractors
 
-import com.blaster.data.entities.Insert
-import com.blaster.data.entities.InsertCode
-import com.blaster.data.entities.InsertCommand
-import com.blaster.data.entities.InsertComment
+import com.blaster.data.inserts.Insert
+import com.blaster.data.inserts.InsertCode
+import com.blaster.data.inserts.InsertCommand
+import com.blaster.data.inserts.InsertComment
+import com.blaster.data.managers.parsing.KotlinParser
 import org.antlr.v4.runtime.CommonTokenStream
-import org.antlr.v4.runtime.Token
 
-class FunctionBodyVisitor(private val tokenStream: CommonTokenStream) : KotlinParserBaseVisitor<List<Insert>>() {
+class StatementsExtractor {
     private val result = ArrayList<Insert>()
 
     private var isComment = false
     private val currentCodeLines = ArrayList<String>()
     private val currentCommentLines = ArrayList<String>()
 
-    override fun aggregateResult(aggregate: List<Insert>?, nextResult: List<Insert>?): List<Insert> {
-        return result
-    }
-
-    override fun visitStatements(ctx: KotlinParser.StatementsContext?): List<Insert> {
-        val statements = gatherTokens(tokenStream.getTokens(ctx!!.start.tokenIndex + 1, ctx.stop.tokenIndex - 1))
-        val lines = trimCommonSpaces(statements.split("[\r]?[\n]".toRegex()))
+    fun extractStatements(tokenStream: CommonTokenStream, ctx: KotlinParser.StatementsContext?): List<Insert> {
+        val statements = gatherTokens(
+            tokenStream.getTokens(
+                ctx!!.start.tokenIndex + 1,
+                ctx.stop.tokenIndex - 1
+            )
+        )
+        val lines = codeLines(statements)
         for (line in lines) {
             val trimmed = line.trim()
             when {
@@ -81,37 +82,5 @@ class FunctionBodyVisitor(private val tokenStream: CommonTokenStream) : KotlinPa
             result.add(InsertComment(comment))
             currentCommentLines.clear()
         }
-    }
-
-    private fun gatherTokens(tokens: List<Token>): String {
-        var result = ""
-        for (token in tokens) {
-            result += token.text
-        }
-        return result
-    }
-
-    private fun trimCommonSpaces(lines : List<String>): ArrayList<String> {
-        val clean = ArrayList<String>()
-        for (line in lines) {
-            if (line.isNotBlank()) {
-                clean.add(line)
-            }
-        }
-        var min = Int.MAX_VALUE
-        for (line in clean) {
-            var index = 0
-            while (line[index] == ' ') {
-                index ++
-            }
-            if (index < min) {
-                min = index
-            }
-        }
-        val trimmed = ArrayList<String>()
-        for (line in clean) {
-            trimmed.add(line.substring(min, line.length))
-        }
-        return trimmed
     }
 }

@@ -1,6 +1,6 @@
 package com.blaster.data.managers.printing
 
-import com.blaster.data.entities.Insert
+import com.blaster.data.inserts.Insert
 import java.io.File
 
 interface PrintingManager {

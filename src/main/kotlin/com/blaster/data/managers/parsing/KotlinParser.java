@@ -133,7 +133,7 @@ public class KotlinParser extends Parser {
 			"classModifier", "memberModifier", "visibilityModifier", "varianceAnnotation", 
 			"functionModifier", "propertyModifier", "inheritanceModifier", "parameterModifier", 
 			"typeParameterModifier", "labelDefinition", "annotations", "annotation", 
-			"annotationList", "annotationUseSiteTarget", "unescapedAnnotation", "identifier", 
+			"annotationList", "annotationUseSiteTarget", "unescapedAnnotation", "clazz",
 			"simpleIdentifier", "semi", "anysemi"
 		};
 	}

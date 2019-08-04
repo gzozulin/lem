@@ -27,6 +27,11 @@ class LemModule {
 
     @Singleton
     @Provides
+    @Named("SOURCE_ROOT")
+    fun providesSourceRoot() = File("src/main/kotlin")
+
+    @Singleton
+    @Provides
     fun provideFreemarkerConfig(@Named("TEMPLATES_FILE") templatesFile: File): Configuration {
         val cfg = Configuration(Configuration.VERSION_2_3_27)
         cfg.setDirectoryForTemplateLoading(templatesFile)
@@ -39,7 +44,7 @@ class LemModule {
 
     @Singleton
     @Provides
-    fun providesLocatorUseCse() = LocatorUseCase()
+    fun providesLocatorUseCse() = LocatorInteractor()
 
     @Singleton
     @Provides
@@ -51,13 +56,13 @@ class LemModule {
 
     @Singleton
     @Provides
-    fun providesParseUseCase() = ParseDefUseCase()
+    fun providesParseUseCase() = ParseInteractor()
 
     @Singleton
     @Provides
-    fun providesPrintUseCase() = PrintUseCase()
+    fun providesPrintUseCase() = PrintInteractor()
 
     @Singleton
     @Provides
-    fun providesParseCommentUseCase() = ProcessCommentUseCase()
+    fun providesParseCommentUseCase() = CommentsInteractor()
 }

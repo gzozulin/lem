@@ -4,10 +4,8 @@
         <title>Welcome!</title>
     </head>
     <body> 
-    <p style="white-space: pre-wrap;">We start by creating our main class
-It is multiline, of course</p>
-    <p style="white-space: pre-wrap;">Our main global foo
-</p>
+    <p style="white-space: pre-wrap;">    This is a first property
+    </p>
     <p style="white-space: pre-wrap;background: #f4f4f4;
                                         border: 1px solid #ddd;
                                         border-left: 3px solid #f36d33;
@@ -21,7 +19,10 @@ It is multiline, of course</p>
                                         overflow: auto;
                                         padding: 1em 1.5em;
                                         display: block;
-                                        word-wrap: break-word;">fun main() </p>
+                                        word-wrap: break-word;">@Inject
+    lateinit var parseInteractor: </p>
+    <p style="white-space: pre-wrap;">    This is a second property
+    </p>
     <p style="white-space: pre-wrap;background: #f4f4f4;
                                         border: 1px solid #ddd;
                                         border-left: 3px solid #f36d33;
@@ -35,10 +36,10 @@ It is multiline, of course</p>
                                         overflow: auto;
                                         padding: 1em 1.5em;
                                         display: block;
-                                        word-wrap: break-word;">val lemApp = LemApp()</p>
-    <p style="white-space: pre-wrap;"> We will include another method here because why not?</p>
-    <p style="white-space: pre-wrap;">This method also will be randomly commented
-</p>
+                                        word-wrap: break-word;">@Inject
+    lateinit var printInteractor: </p>
+    <p style="white-space: pre-wrap;">    And this is a main call for LemApp
+    </p>
     <p style="white-space: pre-wrap;background: #f4f4f4;
                                         border: 1px solid #ddd;
                                         border-left: 3px solid #f36d33;
@@ -52,10 +53,7 @@ It is multiline, of course</p>
                                         overflow: auto;
                                         padding: 1em 1.5em;
                                         display: block;
-                                        word-wrap: break-word;">val path = &quot;com.blaster.platform.LemAppKt::main&quot;
-val parsed = parseInteractor.parseDef(path)</p>
-    <p style="white-space: pre-wrap;">And a last thing..
-</p>
+                                        word-wrap: break-word;">fun render() </p>
     <p style="white-space: pre-wrap;background: #f4f4f4;
                                         border: 1px solid #ddd;
                                         border-left: 3px solid #f36d33;
@@ -69,45 +67,8 @@ val parsed = parseInteractor.parseDef(path)</p>
                                         overflow: auto;
                                         padding: 1em 1.5em;
                                         display: block;
-                                        word-wrap: break-word;">printInteractor.printArticle(path,parsed)</p>
-    <p style="white-space: pre-wrap;"> and then we simply run render() on it</p>
-    <p style="white-space: pre-wrap;background: #f4f4f4;
-                                        border: 1px solid #ddd;
-                                        border-left: 3px solid #f36d33;
-                                        color: #666;
-                                        page-break-inside: avoid;
-                                        font-family: monospace;
-                                        font-size: 15px;
-                                        line-height: 1.6;
-                                        margin-bottom: 1.6em;
-                                        max-width: 100%;
-                                        overflow: auto;
-                                        padding: 1em 1.5em;
-                                        display: block;
-                                        word-wrap: break-word;">lemApp.render()</p>
-    <p style="white-space: pre-wrap;">Then we do a lot of random garbage code just to showcase the approach.
-The group with index 0 is always the entire matched String. Indices greater than 0, instead, represent groups in the regular expression, delimited by parentheses, such as ([bc]+) in our example.
-We can also destructure MatchResult instances in an assignment statement:
-</p>
-    <p style="white-space: pre-wrap;background: #f4f4f4;
-                                        border: 1px solid #ddd;
-                                        border-left: 3px solid #f36d33;
-                                        color: #666;
-                                        page-break-inside: avoid;
-                                        font-family: monospace;
-                                        font-size: 15px;
-                                        line-height: 1.6;
-                                        margin-bottom: 1.6em;
-                                        max-width: 100%;
-                                        overflow: auto;
-                                        padding: 1em 1.5em;
-                                        display: block;
-                                        word-wrap: break-word;">println(&quot;Done!&quot;)
-val runnable = Runnable {
-    println(&quot;Runnable is good&quot;) // runnable is good!
-}
-Thread(runnable).start()</p>
-    <p style="white-space: pre-wrap;">And here we will put a comment as well</p>
+                                        word-wrap: break-word;">val lemApp = LemApp()
+lemApp.render()</p>
 
     </body>
 </html>

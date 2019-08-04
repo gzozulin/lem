@@ -7,11 +7,12 @@ import org.antlr.v4.runtime.CharStreams
 import java.io.File
 
 import com.blaster.data.inserts.Insert
-import com.blaster.data.managers.parsing.extractors.DescriptionsExtractor
+import com.blaster.data.managers.parsing.extractors.DeclarationsExtractor
 import com.blaster.data.managers.parsing.extractors.StatementsExtractor
 import com.blaster.data.managers.parsing.visitors.ClassDeclLocator
 import com.blaster.data.managers.parsing.visitors.FunctionDeclLocator
 import com.blaster.data.managers.parsing.visitors.FunctionStatementsLocator
+import com.blaster.data.managers.parsing.visitors.MemberDeclLocator
 import org.antlr.v4.runtime.CommonTokenStream
 
 class ParsingManagerImpl : ParsingManager {
@@ -48,7 +49,7 @@ class ParsingManagerImpl : ParsingManager {
         // todo: can be triggered by member with same name if comes first
         var result: List<Insert>? = null
         FunctionDeclLocator(location.identifier) { functionDecl ->
-            result = DescriptionsExtractor().extractDescriptions(tokenStream, functionDecl)
+            result = DeclarationsExtractor().extractDeclarations(tokenStream, functionDecl)
         }.visitKotlinFile(parser.kotlinFile())
         return result!!
     }
@@ -58,8 +59,8 @@ class ParsingManagerImpl : ParsingManager {
         val parser = createParser(tokenStream)
         var result: List<Insert>? = null
         ClassDeclLocator(location.clazz) { classDecl ->
-            FunctionDeclLocator(location.identifier) { functionDecl ->
-                result = DescriptionsExtractor().extractDescriptions(tokenStream, functionDecl)
+            MemberDeclLocator(location.identifier) { memberDecl ->
+                result = DeclarationsExtractor().extractDeclarations(tokenStream, memberDecl)
             }.visitClassBody(classDecl.classBody())
         }.visitKotlinFile(parser.kotlinFile())
         return result!!
@@ -70,9 +71,8 @@ class ParsingManagerImpl : ParsingManager {
         val parser = createParser(tokenStream)
         val result = ArrayList<Insert>()
         ClassDeclLocator(location.clazz) { classDecl ->
-            // todo: result.addAll(properties)
-            FunctionDeclLocator(location.clazz) { functionDecl ->
-                result.addAll(DescriptionsExtractor().extractDescriptions(tokenStream, functionDecl))
+            MemberDeclLocator(null) { memberDecl ->
+                result.addAll(DeclarationsExtractor().extractDeclarations(tokenStream, memberDecl))
             }.visitClassBody(classDecl.classBody())
         }.visitKotlinFile(parser.kotlinFile())
         return result

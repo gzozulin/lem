@@ -41,7 +41,8 @@ class LocatorInteractor {
     }
 
     private fun extractClass(path: String): String {
-        return path.substring(0, path.lastIndexOf(":") - 1)
+        val lastIndex = path.lastIndexOf(":")
+        return path.substring(0, if (lastIndex >= 0) lastIndex - 1 else path.length)
     }
 
     private fun extractMember(path: String): String {

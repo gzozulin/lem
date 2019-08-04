@@ -8,9 +8,15 @@ import javax.inject.Inject
  * This is a main class for this app
  */
 class LemApp {
+    /*
+    This is a first property
+     */
     @Inject
     lateinit var parseInteractor: ParseInteractor
 
+    /*
+    This is a second property
+     */
     @Inject
     lateinit var printInteractor: PrintInteractor
 
@@ -19,7 +25,7 @@ class LemApp {
     }
 
     /*
-     * And this is a main call for LemApp
+    And this is a main call for LemApp
      */
     fun render() {
         /*
@@ -36,37 +42,11 @@ class LemApp {
 }
 
 /*
-Our main global foo
+This is a global declaration
  */
 fun main() {
-    /*
-    We start by creating our main class
-    It is multiline, of course
-    */
-    // include decl com.blaster.platform.LemAppKt::main
+    // include decl com.blaster.platform.LemApp
+
     val lemApp = LemApp()
-
-    // We will include another method here because why not?
-    // include def com.blaster.platform.LemApp::render
-
-    // and then we simply run render() on it
     lemApp.render()
-
-    /*
-    Then we do a lot of random garbage code just to showcase the approach.
-    The group with index 0 is always the entire matched String. Indices greater than 0, instead, represent groups in the regular expression, delimited by parentheses, such as ([bc]+) in our example.
-    We can also destructure MatchResult instances in an assignment statement:
-     */
-
-    println("Done!")
-
-    val runnable = Runnable {
-        println("Runnable is good") // runnable is good!
-    }
-
-    Thread(runnable).start()
-
-    /*
-    And here we will put a comment as well
-    */
 }

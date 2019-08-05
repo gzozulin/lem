@@ -7,11 +7,11 @@ import javax.inject.Named
 
 open class Location(val file: File)
 
-class ClassLocation(file: File, val clazz: String) : Location(file)
-class MemberLocation(file: File, val clazz: String, val identifier: String) : Location(file)
-class GlobalLocation(file: File, val identifier: String) : Location(file)
+class LocationClass(file: File, val clazz: String) : Location(file)
+class LocationMember(file: File, val clazz: String, val identifier: String) : Location(file)
+class LocationGlobal(file: File, val identifier: String) : Location(file)
 
-class LocatorInteractor {
+class InteractorLocation {
 
     @Inject
     @field:Named("SOURCE_ROOT")
@@ -31,12 +31,12 @@ class LocatorInteractor {
         return if (path.contains("::")) {
             val member = extractMember(path)
             if (clazz.endsWith("Kt")) {
-                GlobalLocation(file, member)
+                LocationGlobal(file, member)
             } else {
-                MemberLocation(file, clazz, member)
+                LocationMember(file, clazz, member)
             }
         } else {
-            ClassLocation(file, clazz)
+            LocationClass(file, clazz)
         }
     }
 

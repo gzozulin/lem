@@ -1,4 +1,4 @@
-package com.blaster.data.managers.parsing.extractors
+package com.blaster.business
 
 import com.blaster.data.inserts.Insert
 import com.blaster.data.inserts.InsertCode
@@ -7,7 +7,7 @@ import com.blaster.data.inserts.InsertComment
 import com.blaster.data.managers.parsing.KotlinParser
 import org.antlr.v4.runtime.CommonTokenStream
 
-class StatementsExtractor {
+class ExtractorStatements {
     private val result = ArrayList<Insert>()
 
     private var isComment = false

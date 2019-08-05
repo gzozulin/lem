@@ -3,7 +3,7 @@ package com.blaster.business
 import com.blaster.data.inserts.Insert
 import com.blaster.data.inserts.InsertText
 
-class CommentsInteractor {
+class InteractorComments {
     private val singleLineRegex = "^//(.*)\$".toRegex()
     private val delimitedRegex = "^/\\*((.*\\n?)+)\\*/\$".toRegex()
 

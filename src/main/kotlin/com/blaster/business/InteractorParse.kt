@@ -3,6 +3,7 @@ package com.blaster.business
 import com.blaster.data.inserts.Insert
 import com.blaster.data.inserts.InsertCommand
 import com.blaster.data.inserts.InsertComment
+import com.blaster.data.managers.lexing.LexingManager
 import com.blaster.data.managers.parsing.ParsingManager
 import com.blaster.platform.LEM_COMPONENT
 import java.lang.UnsupportedOperationException
@@ -12,34 +13,61 @@ const val INCLUDE_PREFIX = "// include "
 const val DEF_PREFIX = "def "
 const val DECL_PREFIX = "decl "
 
-class ParseInteractor {
+class InteractorParse {
     @Inject
-    lateinit var locatorInteractor: LocatorInteractor
+    lateinit var interactorLocation: InteractorLocation
+
+    @Inject
+    lateinit var lexingManager: LexingManager
 
     @Inject
     lateinit var parsingManager: ParsingManager
 
     @Inject
-    lateinit var commentsInteractor: CommentsInteractor
+    lateinit var interactorComments: InteractorComments
+
+    @Inject
+    lateinit var extractorDeclarations: ExtractorDeclarations
+
+    @Inject
+    lateinit var extractorStatements: ExtractorStatements
 
     init {
         LEM_COMPONENT.inject(this)
     }
 
     fun parseDef(path: String): List<Insert> {
-        val inserts = when (val location = locatorInteractor.locate(path)) {
-            is GlobalLocation -> parsingManager.parseGlobalMethodDef(location)
-            is MemberLocation -> parsingManager.parseMemberMethodDef(location)
+        val location = interactorLocation.locate(path)
+        val (tokenStream, parser) = lexingManager.provideParser(location.file)
+        parser.reset()
+        val statements = when (location) {
+            is LocationGlobal -> parsingManager.locateGlobalMethodStatements(tokenStream, parser, location)
+            is LocationMember -> parsingManager.locateMemberMethodStatements(tokenStream, parser, location)
             else -> throw UnsupportedOperationException()
         }
+        val inserts = extractorStatements.extractStatements(tokenStream, statements)
         return processInserts(inserts)
     }
 
     private fun parseDecl(path: String): List<Insert> {
-        val inserts = when (val location = locatorInteractor.locate(path)) {
-            is GlobalLocation -> parsingManager.parseGlobalDecl(location)
-            is MemberLocation -> parsingManager.parseMemberDecl(location)
-            is ClassLocation -> parsingManager.parseClassDecl(location)
+        val location = interactorLocation.locate(path)
+        val (tokenStream, parser) = lexingManager.provideParser(location.file)
+        parser.reset()
+        val inserts = when (location) {
+            is LocationGlobal -> {
+                val declaration = parsingManager.locateGlobalMethodDecl(tokenStream, parser, location)
+                extractorDeclarations.extractDeclarations(tokenStream, declaration)
+            }
+            is LocationMember -> {
+                val declaration = parsingManager.locateMemberDecl(tokenStream, parser, location)
+                extractorDeclarations.extractDeclarations(tokenStream, declaration)
+            }
+            is LocationClass -> {
+                val result = ArrayList<Insert>()
+                val declarations = parsingManager.locateClassDecl(tokenStream, parser, location)
+                declarations.forEach { result.addAll(extractorDeclarations.extractDeclarations(tokenStream, it)) }
+                result
+            }
             else -> throw UnsupportedOperationException()
         }
         return processInserts(inserts)
@@ -53,7 +81,7 @@ class ParseInteractor {
                     result.addAll(processCommand(insert.command))
                 }
                 is InsertComment -> {
-                    result.add(commentsInteractor.processComment(insert.comment))
+                    result.add(interactorComments.processComment(insert.comment))
                 }
                 else -> result.add(insert)
             }

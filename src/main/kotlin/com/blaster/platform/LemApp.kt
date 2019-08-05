@@ -1,7 +1,7 @@
 package com.blaster.platform
 
-import com.blaster.business.ParseInteractor
-import com.blaster.business.PrintInteractor
+import com.blaster.business.InteractorParse
+import com.blaster.business.InteractorPrint
 import javax.inject.Inject
 
 /*
@@ -12,13 +12,13 @@ class LemApp {
     This is a first property
      */
     @Inject
-    lateinit var parseInteractor: ParseInteractor
+    lateinit var interactorParse: InteractorParse
 
     /*
     This is a second property
      */
     @Inject
-    lateinit var printInteractor: PrintInteractor
+    lateinit var interactorPrint: InteractorPrint
 
     init {
         LEM_COMPONENT.inject(this)
@@ -32,12 +32,12 @@ class LemApp {
         This method also will be randomly commented
          */
         val path = "com.blaster.platform.LemAppKt::main"
-        val parsed = parseInteractor.parseDef(path)
+        val parsed = interactorParse.parseDef(path)
 
         /*
         And a last thing..
          */
-        printInteractor.printArticle(path, parsed)
+        interactorPrint.printArticle(path, parsed)
     }
 }
 

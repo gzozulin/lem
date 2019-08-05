@@ -1,6 +1,8 @@
 package com.blaster.platform
 
 import com.blaster.business.*
+import com.blaster.data.managers.lexing.LexingManager
+import com.blaster.data.managers.lexing.LexingManagerImpl
 import com.blaster.data.managers.parsing.ParsingManager
 import com.blaster.data.managers.parsing.ParsingManagerImpl
 import com.blaster.data.managers.printing.PrintingManagerImpl
@@ -44,7 +46,7 @@ class LemModule {
 
     @Singleton
     @Provides
-    fun providesLocatorUseCse() = LocatorInteractor()
+    fun lexingManager() : LexingManager = LexingManagerImpl()
 
     @Singleton
     @Provides
@@ -54,15 +56,28 @@ class LemModule {
     @Provides
     fun providesParsingManager() : ParsingManager = ParsingManagerImpl()
 
-    @Singleton
-    @Provides
-    fun providesParseUseCase() = ParseInteractor()
 
     @Singleton
     @Provides
-    fun providesPrintUseCase() = PrintInteractor()
+    fun providesLocatorUseCse() = InteractorLocation()
 
     @Singleton
     @Provides
-    fun providesParseCommentUseCase() = CommentsInteractor()
+    fun providesParseUseCase() = InteractorParse()
+
+    @Singleton
+    @Provides
+    fun providesPrintUseCase() = InteractorPrint()
+
+    @Singleton
+    @Provides
+    fun providesParseCommentUseCase() = InteractorComments()
+
+    @Singleton
+    @Provides
+    fun declarationsExtractor() = ExtractorDeclarations()
+
+    @Singleton
+    @Provides
+    fun statementsExtractor() = ExtractorStatements()
 }

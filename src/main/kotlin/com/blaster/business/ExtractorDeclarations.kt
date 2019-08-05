@@ -1,4 +1,4 @@
-package com.blaster.data.managers.parsing.extractors
+package com.blaster.business
 
 import com.blaster.data.inserts.Insert
 import com.blaster.data.inserts.InsertCode
@@ -9,7 +9,7 @@ import org.antlr.v4.runtime.ParserRuleContext
 import org.antlr.v4.runtime.Token
 import java.lang.UnsupportedOperationException
 
-class DeclarationsExtractor {
+class ExtractorDeclarations {
     fun extractDeclarations(tokenStream: CommonTokenStream, memberDecl: ParserRuleContext): List<Insert> {
         return listOf(findCommentToLeft(tokenStream, memberDecl.start.tokenIndex), collectDeclaration(tokenStream, memberDecl))
     }
@@ -21,7 +21,9 @@ class DeclarationsExtractor {
             else -> throw UnsupportedOperationException("Unknown type of member!")
         }
         var code = ""
-        val codeLines = codeLines(gatherTokens(tokenStream.get(memberDecl.start.tokenIndex, lastToken.tokenIndex - 1)))
+        val codeLines = codeLines(
+            gatherTokens(tokenStream.get(memberDecl.start.tokenIndex, lastToken.tokenIndex))
+        )
         for (codeLine in codeLines) {
             code += codeLine + '\n'
         }

@@ -5,9 +5,9 @@ import com.blaster.data.managers.printing.PrintingManager
 import com.blaster.platform.LEM_COMPONENT
 import javax.inject.Inject
 
-class PrintInteractor {
+class InteractorPrint {
     @Inject
-    lateinit var locatorInteractor: LocatorInteractor
+    lateinit var interactorLocation: InteractorLocation
 
     @Inject
     lateinit var printingManager: PrintingManager
@@ -17,7 +17,7 @@ class PrintInteractor {
     }
 
     fun printArticle(path: String, parsed: List<Insert>) {
-        val located = locatorInteractor.locate(path)
+        val located = interactorLocation.locate(path)
         printingManager.startArticleFor(located.file)
         for (insert in parsed) {
             printingManager.appendArticle(located.file, insert)

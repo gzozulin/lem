@@ -8,7 +8,7 @@ import dagger.Component
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = [ LemModule::class ])
+@Component(modules = [LemModule::class])
 interface LemComponent {
     fun inject(lemApp: LemApp)
     fun inject(interactorParse: InteractorParse)
@@ -17,4 +17,4 @@ interface LemComponent {
     fun inject(interactorLocation: InteractorLocation)
 }
 
-val LEM_COMPONENT : LemComponent = DaggerLemComponent.builder().build()
+val LEM_COMPONENT: LemComponent = DaggerLemComponent.builder().build()

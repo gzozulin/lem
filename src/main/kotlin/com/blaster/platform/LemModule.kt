@@ -5,8 +5,8 @@ import com.blaster.data.managers.lexing.LexingManager
 import com.blaster.data.managers.lexing.LexingManagerImpl
 import com.blaster.data.managers.parsing.ParsingManager
 import com.blaster.data.managers.parsing.ParsingManagerImpl
-import com.blaster.data.managers.printing.PrintingManagerImpl
 import com.blaster.data.managers.printing.PrintingManager
+import com.blaster.data.managers.printing.PrintingManagerImpl
 import dagger.Module
 import dagger.Provides
 import freemarker.template.Configuration
@@ -46,15 +46,15 @@ class LemModule {
 
     @Singleton
     @Provides
-    fun lexingManager() : LexingManager = LexingManagerImpl()
+    fun lexingManager(): LexingManager = LexingManagerImpl()
 
     @Singleton
     @Provides
-    fun providePrintingManager() : PrintingManager = PrintingManagerImpl()
+    fun providePrintingManager(): PrintingManager = PrintingManagerImpl()
 
     @Singleton
     @Provides
-    fun providesParsingManager() : ParsingManager = ParsingManagerImpl()
+    fun providesParsingManager(): ParsingManager = ParsingManagerImpl()
 
 
     @Singleton

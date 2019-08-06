@@ -7,11 +7,13 @@ import com.blaster.data.managers.parsing.KotlinParser
 import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.ParserRuleContext
 import org.antlr.v4.runtime.Token
-import java.lang.UnsupportedOperationException
 
 class ExtractorDeclarations {
     fun extractDeclarations(tokenStream: CommonTokenStream, memberDecl: ParserRuleContext): List<Insert> {
-        return listOf(findCommentToLeft(tokenStream, memberDecl.start.tokenIndex), collectDeclaration(tokenStream, memberDecl))
+        return listOf(
+            findCommentToLeft(tokenStream, memberDecl.start.tokenIndex),
+            collectDeclaration(tokenStream, memberDecl)
+        )
     }
 
     private fun collectDeclaration(tokenStream: CommonTokenStream, memberDecl: ParserRuleContext): InsertCode {

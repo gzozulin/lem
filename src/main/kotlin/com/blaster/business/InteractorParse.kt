@@ -6,7 +6,6 @@ import com.blaster.data.inserts.InsertComment
 import com.blaster.data.managers.lexing.LexingManager
 import com.blaster.data.managers.parsing.ParsingManager
 import com.blaster.platform.LEM_COMPONENT
-import java.lang.UnsupportedOperationException
 import javax.inject.Inject
 
 const val INCLUDE_PREFIX = "// include "
@@ -73,7 +72,7 @@ class InteractorParse {
         return processInserts(inserts)
     }
 
-    private fun processInserts(inserts: List<Insert>) : List<Insert> {
+    private fun processInserts(inserts: List<Insert>): List<Insert> {
         val result = ArrayList<Insert>()
         for (insert in inserts) {
             when (insert) {

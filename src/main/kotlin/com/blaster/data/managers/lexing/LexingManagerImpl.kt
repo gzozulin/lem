@@ -20,7 +20,8 @@ class LexingManagerImpl : LexingManager {
         return result
     }
 
-    private fun createTokenStream(file: File) = CommonTokenStream(KotlinLexer(CharStreams.fromFileName(file.absolutePath)))
+    private fun createTokenStream(file: File) =
+        CommonTokenStream(KotlinLexer(CharStreams.fromFileName(file.absolutePath)))
 
     private fun createParser(tokenStream: CommonTokenStream) = KotlinParser(tokenStream)
 }

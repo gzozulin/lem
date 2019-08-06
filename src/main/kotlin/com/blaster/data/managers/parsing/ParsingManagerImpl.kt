@@ -3,11 +3,10 @@ package com.blaster.data.managers.parsing
 import com.blaster.business.LocationClass
 import com.blaster.business.LocationGlobal
 import com.blaster.business.LocationMember
-
 import com.blaster.data.managers.parsing.visitors.ClassDeclVisitor
 import com.blaster.data.managers.parsing.visitors.GlobalDeclVisitor
-import com.blaster.data.managers.parsing.visitors.StatementsVisitor
 import com.blaster.data.managers.parsing.visitors.MemberDeclVisitor
+import com.blaster.data.managers.parsing.visitors.StatementsVisitor
 import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.ParserRuleContext
 

@@ -5,5 +5,5 @@ import org.antlr.v4.runtime.CommonTokenStream
 import java.io.File
 
 interface LexingManager {
-    fun provideParser(file: File) : Pair<CommonTokenStream, KotlinParser>
+    fun provideParser(file: File): Pair<CommonTokenStream, KotlinParser>
 }

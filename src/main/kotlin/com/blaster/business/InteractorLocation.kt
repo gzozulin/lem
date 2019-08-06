@@ -25,7 +25,7 @@ class InteractorLocation {
     // member in class:     com.blaster.platform.LemApp::render
     // class:               com.blaster.platform.LemApp
 
-    fun locate(path: String) : Location {
+    fun locate(path: String): Location {
         val clazz = extractClass(path)
         val file = locateFile(clazz)
         return if (path.contains("::")) {

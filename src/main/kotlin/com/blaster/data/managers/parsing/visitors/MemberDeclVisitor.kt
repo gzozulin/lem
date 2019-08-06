@@ -4,7 +4,9 @@ import com.blaster.data.managers.parsing.KotlinParser
 import com.blaster.data.managers.parsing.KotlinParserBaseVisitor
 import org.antlr.v4.runtime.ParserRuleContext
 
-class MemberDeclVisitor(private val identifier: String?, private val lambda: (ParserRuleContext) -> Unit) : KotlinParserBaseVisitor<Unit>() {
+class MemberDeclVisitor(private val identifier: String?, private val lambda: (ParserRuleContext) -> Unit) :
+    KotlinParserBaseVisitor<Unit>() {
+
     override fun visitFunctionDeclaration(ctx: KotlinParser.FunctionDeclarationContext?) {
         if (identifier == null) {
             lambda(ctx!!)

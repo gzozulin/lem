@@ -5,8 +5,9 @@ import com.blaster.data.managers.parsing.KotlinParserBaseVisitor
 
 class GlobalDeclVisitor(
     private val identifier: String,
-    private val lambda: (KotlinParser.FunctionDeclarationContext) -> Unit) : KotlinParserBaseVisitor<Unit>()
-{
+    private val lambda: (KotlinParser.FunctionDeclarationContext) -> Unit
+) : KotlinParserBaseVisitor<Unit>() {
+
     // todo: we need listener for that
     /*private val classStack = Stack<String>()
     override fun visitClassDeclaration(ctx: KotlinParser.ClassDeclarationContext?) {

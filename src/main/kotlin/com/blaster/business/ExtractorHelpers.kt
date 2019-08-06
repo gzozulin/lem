@@ -10,7 +10,7 @@ fun gatherTokens(tokens: List<Token>): String {
     return result
 }
 
-private fun trimCommonSpaces(lines : List<String>): ArrayList<String> {
+private fun trimCommonSpaces(lines: List<String>): ArrayList<String> {
     val clean = ArrayList<String>()
     for (line in lines) {
         if (line.isNotBlank()) {
@@ -21,7 +21,7 @@ private fun trimCommonSpaces(lines : List<String>): ArrayList<String> {
     for (line in clean) {
         var index = 0
         while (line[index] == ' ') {
-            index ++
+            index++
         }
         if (index < min) {
             min = index

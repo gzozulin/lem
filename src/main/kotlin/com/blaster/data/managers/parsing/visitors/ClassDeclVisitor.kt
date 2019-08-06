@@ -3,7 +3,7 @@ package com.blaster.data.managers.parsing.visitors
 import com.blaster.data.managers.parsing.KotlinParser
 import com.blaster.data.managers.parsing.KotlinParserBaseVisitor
 
-class ClassDeclLocator(
+class ClassDeclVisitor(
     private val clazz: String,
     private val lambda: (KotlinParser.ClassDeclarationContext) -> Unit) : KotlinParserBaseVisitor<Unit>()
 {

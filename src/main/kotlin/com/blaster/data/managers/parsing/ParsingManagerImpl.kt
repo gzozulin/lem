@@ -4,10 +4,10 @@ import com.blaster.business.LocationClass
 import com.blaster.business.LocationGlobal
 import com.blaster.business.LocationMember
 
-import com.blaster.data.managers.parsing.visitors.ClassDeclLocator
-import com.blaster.data.managers.parsing.visitors.FunctionDeclLocator
-import com.blaster.data.managers.parsing.visitors.FunctionStatementsLocator
-import com.blaster.data.managers.parsing.visitors.MemberDeclLocator
+import com.blaster.data.managers.parsing.visitors.ClassDeclVisitor
+import com.blaster.data.managers.parsing.visitors.GlobalDeclVisitor
+import com.blaster.data.managers.parsing.visitors.StatementsVisitor
+import com.blaster.data.managers.parsing.visitors.MemberDeclVisitor
 import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.ParserRuleContext
 
@@ -15,8 +15,8 @@ class ParsingManagerImpl : ParsingManager {
     override fun locateGlobalMethodStatements(tokenStream: CommonTokenStream, parser: KotlinParser, locationGlobal: LocationGlobal): KotlinParser.StatementsContext {
         // todo: can be triggered by member with same name if comes first
         var result: KotlinParser.StatementsContext? = null
-        FunctionDeclLocator(locationGlobal.identifier) { functionDecl ->
-            FunctionStatementsLocator { statements ->
+        GlobalDeclVisitor(locationGlobal.identifier) { functionDecl ->
+            StatementsVisitor { statements ->
                 result = statements
             }.visit(functionDecl.functionBody())
         }.visitKotlinFile(parser.kotlinFile())
@@ -25,9 +25,9 @@ class ParsingManagerImpl : ParsingManager {
 
     override fun locateMemberMethodStatements(tokenStream: CommonTokenStream, parser: KotlinParser, locationMember: LocationMember): KotlinParser.StatementsContext {
         var result: KotlinParser.StatementsContext? = null
-        ClassDeclLocator(locationMember.clazz) { classDecl ->
-            FunctionDeclLocator(locationMember.identifier) { functionDecl ->
-                FunctionStatementsLocator { statements ->
+        ClassDeclVisitor(locationMember.clazz) { classDecl ->
+            GlobalDeclVisitor(locationMember.identifier) { functionDecl ->
+                StatementsVisitor { statements ->
                     result = statements
                 }.visit(functionDecl.functionBody())
             }.visitClassBody(classDecl.classBody())
@@ -38,7 +38,7 @@ class ParsingManagerImpl : ParsingManager {
     override fun locateGlobalMethodDecl(tokenStream: CommonTokenStream, parser: KotlinParser, locationGlobal: LocationGlobal): KotlinParser.FunctionDeclarationContext {
         // todo: can be triggered by member with same name if comes first
         var result: KotlinParser.FunctionDeclarationContext? = null
-        FunctionDeclLocator(locationGlobal.identifier) { functionDecl ->
+        GlobalDeclVisitor(locationGlobal.identifier) { functionDecl ->
             result = functionDecl
         }.visitKotlinFile(parser.kotlinFile())
         return result!!
@@ -46,8 +46,8 @@ class ParsingManagerImpl : ParsingManager {
 
     override fun locateMemberDecl(tokenStream: CommonTokenStream, parser: KotlinParser, locationMember: LocationMember): ParserRuleContext {
         var result: ParserRuleContext? = null
-        ClassDeclLocator(locationMember.clazz) { classDecl ->
-            MemberDeclLocator(locationMember.identifier) { memberDecl ->
+        ClassDeclVisitor(locationMember.clazz) { classDecl ->
+            MemberDeclVisitor(locationMember.identifier) { memberDecl ->
                 result = memberDecl
             }.visitClassBody(classDecl.classBody())
         }.visitKotlinFile(parser.kotlinFile())
@@ -56,8 +56,8 @@ class ParsingManagerImpl : ParsingManager {
 
     override fun locateClassDecl(tokenStream: CommonTokenStream, parser: KotlinParser, locationClass: LocationClass): List<ParserRuleContext> {
         val result = ArrayList<ParserRuleContext>()
-        ClassDeclLocator(locationClass.clazz) { classDecl ->
-            MemberDeclLocator(null) { memberDecl ->
+        ClassDeclVisitor(locationClass.clazz) { classDecl ->
+            MemberDeclVisitor(null) { memberDecl ->
                 result.add(memberDecl)
             }.visitClassBody(classDecl.classBody())
         }.visitKotlinFile(parser.kotlinFile())

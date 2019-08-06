@@ -45,8 +45,7 @@ class LemApp {
 This is a global declaration
  */
 fun main() {
-    // include decl com.blaster.platform.LemApp
-
+    // include decl com.blaster.platform.LemAppKt::main
     val lemApp = LemApp()
     lemApp.render()
 }

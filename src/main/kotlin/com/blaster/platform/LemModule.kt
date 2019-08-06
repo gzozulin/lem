@@ -68,16 +68,4 @@ class LemModule {
     @Singleton
     @Provides
     fun providesPrintUseCase() = InteractorPrint()
-
-    @Singleton
-    @Provides
-    fun providesParseCommentUseCase() = InteractorComments()
-
-    @Singleton
-    @Provides
-    fun declarationsExtractor() = ExtractorDeclarations()
-
-    @Singleton
-    @Provides
-    fun statementsExtractor() = ExtractorStatements()
 }

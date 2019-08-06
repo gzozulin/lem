@@ -3,6 +3,8 @@
   <component name="CompilerConfiguration">
     <bytecodeTargetLevel>
       <module name="gzozulin.ru.lem.generated" target="1.8" />
+      <module name="gzozulin.ru.lem.main" target="1.8" />
+      <module name="gzozulin.ru.lem.test" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

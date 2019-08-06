@@ -1,27 +1,25 @@
 package com.blaster.business
 
-import com.blaster.data.inserts.Insert
-import com.blaster.data.inserts.InsertCode
-import com.blaster.data.inserts.InsertCommand
-import com.blaster.data.inserts.InsertComment
+import com.blaster.data.inserts.*
 import com.blaster.data.managers.parsing.KotlinParser
+import io.reactivex.Observable
 import org.antlr.v4.runtime.CommonTokenStream
+import org.antlr.v4.runtime.Token
+import kotlin.collections.ArrayList
 
-class ExtractorStatements {
+class ExtractorStatements(private val tokens: List<Token>) {
     private val result = ArrayList<Insert>()
 
     private var isComment = false
     private val currentCodeLines = ArrayList<String>()
     private val currentCommentLines = ArrayList<String>()
 
-    fun extractStatements(tokenStream: CommonTokenStream, ctx: KotlinParser.StatementsContext?): List<Insert> {
-        val statements = gatherTokens(
-            tokenStream.getTokens(
-                ctx!!.start.tokenIndex + 1,
-                ctx.stop.tokenIndex - 1
-            )
-        )
-        val lines = codeLines(statements)
+    fun extractStatements(): List<Insert> {
+        val lines = Observable.just(tokens)
+            .map { tokensToText(it) }
+            .map { textToLines(it) }
+            .map { trimCommonSpaces(it) }
+            .blockingFirst()
         for (line in lines) {
             val trimmed = line.trim()
             when {
@@ -62,24 +60,14 @@ class ExtractorStatements {
 
     private fun flushCurrentCode() {
         if (currentCodeLines.isNotEmpty()) {
-            var code = ""
-            for (codeLine in currentCodeLines) {
-                code += codeLine + "\n"
-            }
-            code = code.dropLast(1)
-            result.add(InsertCode(code))
+            result.add(InsertCode(linesToText(currentCodeLines)))
             currentCodeLines.clear()
         }
     }
 
     private fun flushCurrentComment() {
         if (currentCommentLines.isNotEmpty()) {
-            var comment = ""
-            for (commentLine in currentCommentLines) {
-                comment += commentLine + "\n"
-            }
-            comment = comment.dropLast(1)
-            result.add(InsertComment(comment))
+            result.add(commentToText(linesToText(currentCommentLines)))
             currentCommentLines.clear()
         }
     }

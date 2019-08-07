@@ -36,8 +36,7 @@ class InteractorParse {
             is LocationMember -> parsingManager.locateMemberMethodStatements(tokenStream, parser, location)
             else -> throw UnsupportedOperationException()
         }
-        val tokens = tokenStream.getTokens(statements.start.tokenIndex + 1, statements.stop.tokenIndex - 1)
-        val inserts = ExtractorStatements(tokens).extractStatements()
+        val inserts = ExtractorStatements().extractStatements(tokenStream, statements)
         return processCommands(inserts)
     }
 

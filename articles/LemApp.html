@@ -1,53 +1,63 @@
-
 <html>
+
+    <style>
+        .text {
+            white-space: pre-wrap;
+        }
+        .code {
+            white-space: pre-wrap;
+            background: #f4f4f4;
+            border: 1px solid #ddd;
+            border-left: 3px solid #f36d33;
+            color: #666;
+            page-break-inside: avoid;
+            font-family: monospace;
+            font-size: 15px;
+            line-height: 1.6;
+            margin-bottom: 1.6em;
+            max-width: 100%;
+            overflow: auto;
+            padding: 1em 1.5em;
+            display: block;
+            word-wrap: break-word;
+        }
+        .child {
+
+        }
+    </style>
     <head>
         <title>Welcome!</title>
     </head>
-    <body> 
-    <p style="white-space: pre-wrap;">What about this type of comment?</p>
-    <p style="white-space: pre-wrap;background: #f4f4f4;
-                                        border: 1px solid #ddd;
-                                        border-left: 3px solid #f36d33;
-                                        color: #666;
-                                        page-break-inside: avoid;
-                                        font-family: monospace;
-                                        font-size: 15px;
-                                        line-height: 1.6;
-                                        margin-bottom: 1.6em;
-                                        max-width: 100%;
-                                        overflow: auto;
-                                        padding: 1em 1.5em;
-                                        display: block;
-                                        word-wrap: break-word;">val lemApp = LemApp()
+    <body>
+        &lt;div class=&quot;text&quot;&gt;What about this type of comment?&lt;/div&gt;
+&lt;div class=&quot;code&quot;&gt;val lemApp = LemApp()
 lemApp.render()
 val runnable = Runnable {
     val runnable = Runnable {
         val runnable = Runnable {
             val runnable = Runnable {
-                val runnable = Runnable {</p>
-    <p style="white-space: pre-wrap;">More complex stuff goes here</p>
-    <p style="white-space: pre-wrap;">And even more complex!!</p>
-    <p style="white-space: pre-wrap;background: #f4f4f4;
-                                        border: 1px solid #ddd;
-                                        border-left: 3px solid #f36d33;
-                                        color: #666;
-                                        page-break-inside: avoid;
-                                        font-family: monospace;
-                                        font-size: 15px;
-                                        line-height: 1.6;
-                                        margin-bottom: 1.6em;
-                                        max-width: 100%;
-                                        overflow: auto;
-                                        padding: 1em 1.5em;
-                                        display: block;
-                                        word-wrap: break-word;">                }
+                val runnable = Runnable {&lt;/div&gt;
+&lt;div class=&quot;text&quot;&gt;More complex stuff goes here&lt;/div&gt;
+&lt;div class=&quot;text&quot;&gt;And even more complex!!&lt;/div&gt;
+&lt;div class=&quot;code&quot;&gt;                }
             }
         }
     }
-}</p>
-
-
-
-
+}&lt;/div&gt;
+&lt;div class=&quot;child&quot;&gt;&amp;lt;div class=&amp;quot;code&amp;quot;&amp;gt;@Inject
+lateinit var interactorParse: InteractorParse&amp;lt;/div&amp;gt;
+&amp;lt;div class=&amp;quot;text&amp;quot;&amp;gt;Sec prop&amp;lt;/div&amp;gt;
+&amp;lt;div class=&amp;quot;code&amp;quot;&amp;gt;@Inject
+lateinit var interactorPrint: InteractorPrint&amp;lt;/div&amp;gt;
+&amp;lt;div class=&amp;quot;text&amp;quot;&amp;gt;Main foo&amp;lt;/div&amp;gt;
+&amp;lt;div class=&amp;quot;code&amp;quot;&amp;gt;fun render() &amp;lt;/div&amp;gt;&lt;/div&gt;
+&lt;div class=&quot;child&quot;&gt;&amp;lt;div class=&amp;quot;text&amp;quot;&amp;gt;Main foo is started like this&amp;lt;/div&amp;gt;
+&amp;lt;div class=&amp;quot;text&amp;quot;&amp;gt;Then like this&amp;lt;/div&amp;gt;
+&amp;lt;div class=&amp;quot;text&amp;quot;&amp;gt;And finally like this&amp;lt;/div&amp;gt;
+&amp;lt;div class=&amp;quot;code&amp;quot;&amp;gt;val path = &amp;amp;quot;com.blaster.platform.LemAppKt::main&amp;amp;quot;
+val parsed = interactorParse.parseDef(path)
+interactorPrint.printArticle(path,parsed)&amp;lt;/div&amp;gt;&lt;/div&gt;
+&lt;div class=&quot;child&quot;&gt;&amp;lt;div class=&amp;quot;text&amp;quot;&amp;gt;The super main function&amp;lt;/div&amp;gt;
+&amp;lt;div class=&amp;quot;code&amp;quot;&amp;gt;fun main() &amp;lt;/div&amp;gt;&lt;/div&gt;
     </body>
 </html>

@@ -1,3 +1,3 @@
 package com.blaster.data.inserts
 
-class InsertCode(val code: String) : Insert()
+class InsertCode(val code: String) : Insert

@@ -1,28 +1,13 @@
 package com.blaster.data.managers.printing
 
-import com.blaster.data.inserts.Insert
-import com.blaster.data.inserts.InsertCode
-import com.blaster.data.inserts.InsertText
 import com.blaster.platform.LEM_COMPONENT
 import freemarker.template.Configuration
 import freemarker.template.Template
 import java.io.File
 import java.io.FileOutputStream
+import java.io.StringWriter
 import javax.inject.Inject
 import javax.inject.Named
-
-const val HTML_START = """
-<html>
-    <head>
-        <title>Welcome!</title>
-    </head>
-    <body> 
-"""
-
-const val HTML_END = """
-    </body>
-</html>
-"""
 
 class PrintingManagerImpl : PrintingManager {
     @Inject
@@ -36,38 +21,31 @@ class PrintingManagerImpl : PrintingManager {
         LEM_COMPONENT.inject(this)
     }
 
-    private val textTemplate: Template
-    private val codeTemplate: Template
-
-    init {
-        textTemplate = configuration.getTemplate("template_insert_text.ftlh")
-        codeTemplate = configuration.getTemplate("template_insert_code.ftlh")
+    override fun renderTemplate(id: String, dateModel: Any): String {
+        val template = getTemplate(id)
+        val sw = StringWriter()
+        template.process(dateModel, sw)
+        return sw.toString()
     }
 
-    override fun startArticleFor(root: File) {
-        val articleFile = articleFile(root)
+    override fun printArticle(file: File, article: String) {
+        val articleFile = articleFile(file)
         if (articleFile.exists()) {
             articleFile.delete()
         }
         articleWriter(articleFile).use {
-            it.write(HTML_START)
+            it.write(article)
         }
     }
 
-    override fun appendArticle(root: File, insert: Insert) {
-        articleWriter(articleFile(root)).use {
-            when (insert) {
-                is InsertText -> textTemplate.process(hashMapOf("text" to insert.text), it)
-                is InsertCode -> codeTemplate.process(hashMapOf("code" to insert.code), it)
-            }
-            it.write("\n")
+    private val templateCache = HashMap<String, Template>()
+    private fun getTemplate(id: String): Template {
+        var template = templateCache[id]
+        if (template == null) {
+            template = configuration.getTemplate(id)
+            templateCache[id] = template
         }
-    }
-
-    override fun finishArticleFor(root: File) {
-        articleWriter(articleFile(root)).use {
-            it.write(HTML_END)
-        }
+        return template!!
     }
 
     private fun articleFile(root: File) = File(articlesDir.absoluteFile, root.nameWithoutExtension + ".html")

@@ -1,3 +1,3 @@
 package com.blaster.data.inserts
 
-class InsertText(val text: String) : Insert
+class InsertText(val text: String) : Insert()

@@ -5,9 +5,7 @@ import com.blaster.data.inserts.InsertCommand
 import com.blaster.data.managers.lexing.LexingManager
 import com.blaster.data.managers.parsing.ParsingManager
 import com.blaster.platform.LEM_COMPONENT
-import org.antlr.v4.runtime.ParserRuleContext
 import javax.inject.Inject
-import kotlin.collections.ArrayList
 
 const val INCLUDE_PREFIX = "// include "
 const val DEF_PREFIX = "def "
@@ -58,15 +56,12 @@ class InteractorParse {
     }
 
     private fun processCommands(inserts: List<Insert>): List<Insert> {
-        val result = ArrayList<Insert>()
         for (insert in inserts) {
             if (insert is InsertCommand) {
-                result.addAll(processCommand(insert.command))
-            } else {
-                result.add(insert)
+                insert.children.addAll(processCommand(insert.command))
             }
         }
-        return result
+        return inserts
     }
 
     private fun processCommand(command: String): List<Insert> {

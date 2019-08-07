@@ -40,8 +40,8 @@ class PrintingManagerImpl : PrintingManager {
     private val codeTemplate: Template
 
     init {
-        textTemplate = configuration.getTemplate("insert_text.ftlh")
-        codeTemplate = configuration.getTemplate("insert_code.ftlh")
+        textTemplate = configuration.getTemplate("template_insert_text.ftlh")
+        codeTemplate = configuration.getTemplate("template_insert_code.ftlh")
     }
 
     override fun startArticleFor(root: File) {

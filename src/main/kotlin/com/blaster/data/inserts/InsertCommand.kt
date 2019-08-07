@@ -1,3 +1,3 @@
 package com.blaster.data.inserts
 
-class InsertCommand(val command: String) : Insert
+class InsertCommand(val command: String) : Insert()

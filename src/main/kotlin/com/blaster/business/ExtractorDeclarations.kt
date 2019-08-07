@@ -9,7 +9,7 @@ import org.antlr.v4.runtime.Token
 class ExtractorDeclarations {
     fun extractDeclaration(tokenStream: CommonTokenStream, memberDecl: ParserRuleContext): List<Insert> {
         val lastToken = when (memberDecl) {
-            is KotlinParser.FunctionDeclarationContext -> memberDecl.functionBody().start
+            is KotlinParser.FunctionDeclarationContext -> tokenStream.get(memberDecl.functionBody().start.tokenIndex - 1)
             is KotlinParser.PropertyDeclarationContext -> memberDecl.stop
             else -> throw UnsupportedOperationException("Unknown type of member!")
         }
@@ -28,15 +28,11 @@ class ExtractorDeclarations {
             val token = tokenStream.get(current)
             val text = token.text
             // not hidden, not blank, not new line
-            if (token.channel != 1 && !text.isBlank() && !isNewLine(text)) {
+            if (token.channel != 1 && !text.isBlank()) {
                 return token
             }
             current--
         }
         return null
-    }
-
-    private fun isNewLine(text: String): Boolean {
-        return text == "\n" || text == "\r\n"
     }
 }

@@ -39,6 +39,9 @@ class LemApp {
     }
 }
 
+/*
+The super main function
+ */
 fun main() {
     /*
     What about this type of comment?
@@ -63,4 +66,5 @@ fun main() {
 
     // include decl com.blaster.platform.LemApp
     // include def com.blaster.platform.LemApp::render
+    // include decl com.blaster.platform.LemAppKt::main
 }

@@ -1,1 +1,1 @@
-<div class="child">${children}</div>
+<div class="child">${children?no_esc}</div>

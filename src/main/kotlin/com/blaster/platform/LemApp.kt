@@ -67,4 +67,12 @@ fun main() {
     // include decl com.blaster.platform.LemApp
     // include def com.blaster.platform.LemApp::render
     // include decl com.blaster.platform.LemAppKt::main
+
+    /*
+    You can use if, elseif and else directives to conditionally skip a section of the template.
+    The condition-s must evaluate to a boolean value, or else an error will abort template processing.
+    The elseif-s and else-s must occur inside if (that is, between the if start-tag and end-tag).
+    The if can contain any number of elseif-s (including 0) and at the end optionally one else.
+    Examples: if with 0 elseif and no else:
+     */
 }

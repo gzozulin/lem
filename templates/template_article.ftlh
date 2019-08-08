@@ -22,13 +22,13 @@
             word-wrap: break-word;
         }
         .child {
-
+            margin-left: 15%;
         }
     </style>
     <head>
         <title>Welcome!</title>
     </head>
     <body>
-        ${article}
+        ${article?no_esc}
     </body>
 </html>

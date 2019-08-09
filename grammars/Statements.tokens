@@ -1,0 +1,7 @@
+SL_START=1
+ML_START=2
+ML_END=3
+ANY=4
+'//'=1
+'/*'=2
+'*/'=3

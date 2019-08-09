@@ -62,4 +62,22 @@ class ParsingManagerImpl : ParsingManager {
         }.visitKotlinFile(parser.kotlinFile())
         return result
     }
+
+    override fun locateStatements(tokenStream: CommonTokenStream, parser: StatementsParser): List<ParserRuleContext> {
+        val result = ArrayList<ParserRuleContext>()
+        object : StatementsBaseVisitor<Unit>() {
+            override fun visitSingleLineComment(ctx: StatementsParser.SingleLineCommentContext?) {
+                result.add(ctx!!)
+            }
+
+            override fun visitMultiLineComment(ctx: StatementsParser.MultiLineCommentContext?) {
+                result.add(ctx!!)
+            }
+
+            override fun visitCode(ctx: StatementsParser.CodeContext?) {
+                result.add(ctx!!)
+            }
+        }.visitStatements(parser.statements())
+        return result
+    }
 }

@@ -1,8 +1,6 @@
 package com.blaster.platform
 
-import com.blaster.business.InteractorLocation
-import com.blaster.business.InteractorParse
-import com.blaster.business.InteractorPrint
+import com.blaster.business.*
 import com.blaster.data.managers.printing.PrintingManagerImpl
 import dagger.Component
 import javax.inject.Singleton
@@ -15,6 +13,9 @@ interface LemComponent {
     fun inject(interactorPrint: InteractorPrint)
     fun inject(printingManagerImpl: PrintingManagerImpl)
     fun inject(interactorLocation: InteractorLocation)
+    fun inject(extractorTokens: ExtractorTokens)
+    fun inject(extractorStatements: ExtractorStatements)
+    fun inject(extractorDeclarations: ExtractorDeclarations)
 }
 
 val LEM_COMPONENT: LemComponent = DaggerLemComponent.builder().build()

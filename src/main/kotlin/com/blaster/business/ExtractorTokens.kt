@@ -4,82 +4,76 @@ import com.blaster.data.inserts.Insert
 import com.blaster.data.inserts.InsertCode
 import com.blaster.data.inserts.InsertCommand
 import com.blaster.data.inserts.InsertText
-import io.reactivex.Observable
+import com.blaster.data.managers.lexing.LexingManager
+import com.blaster.data.managers.parsing.ParsingManager
+import com.blaster.data.managers.parsing.StatementsParser
+import com.blaster.platform.LEM_COMPONENT
 import org.antlr.v4.runtime.Token
+import java.lang.IllegalStateException
+import javax.inject.Inject
 
-class ExtractorTokens(private val tokens: List<Token>) {
-    private val result = ArrayList<Insert>()
-
-    private val currentCodeLines = ArrayList<String>()
-    private val currentCommentLines = ArrayList<String>()
-
+class ExtractorTokens {
     private val lineRegex = "[\r]?[\n]".toRegex()
 
-    private var isComment = false
+    @Inject
+    lateinit var lexingManager: LexingManager
 
-    fun extractStatements(): List<Insert> {
-        val lines = Observable.just(tokens)
-            .map { tokensToText(it) }
-            .map { textToLines(it) }
-            .map { trimCommonSpaces(it) }
-            .blockingFirst()
-        Observable.fromIterable(lines)
-            .doOnNext { enforceProperComments(it) }
-            .subscribe()
-        for (line in lines) {
-            val trimmed = line.trim()
-            when {
-                trimmed.startsWith("//") -> {
-                    flushCurrentCode()
-                    if (trimmed.startsWith("// include")) {
-                        result.add(InsertCommand(trimmed))
-                    } else {
-                        currentCommentLines.add(trimmed.removePrefix("// "))
-                        flushCurrentComment()
+    @Inject
+    lateinit var parsingManager: ParsingManager
+
+    init {
+        LEM_COMPONENT.inject(this)
+    }
+
+    fun extractStatements(tokens: List<Token>): List<Insert> {
+        val text = tokensToText(tokens)
+        val (tokenStream, parser) = lexingManager.provideParserForStatememts(text)
+        val statements = parsingManager.locateStatements(tokenStream, parser)
+        val result = ArrayList<Insert>()
+        for (statement in statements) {
+            when (statement) {
+                is StatementsParser.MultiLineCommentContext -> {
+                    val cleaned = cleanup(statement.meat().text)
+                    if (cleaned != null) {
+                        result.add(InsertText(cleaned))
                     }
                 }
-                trimmed.startsWith("/*") -> {
-                    check(!isComment) { "Comment is already started!" }
-                    flushCurrentCode()
-                    isComment = true
-                }
-                trimmed.startsWith("*/") -> {
-                    check(isComment) { "Comment is not started yet!" }
-                    flushCurrentComment()
-                    isComment = false
-                }
-                else -> {
-                    if (isComment) {
-                        currentCommentLines.add(trimmed)
-                    } else {
-                        currentCodeLines.add(line)
+                is StatementsParser.SingleLineCommentContext -> {
+                    val cleaned = cleanup(statement.meat().text)
+                    if (cleaned != null) {
+                        if (cleaned.startsWith("include")) {
+                            result.add(InsertCommand(cleaned))
+                        } else {
+                            result.add(InsertText(cleaned))
+                        }
                     }
                 }
+                is StatementsParser.CodeContext -> {
+                    val cleaned = cleanup(statement.meat().text)
+                    if (cleaned != null) {
+                        result.add(InsertCode(cleaned))
+                    }
+                }
+                else -> throw IllegalStateException("UnknownStatement!")
             }
         }
-        flushCurrentCode()
-        flushCurrentComment()
         return result
     }
 
-    private fun enforceProperComments(line: String) {
-        if (line.contains("/*") || line.contains("*/")) {
-            check(line.trim() == "/*" || line.trim() == "*/") { "We do not support comments in between of the lines!" }
+    private fun cleanup(text: String): String? {
+        val lines =  textToLines(text)
+        if (lines.isEmpty()) {
+            return null
         }
+        val trimmed = trimCommonSpaces(lines)
+        if (trimmed.isEmpty()) {
+            return null
+        }
+        return linesToText(trimmed)
     }
 
-    private fun flushCurrentCode() {
-        if (currentCodeLines.isNotEmpty()) {
-            result.add(InsertCode(linesToText(currentCodeLines)))
-            currentCodeLines.clear()
-        }
-    }
-
-    private fun flushCurrentComment() {
-        if (currentCommentLines.isNotEmpty()) {
-            result.add(InsertText(linesToText(currentCommentLines)))
-            currentCommentLines.clear()
-        }
+    private fun textToLines(string: String): List<String> {
+        return string.split(lineRegex)
     }
 
     private fun tokensToText(tokens: List<Token>): String {
@@ -88,10 +82,6 @@ class ExtractorTokens(private val tokens: List<Token>) {
             result += token.text
         }
         return result
-    }
-
-    private fun textToLines(string: String): List<String> {
-        return string.split(lineRegex)
     }
 
     private fun linesToText(lines: List<String>): String {

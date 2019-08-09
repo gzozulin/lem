@@ -7,7 +7,7 @@ import com.blaster.data.managers.parsing.ParsingManager
 import com.blaster.platform.LEM_COMPONENT
 import javax.inject.Inject
 
-const val INCLUDE_PREFIX = "// include "
+const val INCLUDE_PREFIX = "include "
 const val DEF_PREFIX = "def "
 const val DECL_PREFIX = "decl "
 
@@ -21,26 +21,32 @@ class InteractorParse {
     @Inject
     lateinit var parsingManager: ParsingManager
 
+    @Inject
+    lateinit var extractorStatements: ExtractorStatements
+
+    @Inject
+    lateinit var extractorDeclarations: ExtractorDeclarations
+
     init {
         LEM_COMPONENT.inject(this)
     }
 
     fun parseDef(path: String): List<Insert> {
         val location = interactorLocation.locate(path)
-        val (tokenStream, parser) = lexingManager.provideParser(location.file)
+        val (tokenStream, parser) = lexingManager.provideParserForKotlin(location.file)
         parser.reset()
         val statements = when (location) {
             is LocationGlobal -> parsingManager.locateGlobalMethodStatements(tokenStream, parser, location)
             is LocationMember -> parsingManager.locateMemberMethodStatements(tokenStream, parser, location)
             else -> throw UnsupportedOperationException()
         }
-        val inserts = ExtractorStatements().extractStatements(tokenStream, statements)
+        val inserts = extractorStatements.extractStatements(tokenStream, statements)
         return processCommands(inserts)
     }
 
     private fun parseDecl(path: String): List<Insert> {
         val location = interactorLocation.locate(path)
-        val (tokenStream, parser) = lexingManager.provideParser(location.file)
+        val (tokenStream, parser) = lexingManager.provideParserForKotlin(location.file)
         parser.reset()
         val declarations = when (location) {
             is LocationGlobal -> listOf(parsingManager.locateGlobalMethodDecl(tokenStream, parser, location))
@@ -50,7 +56,7 @@ class InteractorParse {
         }
         val inserts = ArrayList<Insert>()
         for (declaration in declarations) {
-            inserts.addAll(ExtractorDeclarations().extractDeclaration(tokenStream, declaration))
+            inserts.addAll(extractorDeclarations.extractDeclaration(tokenStream, declaration))
         }
         return processCommands(inserts)
     }

@@ -2,11 +2,20 @@ package com.blaster.business
 
 import com.blaster.data.inserts.Insert
 import com.blaster.data.managers.parsing.KotlinParser
+import com.blaster.platform.LEM_COMPONENT
 import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.ParserRuleContext
 import org.antlr.v4.runtime.Token
+import javax.inject.Inject
 
 class ExtractorDeclarations {
+    @Inject
+    lateinit var extractorTokens: ExtractorTokens
+
+    init {
+        LEM_COMPONENT.inject(this)
+    }
+
     fun extractDeclaration(tokenStream: CommonTokenStream, memberDecl: ParserRuleContext): List<Insert> {
         val lastToken = when (memberDecl) {
             is KotlinParser.FunctionDeclarationContext -> tokenStream.get(memberDecl.functionBody().start.tokenIndex - 1)
@@ -19,7 +28,7 @@ class ExtractorDeclarations {
         } else {
             tokenStream.get(memberDecl.start.tokenIndex, lastToken.tokenIndex)
         }
-        return ExtractorTokens(tokens).extractStatements()
+        return extractorTokens.extractStatements(tokens)
     }
 
     private fun findPrevDeclaration(tokenStream: CommonTokenStream, index: Int): Token? {

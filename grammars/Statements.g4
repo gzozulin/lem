@@ -1,18 +1,19 @@
 grammar Statements;
 
 @header {
-    package com.blaster.data.managers.parsing;
+package com.blaster.data.managers.parsing;
 }
 
 SL_START: '//';
+SL_END:   '[\r]?[\n]';
 ML_START: '/*';
 ML_END:   '*/';
 
 ANY: .;
 
-statements: (code | singleLineComment | multiLineComment)*;
+statements: (singleLineComment | multiLineComment | code)*;
 
-singleLineComment: SL_START meat;
+singleLineComment: SL_START meat SL_END;
 
 multiLineComment: ML_START meat ML_END;
 

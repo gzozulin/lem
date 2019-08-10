@@ -26,14 +26,14 @@ public class StatementsBaseVisitor<T> extends AbstractParseTreeVisitor<T> implem
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitSingleLineComment(StatementsParser.SingleLineCommentContext ctx) { return visitChildren(ctx); }
+	@Override public T visitDelimitedComment(StatementsParser.DelimitedCommentContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitMultiLineComment(StatementsParser.MultiLineCommentContext ctx) { return visitChildren(ctx); }
+	@Override public T visitLineComment(StatementsParser.LineCommentContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -41,11 +41,4 @@ public class StatementsBaseVisitor<T> extends AbstractParseTreeVisitor<T> implem
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public T visitCode(StatementsParser.CodeContext ctx) { return visitChildren(ctx); }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
-	@Override public T visitMeat(StatementsParser.MeatContext ctx) { return visitChildren(ctx); }
 }

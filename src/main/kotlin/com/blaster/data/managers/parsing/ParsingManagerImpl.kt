@@ -66,11 +66,11 @@ class ParsingManagerImpl : ParsingManager {
     override fun locateStatements(tokenStream: CommonTokenStream, parser: StatementsParser): List<ParserRuleContext> {
         val result = ArrayList<ParserRuleContext>()
         object : StatementsBaseVisitor<Unit>() {
-            override fun visitSingleLineComment(ctx: StatementsParser.SingleLineCommentContext?) {
+            override fun visitLineComment(ctx: StatementsParser.LineCommentContext?) {
                 result.add(ctx!!)
             }
 
-            override fun visitMultiLineComment(ctx: StatementsParser.MultiLineCommentContext?) {
+            override fun visitDelimitedComment(ctx: StatementsParser.DelimitedCommentContext?) {
                 result.add(ctx!!)
             }
 

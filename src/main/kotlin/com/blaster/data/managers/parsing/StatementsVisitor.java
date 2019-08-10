@@ -19,27 +19,21 @@ public interface StatementsVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitStatements(StatementsParser.StatementsContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link StatementsParser#singleLineComment}.
+	 * Visit a parse tree produced by {@link StatementsParser#delimitedComment}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitSingleLineComment(StatementsParser.SingleLineCommentContext ctx);
+	T visitDelimitedComment(StatementsParser.DelimitedCommentContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link StatementsParser#multiLineComment}.
+	 * Visit a parse tree produced by {@link StatementsParser#lineComment}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitMultiLineComment(StatementsParser.MultiLineCommentContext ctx);
+	T visitLineComment(StatementsParser.LineCommentContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link StatementsParser#code}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitCode(StatementsParser.CodeContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link StatementsParser#meat}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitMeat(StatementsParser.MeatContext ctx);
 }

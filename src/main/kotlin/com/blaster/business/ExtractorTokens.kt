@@ -32,14 +32,14 @@ class ExtractorTokens {
         val result = ArrayList<Insert>()
         for (statement in statements) {
             when (statement) {
-                is StatementsParser.MultiLineCommentContext -> {
-                    val cleaned = cleanup(statement.meat().text)
+                is StatementsParser.DelimitedCommentContext -> {
+                    val cleaned = cleanup(statement.text)
                     if (cleaned != null) {
                         result.add(InsertText(cleaned))
                     }
                 }
-                is StatementsParser.SingleLineCommentContext -> {
-                    val cleaned = cleanup(statement.meat().text)
+                is StatementsParser.LineCommentContext -> {
+                    val cleaned = cleanup(statement.text)
                     if (cleaned != null) {
                         if (cleaned.startsWith("include")) {
                             result.add(InsertCommand(cleaned))
@@ -49,7 +49,7 @@ class ExtractorTokens {
                     }
                 }
                 is StatementsParser.CodeContext -> {
-                    val cleaned = cleanup(statement.meat().text)
+                    val cleaned = cleanup(statement.text)
                     if (cleaned != null) {
                         result.add(InsertCode(cleaned))
                     }
@@ -61,7 +61,11 @@ class ExtractorTokens {
     }
 
     private fun cleanup(text: String): String? {
-        val lines =  textToLines(text)
+        val noComments = text
+            .replace("/*", "")
+            .replace("*/", "")
+            .replace("//", "")
+        val lines =  textToLines(noComments)
         if (lines.isEmpty()) {
             return null
         }

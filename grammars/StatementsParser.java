@@ -19,26 +19,25 @@ public class StatementsParser extends Parser {
 	protected static final PredictionContextCache _sharedContextCache =
 		new PredictionContextCache();
 	public static final int
-		SL_START=1, SL_END=2, ML_START=3, ML_END=4, ANY=5;
+		DelimitedComment=1, LineComment=2, Any=3;
 	public static final int
-		RULE_statements = 0, RULE_singleLineComment = 1, RULE_multiLineComment = 2, 
-		RULE_code = 3, RULE_meat = 4;
+		RULE_statements = 0, RULE_delimitedComment = 1, RULE_lineComment = 2, 
+		RULE_code = 3;
 	private static String[] makeRuleNames() {
 		return new String[] {
-			"statements", "singleLineComment", "multiLineComment", "code", "meat"
+			"statements", "delimitedComment", "lineComment", "code"
 		};
 	}
 	public static final String[] ruleNames = makeRuleNames();
 
 	private static String[] makeLiteralNames() {
 		return new String[] {
-			null, "'//'", "'[\r]?[\n]'", "'/*'", "'*/'"
 		};
 	}
 	private static final String[] _LITERAL_NAMES = makeLiteralNames();
 	private static String[] makeSymbolicNames() {
 		return new String[] {
-			null, "SL_START", "SL_END", "ML_START", "ML_END", "ANY"
+			null, "DelimitedComment", "LineComment", "Any"
 		};
 	}
 	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
@@ -93,17 +92,17 @@ public class StatementsParser extends Parser {
 	}
 
 	public static class StatementsContext extends ParserRuleContext {
-		public List<SingleLineCommentContext> singleLineComment() {
-			return getRuleContexts(SingleLineCommentContext.class);
+		public List<DelimitedCommentContext> delimitedComment() {
+			return getRuleContexts(DelimitedCommentContext.class);
 		}
-		public SingleLineCommentContext singleLineComment(int i) {
-			return getRuleContext(SingleLineCommentContext.class,i);
+		public DelimitedCommentContext delimitedComment(int i) {
+			return getRuleContext(DelimitedCommentContext.class,i);
 		}
-		public List<MultiLineCommentContext> multiLineComment() {
-			return getRuleContexts(MultiLineCommentContext.class);
+		public List<LineCommentContext> lineComment() {
+			return getRuleContexts(LineCommentContext.class);
 		}
-		public MultiLineCommentContext multiLineComment(int i) {
-			return getRuleContext(MultiLineCommentContext.class,i);
+		public LineCommentContext lineComment(int i) {
+			return getRuleContext(LineCommentContext.class,i);
 		}
 		public List<CodeContext> code() {
 			return getRuleContexts(CodeContext.class);
@@ -137,29 +136,29 @@ public class StatementsParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(15);
+			setState(13);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << SL_START) | (1L << ML_START) | (1L << ANY))) != 0)) {
+			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << DelimitedComment) | (1L << LineComment) | (1L << Any))) != 0)) {
 				{
-				setState(13);
+				setState(11);
 				_errHandler.sync(this);
 				switch (_input.LA(1)) {
-				case SL_START:
+				case DelimitedComment:
+					{
+					setState(8);
+					delimitedComment();
+					}
+					break;
+				case LineComment:
+					{
+					setState(9);
+					lineComment();
+					}
+					break;
+				case Any:
 					{
 					setState(10);
-					singleLineComment();
-					}
-					break;
-				case ML_START:
-					{
-					setState(11);
-					multiLineComment();
-					}
-					break;
-				case ANY:
-					{
-					setState(12);
 					code();
 					}
 					break;
@@ -167,7 +166,7 @@ public class StatementsParser extends Parser {
 					throw new NoViableAltException(this);
 				}
 				}
-				setState(17);
+				setState(15);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
@@ -184,43 +183,35 @@ public class StatementsParser extends Parser {
 		return _localctx;
 	}
 
-	public static class SingleLineCommentContext extends ParserRuleContext {
-		public TerminalNode SL_START() { return getToken(StatementsParser.SL_START, 0); }
-		public MeatContext meat() {
-			return getRuleContext(MeatContext.class,0);
-		}
-		public TerminalNode SL_END() { return getToken(StatementsParser.SL_END, 0); }
-		public SingleLineCommentContext(ParserRuleContext parent, int invokingState) {
+	public static class DelimitedCommentContext extends ParserRuleContext {
+		public TerminalNode DelimitedComment() { return getToken(StatementsParser.DelimitedComment, 0); }
+		public DelimitedCommentContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_singleLineComment; }
+		@Override public int getRuleIndex() { return RULE_delimitedComment; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof StatementsListener ) ((StatementsListener)listener).enterSingleLineComment(this);
+			if ( listener instanceof StatementsListener ) ((StatementsListener)listener).enterDelimitedComment(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof StatementsListener ) ((StatementsListener)listener).exitSingleLineComment(this);
+			if ( listener instanceof StatementsListener ) ((StatementsListener)listener).exitDelimitedComment(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof StatementsVisitor ) return ((StatementsVisitor<? extends T>)visitor).visitSingleLineComment(this);
+			if ( visitor instanceof StatementsVisitor ) return ((StatementsVisitor<? extends T>)visitor).visitDelimitedComment(this);
 			else return visitor.visitChildren(this);
 		}
 	}
 
-	public final SingleLineCommentContext singleLineComment() throws RecognitionException {
-		SingleLineCommentContext _localctx = new SingleLineCommentContext(_ctx, getState());
-		enterRule(_localctx, 2, RULE_singleLineComment);
+	public final DelimitedCommentContext delimitedComment() throws RecognitionException {
+		DelimitedCommentContext _localctx = new DelimitedCommentContext(_ctx, getState());
+		enterRule(_localctx, 2, RULE_delimitedComment);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(18);
-			match(SL_START);
-			setState(19);
-			meat();
-			setState(20);
-			match(SL_END);
+			setState(16);
+			match(DelimitedComment);
 			}
 		}
 		catch (RecognitionException re) {
@@ -234,43 +225,35 @@ public class StatementsParser extends Parser {
 		return _localctx;
 	}
 
-	public static class MultiLineCommentContext extends ParserRuleContext {
-		public TerminalNode ML_START() { return getToken(StatementsParser.ML_START, 0); }
-		public MeatContext meat() {
-			return getRuleContext(MeatContext.class,0);
-		}
-		public TerminalNode ML_END() { return getToken(StatementsParser.ML_END, 0); }
-		public MultiLineCommentContext(ParserRuleContext parent, int invokingState) {
+	public static class LineCommentContext extends ParserRuleContext {
+		public TerminalNode LineComment() { return getToken(StatementsParser.LineComment, 0); }
+		public LineCommentContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_multiLineComment; }
+		@Override public int getRuleIndex() { return RULE_lineComment; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof StatementsListener ) ((StatementsListener)listener).enterMultiLineComment(this);
+			if ( listener instanceof StatementsListener ) ((StatementsListener)listener).enterLineComment(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof StatementsListener ) ((StatementsListener)listener).exitMultiLineComment(this);
+			if ( listener instanceof StatementsListener ) ((StatementsListener)listener).exitLineComment(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof StatementsVisitor ) return ((StatementsVisitor<? extends T>)visitor).visitMultiLineComment(this);
+			if ( visitor instanceof StatementsVisitor ) return ((StatementsVisitor<? extends T>)visitor).visitLineComment(this);
 			else return visitor.visitChildren(this);
 		}
 	}
 
-	public final MultiLineCommentContext multiLineComment() throws RecognitionException {
-		MultiLineCommentContext _localctx = new MultiLineCommentContext(_ctx, getState());
-		enterRule(_localctx, 4, RULE_multiLineComment);
+	public final LineCommentContext lineComment() throws RecognitionException {
+		LineCommentContext _localctx = new LineCommentContext(_ctx, getState());
+		enterRule(_localctx, 4, RULE_lineComment);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(22);
-			match(ML_START);
-			setState(23);
-			meat();
-			setState(24);
-			match(ML_END);
+			setState(18);
+			match(LineComment);
 			}
 		}
 		catch (RecognitionException re) {
@@ -285,8 +268,9 @@ public class StatementsParser extends Parser {
 	}
 
 	public static class CodeContext extends ParserRuleContext {
-		public MeatContext meat() {
-			return getRuleContext(MeatContext.class,0);
+		public List<TerminalNode> Any() { return getTokens(StatementsParser.Any); }
+		public TerminalNode Any(int i) {
+			return getToken(StatementsParser.Any, i);
 		}
 		public CodeContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -311,55 +295,10 @@ public class StatementsParser extends Parser {
 		CodeContext _localctx = new CodeContext(_ctx, getState());
 		enterRule(_localctx, 6, RULE_code);
 		try {
-			enterOuterAlt(_localctx, 1);
-			{
-			setState(26);
-			meat();
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
-	}
-
-	public static class MeatContext extends ParserRuleContext {
-		public List<TerminalNode> ANY() { return getTokens(StatementsParser.ANY); }
-		public TerminalNode ANY(int i) {
-			return getToken(StatementsParser.ANY, i);
-		}
-		public MeatContext(ParserRuleContext parent, int invokingState) {
-			super(parent, invokingState);
-		}
-		@Override public int getRuleIndex() { return RULE_meat; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof StatementsListener ) ((StatementsListener)listener).enterMeat(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof StatementsListener ) ((StatementsListener)listener).exitMeat(this);
-		}
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof StatementsVisitor ) return ((StatementsVisitor<? extends T>)visitor).visitMeat(this);
-			else return visitor.visitChildren(this);
-		}
-	}
-
-	public final MeatContext meat() throws RecognitionException {
-		MeatContext _localctx = new MeatContext(_ctx, getState());
-		enterRule(_localctx, 8, RULE_meat);
-		try {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(29); 
+			setState(21); 
 			_errHandler.sync(this);
 			_alt = 1;
 			do {
@@ -367,15 +306,15 @@ public class StatementsParser extends Parser {
 				case 1:
 					{
 					{
-					setState(28);
-					match(ANY);
+					setState(20);
+					match(Any);
 					}
 					}
 					break;
 				default:
 					throw new NoViableAltException(this);
 				}
-				setState(31); 
+				setState(23); 
 				_errHandler.sync(this);
 				_alt = getInterpreter().adaptivePredict(_input,2,_ctx);
 			} while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER );
@@ -393,16 +332,14 @@ public class StatementsParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\7$\4\2\t\2\4\3\t"+
-		"\3\4\4\t\4\4\5\t\5\4\6\t\6\3\2\3\2\3\2\7\2\20\n\2\f\2\16\2\23\13\2\3\3"+
-		"\3\3\3\3\3\3\3\4\3\4\3\4\3\4\3\5\3\5\3\6\6\6 \n\6\r\6\16\6!\3\6\2\2\7"+
-		"\2\4\6\b\n\2\2\2\"\2\21\3\2\2\2\4\24\3\2\2\2\6\30\3\2\2\2\b\34\3\2\2\2"+
-		"\n\37\3\2\2\2\f\20\5\4\3\2\r\20\5\6\4\2\16\20\5\b\5\2\17\f\3\2\2\2\17"+
-		"\r\3\2\2\2\17\16\3\2\2\2\20\23\3\2\2\2\21\17\3\2\2\2\21\22\3\2\2\2\22"+
-		"\3\3\2\2\2\23\21\3\2\2\2\24\25\7\3\2\2\25\26\5\n\6\2\26\27\7\4\2\2\27"+
-		"\5\3\2\2\2\30\31\7\5\2\2\31\32\5\n\6\2\32\33\7\6\2\2\33\7\3\2\2\2\34\35"+
-		"\5\n\6\2\35\t\3\2\2\2\36 \7\7\2\2\37\36\3\2\2\2 !\3\2\2\2!\37\3\2\2\2"+
-		"!\"\3\2\2\2\"\13\3\2\2\2\5\17\21!";
+		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\5\34\4\2\t\2\4\3"+
+		"\t\3\4\4\t\4\4\5\t\5\3\2\3\2\3\2\7\2\16\n\2\f\2\16\2\21\13\2\3\3\3\3\3"+
+		"\4\3\4\3\5\6\5\30\n\5\r\5\16\5\31\3\5\2\2\6\2\4\6\b\2\2\2\33\2\17\3\2"+
+		"\2\2\4\22\3\2\2\2\6\24\3\2\2\2\b\27\3\2\2\2\n\16\5\4\3\2\13\16\5\6\4\2"+
+		"\f\16\5\b\5\2\r\n\3\2\2\2\r\13\3\2\2\2\r\f\3\2\2\2\16\21\3\2\2\2\17\r"+
+		"\3\2\2\2\17\20\3\2\2\2\20\3\3\2\2\2\21\17\3\2\2\2\22\23\7\3\2\2\23\5\3"+
+		"\2\2\2\24\25\7\4\2\2\25\7\3\2\2\2\26\30\7\5\2\2\27\26\3\2\2\2\30\31\3"+
+		"\2\2\2\31\27\3\2\2\2\31\32\3\2\2\2\32\t\3\2\2\2\5\r\17\31";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

@@ -30,25 +30,25 @@ public class StatementsBaseListener implements StatementsListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterSingleLineComment(StatementsParser.SingleLineCommentContext ctx) { }
+	@Override public void enterDelimitedComment(StatementsParser.DelimitedCommentContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitSingleLineComment(StatementsParser.SingleLineCommentContext ctx) { }
+	@Override public void exitDelimitedComment(StatementsParser.DelimitedCommentContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterMultiLineComment(StatementsParser.MultiLineCommentContext ctx) { }
+	@Override public void enterLineComment(StatementsParser.LineCommentContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitMultiLineComment(StatementsParser.MultiLineCommentContext ctx) { }
+	@Override public void exitLineComment(StatementsParser.LineCommentContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -61,18 +61,6 @@ public class StatementsBaseListener implements StatementsListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitCode(StatementsParser.CodeContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterMeat(StatementsParser.MeatContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitMeat(StatementsParser.MeatContext ctx) { }
 
 	/**
 	 * {@inheritDoc}

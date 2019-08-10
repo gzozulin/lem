@@ -4,19 +4,16 @@ grammar Statements;
 package com.blaster.data.managers.parsing;
 }
 
-SL_START: '//';
-SL_END:   '[\r]?[\n]';
-ML_START: '/*';
-ML_END:   '*/';
+DelimitedComment:   '/*' ( DelimitedComment | . )*? '*/';
 
-ANY: .;
+LineComment:        '//' ~[\u000A\u000D]*;
 
-statements: (singleLineComment | multiLineComment | code)*;
+Any:                .;
 
-singleLineComment: SL_START meat SL_END;
+statements:         (delimitedComment | lineComment | code)*;
 
-multiLineComment: ML_START meat ML_END;
+delimitedComment:   DelimitedComment;
 
-code: meat;
+lineComment:        LineComment;
 
-meat: ANY+;
+code:               Any+;

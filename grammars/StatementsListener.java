@@ -20,25 +20,25 @@ public interface StatementsListener extends ParseTreeListener {
 	 */
 	void exitStatements(StatementsParser.StatementsContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link StatementsParser#singleLineComment}.
+	 * Enter a parse tree produced by {@link StatementsParser#delimitedComment}.
 	 * @param ctx the parse tree
 	 */
-	void enterSingleLineComment(StatementsParser.SingleLineCommentContext ctx);
+	void enterDelimitedComment(StatementsParser.DelimitedCommentContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link StatementsParser#singleLineComment}.
+	 * Exit a parse tree produced by {@link StatementsParser#delimitedComment}.
 	 * @param ctx the parse tree
 	 */
-	void exitSingleLineComment(StatementsParser.SingleLineCommentContext ctx);
+	void exitDelimitedComment(StatementsParser.DelimitedCommentContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link StatementsParser#multiLineComment}.
+	 * Enter a parse tree produced by {@link StatementsParser#lineComment}.
 	 * @param ctx the parse tree
 	 */
-	void enterMultiLineComment(StatementsParser.MultiLineCommentContext ctx);
+	void enterLineComment(StatementsParser.LineCommentContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link StatementsParser#multiLineComment}.
+	 * Exit a parse tree produced by {@link StatementsParser#lineComment}.
 	 * @param ctx the parse tree
 	 */
-	void exitMultiLineComment(StatementsParser.MultiLineCommentContext ctx);
+	void exitLineComment(StatementsParser.LineCommentContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link StatementsParser#code}.
 	 * @param ctx the parse tree
@@ -49,14 +49,4 @@ public interface StatementsListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitCode(StatementsParser.CodeContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link StatementsParser#meat}.
-	 * @param ctx the parse tree
-	 */
-	void enterMeat(StatementsParser.MeatContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link StatementsParser#meat}.
-	 * @param ctx the parse tree
-	 */
-	void exitMeat(StatementsParser.MeatContext ctx);
 }

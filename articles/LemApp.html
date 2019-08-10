@@ -1,44 +1,148 @@
 <html>
+<style>
 
-    <style>
-        .text {
-            white-space: pre-wrap;
+        .code,.child {
+            display: block;
+            max-width: 100%;
+            overflow: auto;
+            color: #666;
+            page-break-inside: avoid;
+            font: normal 15px/1.6 monospace;
+            padding: 1em 1.5em;
+            margin: 1.6em 0;
+            word-wrap: break-word;
         }
         .code {
             white-space: pre-wrap;
-            background: #f4f4f4;
-            border: 1px solid #ddd;
-            border-left: 3px solid #f36d33;
-            color: #666;
-            page-break-inside: avoid;
-            font-family: monospace;
-            font-size: 15px;
-            line-height: 1.6;
-            margin-bottom: 1.6em;
-            max-width: 100%;
-            overflow: auto;
-            padding: 1em 1.5em;
-            display: block;
-            word-wrap: break-word;
+            background: #EBFCE3;
         }
+
         .child {
-            margin-left: 15%;
+            background: #F1ECEC;
+            border-left: 5px solid #C2C2C2;
+            box-shadow: 5px 5px 10px rgba(0,0,0,0.3);
         }
-    </style>
-    <head>
-        <title>Welcome!</title>
-    </head>
-    <body>
-        <div class="code">val lemApp = LemApp()
-lemApp.render()</div>
-<div class="child">
-    <div>com.blaster.platform.LemApp</div>
-    <div><div class="code">class LemApp </div>
-<div class="text">Sec prop</div>
-<div class="code">@Inject
-lateinit var interactorPrint: InteractorPrint</div>
-<div class="text">Main foo</div>
-<div class="code">fun render() </div></div>
+
+        .code_child {
+            white-space: pre-wrap;
+            background: #EBFCE3;
+            padding: 1em 1.5em;
+            margin: 1.6em 0;
+        }
+
+
+</style>
+
+<head>
+    <title>Welcome!</title>
+</head>
+
+<body>
+
+<h1>LemApp article</h1>
+
+<div class="code">val lemApp = LemApp()
+    lemApp.render()
 </div>
-    </body>
+<div class="text"> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque elementum massa vel sem
+    pulvinar, vel pulvinar est ultricies. Curabitur porta malesuada metus, vitae interdum velit fermentum eu. Praesent
+    felis augue, molestie in nisi non, faucibus scelerisque risus. Fusce auctor vehicula orci, dictum dictum orci
+    convallis nec. In ac hendrerit odio. Maecenas molestie risus quis fringilla viverra. Sed aliquam posuere bibendum.
+    Aenean volutpat cursus turpis eget lobortis. In viverra urna libero, ut auctor libero facilisis elementum.
+    Pellentesque sagittis iaculis massa, id pellentesque mi porttitor a.
+    Integer accumsan, eros ut posuere auctor, lacus nisl semper mi, vel convallis velit neque in urna. Sed metus enim,
+    lobortis id nunc vitae, fermentum blandit lectus. Aliquam vitae elit nisl. Phasellus ipsum lorem, elementum id
+    iaculis vel, convallis vitae augue. Pellentesque in dignissim neque. Integer scelerisque, turpis vel accumsan
+    mattis, ipsum erat tristique tellus, eget vehicula eros dui a odio. Praesent accumsan finibus velit sit amet
+    efficitur. Phasellus posuere neque id orci sodales, at consequat justo gravida. Sed ultricies, nibh at varius
+    consequat, enim velit efficitur neque, vulputate vulputate arcu ex nec erat. Suspendisse iaculis gravida
+    pellentesque. Mauris pulvinar mattis pretium. In quis sapien vitae libero imperdiet semper ut vitae eros. Sed sapien
+    magna, vestibulum ac quam et, condimentum luctus odio. Etiam ipsum eros, dapibus in aliquam ac, imperdiet tincidunt
+    quam.
+    Morbi non dignissim est. Proin purus dolor, mollis eget congue id, sollicitudin ac lectus. Nullam sed sapien ante.
+    Quisque ornare ipsum dapibus ligula congue luctus. Praesent sed sapien quis ligula tristique feugiat. Fusce
+    ullamcorper nibh sed est imperdiet semper. Sed turpis dolor, tincidunt eget vestibulum vulputate, vehicula in nibh.
+    Praesent gravida auctor sapien, at pharetra nisl elementum nec. Vestibulum ante ipsum primis in faucibus orci luctus
+    et ultrices posuere cubilia Curae; In nisl metus, laoreet ut nunc eu, consequat viverra orci. Sed pretium, nibh
+    pharetra vulputate pulvinar, elit est placerat velit, a eleifend nulla magna et neque.
+    Sed erat sapien, suscipit sit amet accumsan at, consectetur commodo mi. Fusce semper sed tellus vitae malesuada.
+    Suspendisse non leo eu tortor elementum vulputate. Phasellus in odio id lacus condimentum blandit molestie
+    sollicitudin magna. Sed hendrerit elit sed nunc volutpat imperdiet. Pellentesque aliquam arcu eget lorem euismod,
+    sed consectetur libero mollis. Duis vitae bibendum urna. Nullam et sodales velit. Morbi vel semper sapien. Nunc at
+    lobortis nisl, in varius eros.
+    Curabitur maximus arcu ornare ullamcorper condimentum. Vivamus eu purus nec magna ornare facilisis in ac neque.
+    Maecenas libero lectus, pulvinar non magna nec, hendrerit fermentum risus. Praesent eu nibh a nulla auctor
+    vulputate. Nulla blandit euismod lacus, vel vehicula justo suscipit sit amet. Proin mattis volutpat nibh eu
+    fermentum. Proin at est tristique, volutpat nibh eu, finibus sem. Suspendisse potenti. Duis pretium urna at pulvinar
+    sollicitudin. Sed maximus sem erat, ac ullamcorper velit lacinia vitae. Ut aliquet rhoncus eros, ornare tincidunt
+    lacus commodo non. Duis ligula felis, interdum quis volutpat sit amet, fringilla ut tortor. Fusce neque risus,
+    bibendum sit amet lorem sit amet, sagittis varius nulla. Nunc et purus faucibus, aliquet lorem eget, molestie purus.
+    Vestibulum porta nibh ante, at ullamcorper nulla viverra tempor.
+</div>
+
+<div class="child">
+    <h2>com.blaster.platform.LemApp</h2>
+
+    <div class="code_child">class LemApp</div>
+    <div class="text">Sec prop</div>
+
+    <div class="child">
+        <h2>com.blaster.platform.LemApp</h2>
+
+        <div class="code_child">@Inject
+            lateinit var interactorPrint: InteractorPrint
+        </div>
+
+        <div class="text">Main foo
+            additional information
+        </div>
+
+        <div class="child">
+            <h2>com.blaster.platform.LemApp</h2>
+            <div class="code_child">fun render()</div>
+        </div>
+
+    </div>
+
+</div>
+
+<div class="text"> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque elementum massa vel sem
+    pulvinar, vel pulvinar est ultricies. Curabitur porta malesuada metus, vitae interdum velit fermentum eu. Praesent
+    felis augue, molestie in nisi non, faucibus scelerisque risus. Fusce auctor vehicula orci, dictum dictum orci
+    convallis nec. In ac hendrerit odio. Maecenas molestie risus quis fringilla viverra. Sed aliquam posuere bibendum.
+    Aenean volutpat cursus turpis eget lobortis. In viverra urna libero, ut auctor libero facilisis elementum.
+    Pellentesque sagittis iaculis massa, id pellentesque mi porttitor a.
+    Integer accumsan, eros ut posuere auctor, lacus nisl semper mi, vel convallis velit neque in urna. Sed metus enim,
+    lobortis id nunc vitae, fermentum blandit lectus. Aliquam vitae elit nisl. Phasellus ipsum lorem, elementum id
+    iaculis vel, convallis vitae augue. Pellentesque in dignissim neque. Integer scelerisque, turpis vel accumsan
+    mattis, ipsum erat tristique tellus, eget vehicula eros dui a odio. Praesent accumsan finibus velit sit amet
+    efficitur. Phasellus posuere neque id orci sodales, at consequat justo gravida. Sed ultricies, nibh at varius
+    consequat, enim velit efficitur neque, vulputate vulputate arcu ex nec erat. Suspendisse iaculis gravida
+    pellentesque. Mauris pulvinar mattis pretium. In quis sapien vitae libero imperdiet semper ut vitae eros. Sed sapien
+    magna, vestibulum ac quam et, condimentum luctus odio. Etiam ipsum eros, dapibus in aliquam ac, imperdiet tincidunt
+    quam.
+    Morbi non dignissim est. Proin purus dolor, mollis eget congue id, sollicitudin ac lectus. Nullam sed sapien ante.
+    Quisque ornare ipsum dapibus ligula congue luctus. Praesent sed sapien quis ligula tristique feugiat. Fusce
+    ullamcorper nibh sed est imperdiet semper. Sed turpis dolor, tincidunt eget vestibulum vulputate, vehicula in nibh.
+    Praesent gravida auctor sapien, at pharetra nisl elementum nec. Vestibulum ante ipsum primis in faucibus orci luctus
+    et ultrices posuere cubilia Curae; In nisl metus, laoreet ut nunc eu, consequat viverra orci. Sed pretium, nibh
+    pharetra vulputate pulvinar, elit est placerat velit, a eleifend nulla magna et neque.
+    Sed erat sapien, suscipit sit amet accumsan at, consectetur commodo mi. Fusce semper sed tellus vitae malesuada.
+    Suspendisse non leo eu tortor elementum vulputate. Phasellus in odio id lacus condimentum blandit molestie
+    sollicitudin magna. Sed hendrerit elit sed nunc volutpat imperdiet. Pellentesque aliquam arcu eget lorem euismod,
+    sed consectetur libero mollis. Duis vitae bibendum urna. Nullam et sodales velit. Morbi vel semper sapien. Nunc at
+    lobortis nisl, in varius eros.
+    Curabitur maximus arcu ornare ullamcorper condimentum. Vivamus eu purus nec magna ornare facilisis in ac neque.
+    Maecenas libero lectus, pulvinar non magna nec, hendrerit fermentum risus. Praesent eu nibh a nulla auctor
+    vulputate. Nulla blandit euismod lacus, vel vehicula justo suscipit sit amet. Proin mattis volutpat nibh eu
+    fermentum. Proin at est tristique, volutpat nibh eu, finibus sem. Suspendisse potenti. Duis pretium urna at pulvinar
+    sollicitudin. Sed maximus sem erat, ac ullamcorper velit lacinia vitae. Ut aliquet rhoncus eros, ornare tincidunt
+    lacus commodo non. Duis ligula felis, interdum quis volutpat sit amet, fringilla ut tortor. Fusce neque risus,
+    bibendum sit amet lorem sit amet, sagittis varius nulla. Nunc et purus faucibus, aliquet lorem eget, molestie purus.
+    Vestibulum porta nibh ante, at ullamcorper nulla viverra tempor.
+</div>
+<div class="code">val lemApp = LemApp()
+    lemApp.render()
+</div>
+</body>
 </html>

@@ -2,14 +2,11 @@ package com.blaster.business
 
 import com.blaster.data.inserts.Insert
 import com.blaster.data.inserts.InsertCommand
+import com.blaster.data.inserts.InsertText
 import com.blaster.data.managers.lexing.LexingManager
 import com.blaster.data.managers.parsing.ParsingManager
 import com.blaster.platform.LEM_COMPONENT
 import javax.inject.Inject
-
-const val INCLUDE_PREFIX = "include "
-const val DEF_PREFIX = "def "
-const val DECL_PREFIX = "decl "
 
 class InteractorParse {
     @Inject
@@ -51,7 +48,7 @@ class InteractorParse {
         val declarations = when (location) {
             is LocationGlobal -> listOf(parsingManager.locateGlobalMethodDecl(tokenStream, parser, location))
             is LocationMember -> listOf(parsingManager.locateMemberDecl(tokenStream, parser, location))
-            is LocationClass -> parsingManager.locateClassDecl(tokenStream, parser, location)
+            is LocationClass -> parsingManager.locateClassDecls(tokenStream, parser, location)
             else -> throw UnsupportedOperationException()
         }
         val inserts = ArrayList<Insert>()
@@ -62,29 +59,34 @@ class InteractorParse {
     }
 
     private fun processCommands(inserts: List<Insert>): List<Insert> {
-        for (insert in inserts) {
+        if (inserts.isEmpty()) {
+            return inserts
+        }
+        val mutableList = ArrayList(inserts)
+        val iterator = mutableList.listIterator()
+        while (iterator.hasNext()) {
+            val insert = iterator.next()
             if (insert is InsertCommand) {
-                insert.children.addAll(processCommand(insert.command))
+                when (insert.type) {
+                    InsertCommand.Type.INCLUDE -> {
+                        when (insert.inclType) {
+                            InsertCommand.IncludeType.DECL -> {
+                                insert.children.addAll(parseDecl(insert.path))
+                            }
+                            InsertCommand.IncludeType.DEF -> {
+                                insert.children.addAll(parseDef(insert.path))
+                            }
+                        }
+                    }
+                    InsertCommand.Type.OMIT -> {
+                        check(iterator.hasNext()) { "What to omit??" }
+                        iterator.remove()
+                        iterator.next()
+                        iterator.remove()
+                    }
+                }
             }
         }
-        return inserts
-    }
-
-    private fun processCommand(command: String): List<Insert> {
-        check(command.startsWith(INCLUDE_PREFIX)) { "Expected command is not started with expected prefix!" }
-        val include = command.removePrefix(INCLUDE_PREFIX)
-        return processInclude(include)
-    }
-
-    private fun processInclude(include: String): List<Insert> {
-        if (include.startsWith(DECL_PREFIX)) {
-            val decl = include.removePrefix(DECL_PREFIX)
-            return parseDecl(decl)
-        }
-        if (include.startsWith(DEF_PREFIX)) {
-            val def = include.removePrefix(DEF_PREFIX)
-            return parseDef(def)
-        }
-        throw IllegalStateException("Wtf??")
+        return mutableList
     }
 }

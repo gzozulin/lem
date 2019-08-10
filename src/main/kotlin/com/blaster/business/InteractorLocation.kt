@@ -2,14 +2,25 @@ package com.blaster.business
 
 import com.blaster.platform.LEM_COMPONENT
 import java.io.File
+import java.util.regex.Pattern
 import javax.inject.Inject
 import javax.inject.Named
 
+private val LOCATION_PATTERN = Pattern.compile("")
+
 open class Location(val file: File)
 
-class LocationClass(file: File, val clazz: String) : Location(file)
-class LocationMember(file: File, val clazz: String, val identifier: String) : Location(file)
-class LocationGlobal(file: File, val identifier: String) : Location(file)
+class LocationClass(file: File, val clazz: String) : Location(file) {
+    override fun toString(): String = "{file: $file, class: $clazz}"
+}
+
+class LocationMember(file: File, val clazz: String, val identifier: String) : Location(file) {
+    override fun toString(): String = "{file: $file, class: $clazz, identifier: $identifier}"
+}
+
+class LocationGlobal(file: File, val identifier: String) : Location(file) {
+    override fun toString(): String = "{file: $file, identifier: $identifier}"
+}
 
 class InteractorLocation {
 
@@ -26,6 +37,10 @@ class InteractorLocation {
     // class:               com.blaster.platform.LemApp
 
     fun locate(path: String): Location {
+        if (path.contains(":")) { // todo: should be something in the lines of \w+(.\w+)*(::[\w]+)?
+            val count = path.count { it == ':' }
+            check(count == 2) { "Syntactical error in the path! $path" }
+        }
         val clazz = extractClass(path)
         val file = locateFile(clazz)
         return if (path.contains("::")) {
@@ -56,7 +71,7 @@ class InteractorLocation {
         }
         filepath += ".kt"
         val result = File(sourceRoot, filepath)
-        check(result.exists()) { "Provided class does not exists!" }
+        check(result.exists()) { "Provided class does not exists! $clazz" }
         return result
     }
 }

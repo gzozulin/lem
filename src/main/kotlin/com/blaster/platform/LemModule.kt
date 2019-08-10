@@ -80,4 +80,8 @@ class LemModule {
     @Singleton
     @Provides
     fun extractTokens() = ExtractorTokens()
+
+    @Singleton
+    @Provides
+    fun extractorCommands() = ExtractorCommands()
 }

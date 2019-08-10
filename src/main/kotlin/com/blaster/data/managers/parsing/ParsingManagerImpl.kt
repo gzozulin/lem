@@ -19,6 +19,7 @@ class ParsingManagerImpl : ParsingManager {
                 result = statements
             }.visit(functionDecl.functionBody())
         }.visitKotlinFile(parser.kotlinFile())
+        checkNotNull(result) { "Nothing found for specified location $locationGlobal" }
         return result!!
     }
 
@@ -31,6 +32,7 @@ class ParsingManagerImpl : ParsingManager {
                 }.visit(functionDecl.functionBody())
             }.visitClassBody(classDecl.classBody())
         }.visitKotlinFile(parser.kotlinFile())
+        checkNotNull(result) { "Nothing found for specified location $locationMember" }
         return result!!
     }
 
@@ -40,6 +42,7 @@ class ParsingManagerImpl : ParsingManager {
         GlobalDeclVisitor(locationGlobal.identifier) { functionDecl ->
             result = functionDecl
         }.visitKotlinFile(parser.kotlinFile())
+        checkNotNull(result) { "Nothing found for specified location $locationGlobal" }
         return result!!
     }
 
@@ -50,16 +53,19 @@ class ParsingManagerImpl : ParsingManager {
                 result = memberDecl
             }.visitClassBody(classDecl.classBody())
         }.visitKotlinFile(parser.kotlinFile())
+        checkNotNull(result) { "Nothing found for specified location $locationMember" }
         return result!!
     }
 
-    override fun locateClassDecl(tokenStream: CommonTokenStream, parser: KotlinParser, locationClass: LocationClass): List<ParserRuleContext> {
+    override fun locateClassDecls(tokenStream: CommonTokenStream, parser: KotlinParser, locationClass: LocationClass): List<ParserRuleContext> {
         val result = ArrayList<ParserRuleContext>()
         ClassDeclVisitor(locationClass.clazz) { classDecl ->
+            result.add(classDecl)
             MemberDeclVisitor(null) { memberDecl ->
                 result.add(memberDecl)
             }.visitClassBody(classDecl.classBody())
         }.visitKotlinFile(parser.kotlinFile())
+        check(result.isNotEmpty()) { "Nothing found for specified location $locationClass" }
         return result
     }
 

@@ -2,14 +2,12 @@ package com.blaster.business
 
 import com.blaster.data.inserts.Insert
 import com.blaster.data.inserts.InsertCode
-import com.blaster.data.inserts.InsertCommand
 import com.blaster.data.inserts.InsertText
 import com.blaster.data.managers.lexing.LexingManager
 import com.blaster.data.managers.parsing.ParsingManager
 import com.blaster.data.managers.parsing.StatementsParser
 import com.blaster.platform.LEM_COMPONENT
 import org.antlr.v4.runtime.Token
-import java.lang.IllegalStateException
 import javax.inject.Inject
 
 class ExtractorTokens {
@@ -20,6 +18,9 @@ class ExtractorTokens {
 
     @Inject
     lateinit var parsingManager: ParsingManager
+
+    @Inject
+    lateinit var extractorCommands: ExtractorCommands
 
     init {
         LEM_COMPONENT.inject(this)
@@ -41,8 +42,9 @@ class ExtractorTokens {
                 is StatementsParser.LineCommentContext -> {
                     val cleaned = cleanup(statement.text)
                     if (cleaned != null) {
-                        if (cleaned.startsWith("include")) {
-                            result.add(InsertCommand(cleaned))
+                        val command = extractorCommands.extractCommand(cleaned)
+                        if (command != null) {
+                            result.add(command)
                         } else {
                             result.add(InsertText(cleaned))
                         }
@@ -65,6 +67,9 @@ class ExtractorTokens {
             .replace("/*", "")
             .replace("*/", "")
             .replace("//", "")
+        if (noComments.isEmpty()) {
+            return null
+        }
         val lines =  textToLines(noComments)
         if (lines.isEmpty()) {
             return null

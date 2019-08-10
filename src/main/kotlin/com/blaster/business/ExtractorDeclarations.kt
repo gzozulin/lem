@@ -18,6 +18,7 @@ class ExtractorDeclarations {
 
     fun extractDeclaration(tokenStream: CommonTokenStream, memberDecl: ParserRuleContext): List<Insert> {
         val lastToken = when (memberDecl) {
+            is KotlinParser.ClassDeclarationContext    -> tokenStream.get(memberDecl.classBody().start.tokenIndex - 1)
             is KotlinParser.FunctionDeclarationContext -> tokenStream.get(memberDecl.functionBody().start.tokenIndex - 1)
             is KotlinParser.PropertyDeclarationContext -> memberDecl.stop
             else -> throw UnsupportedOperationException("Unknown type of member!")

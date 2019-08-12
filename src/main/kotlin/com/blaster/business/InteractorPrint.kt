@@ -25,26 +25,31 @@ class InteractorPrint {
         printingManager.printArticle(located.file, article)
     }
 
-    private fun printInserts(inserts: List<Insert>): String {
+    private fun printInserts(inserts: List<Insert>, child: Boolean = false): String {
         var result = ""
         for (insert in inserts) {
             when (insert) {
                 is InsertCommand -> {
                     result += printingManager.renderTemplate(
                         "template_insert_children.ftlh",
-                        hashMapOf("cmd" to insert.path, "children" to printInserts(insert.children))
+                        hashMapOf("cmd" to insert.path, "children" to printInserts(insert.children, true))
                     ) + "\n"
                 }
                 is InsertText -> {
                     result += printingManager.renderTemplate(
-                        "template_insert_text.ftlh", hashMapOf("text" to insert.text)) + "\n"
+                        "template_insert_text.ftlh",
+                        hashMapOf(textTemplateClass(child), "text" to insert.text)) + "\n"
                 }
                 is InsertCode -> {
                     result += printingManager.renderTemplate(
-                        "template_insert_code.ftlh", hashMapOf("code" to insert.code)) + "\n"
+                        "template_insert_code.ftlh",
+                        hashMapOf(codeTemplateClass(child), "code" to insert.code)) + "\n"
                 }
             }
         }
         return result.dropLast(1)
     }
+
+    private fun codeTemplateClass(child: Boolean) = "class" to if (child) "code_child" else "code"
+    private fun textTemplateClass(child: Boolean) = "class" to if (child) "text_child" else "text"
 }

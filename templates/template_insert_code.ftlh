@@ -1,1 +1,1 @@
-<div class="code">${code}</div>
+<div class="${class}">${code}</div>

@@ -1,29 +1,42 @@
 <html>
-
     <style>
-        .text {
-            white-space: pre-wrap;
-        }
-        .code {
-            white-space: pre-wrap;
-            background: #f4f4f4;
-            border: 1px solid #ddd;
-            border-left: 3px solid #f36d33;
-            color: #666;
-            page-break-inside: avoid;
-            font-family: monospace;
-            font-size: 15px;
-            line-height: 1.6;
-            margin-bottom: 1.6em;
-            max-width: 100%;
-            overflow: auto;
-            padding: 1em 1.5em;
-            display: block;
-            word-wrap: break-word;
-        }
-        .child {
-            margin-left: 15%;
-        }
+        .code,.child {
+                    border-radius: 3px;
+                    display: block;
+                    max-width: 100%;
+                    overflow: auto;
+                    color: #666;
+                    page-break-inside: avoid;
+                    font: normal 15px/1.6 monospace;
+                    padding: 1em 1.5em;
+                    margin: 1.6em 0;
+                    word-wrap: break-word;
+                }
+
+                .code {
+                    white-space: pre-wrap;
+                    background: #EBFCE3;
+                }
+
+                .text {
+                }
+
+                .child {
+                    border-radius: 3px;
+                    background: #F1ECEC;
+                    box-shadow: -5px 5px 10px rgba(0,0,0,0.3);
+                }
+
+                .code_child {
+                    border-radius: 3px;
+                    white-space: pre-wrap;
+                    background: #EBFCE3;
+                    padding: 1em 1.5em;
+                    margin: 1.6em 0;
+                }
+
+                .text_child {
+                }
     </style>
     <head>
         <title>Welcome!</title>

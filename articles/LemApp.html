@@ -1,5 +1,5 @@
 <html>
-    <style>
+<style>
         .code,.child {
                     border-radius: 3px;
                     display: block;
@@ -21,6 +21,12 @@
                 .text {
                 }
 
+                .link {
+                }
+
+                .picture {
+                }
+
                 .child {
                     border-radius: 3px;
                     background: #F1ECEC;
@@ -37,27 +43,46 @@
 
                 .text_child {
                 }
-    </style>
-    <head>
-        <title>Welcome!</title>
-    </head>
-    <body>
-            <h1>Lem app article</h1>
 
-    <h2>We will start by creating a main class for our app.</h2>
+                .link_child {
+                }
 
+                .picture_child {
+                }
+
+</style>
+<head>
+    <title>Welcome!</title>
+</head>
+<body>
+<h1>Lem app article</h1>
+
+<h2>We will start by creating a main class for our app.</h2>
+
+<div class="link">
+    <a href="https:github.com/antlr/grammars-v4/tree/master/kotlin">Kotlin grammar repo</a>
+    <p> This repo contains some of the grammars used throughout the article</p>
+</div>
+<div class="picture">
+    <h3>This is a cool picture</h3>
+    <img src="https:ichef.bbci.co.uk/news/660/media/images/83351000/jpg/_83351971_explorer164gowerpicturebygarethjames.jpg"
+         alt="This is a cool picture">
+    <p>This picture looks cool</p>
+</div>
 <div class="code">val lemApp = LemApp()
-lemApp.render()</div>
-    <h2>Now we can go to includes.</h2>
+    lemApp.render()
+</div>
+<h2>Now we can go to includes.</h2>
 
 <div class="child">
     <h3>com.blaster.platform.LemApp</h3>
-    <div class="code_child">class LemApp </div>
-<div class="text_child">Sec prop</div>
-<div class="code_child">@Inject
-lateinit var interactorPrint: InteractorPrint</div>
-<div class="text_child">Main foo</div>
-<div class="code_child">fun render() </div>
+    <div class="code_child">class LemApp</div>
+    <div class="text_child">Sec prop</div>
+    <div class="code_child">@Inject
+        lateinit var interactorPrint: InteractorPrint
+    </div>
+    <div class="text_child">Main foo</div>
+    <div class="code_child">fun render()</div>
 </div>
-    </body>
+</body>
 </html>

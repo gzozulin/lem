@@ -1,16 +1,9 @@
 package com.blaster.business
 
-import com.blaster.data.inserts.InsertCommand
+import com.blaster.data.inserts.*
 import java.lang.IllegalArgumentException
 
-const val COMMAND_INCLUDE       = "include"
-const val COMMAND_HEADER        = "header"
-const val COMMAND_OMIT          = "omit"
-
-const val SUBCOMMAND_DECL       = "decl"
-const val SUBCOMMAND_DEF        = "def"
-const val SUBCOMMAND_H1         = "h1"
-const val SUBCOMMAND_H2         = "h2"
+val CSV_PATTERN = ";".toPattern()
 
 class InteractorCommands {
     fun extractCommand(command: String): InsertCommand? {
@@ -25,6 +18,18 @@ class InteractorCommands {
                     includeCmd.startsWith(SUBCOMMAND_DEF) -> {
                         val path = removeCommandPrefix(includeCmd, SUBCOMMAND_DEF)
                         InsertCommand(InsertCommand.Type.INCLUDE, listOf(SUBCOMMAND_DEF, path))
+                    }
+                    includeCmd.startsWith(SUBCOMMAND_LINK) -> {
+                        val csv = removeCommandPrefix(includeCmd, SUBCOMMAND_LINK)
+                        val split = csv.split(CSV_PATTERN)
+                        check(split.size == 3) { "Wrong amount of parameters for a link include command!" }
+                        InsertCommand(InsertCommand.Type.INCLUDE, listOf(SUBCOMMAND_LINK, split[0], split[1], split[2]))
+                    }
+                    includeCmd.startsWith(SUBCOMMAND_PICTURE) -> {
+                        val csv = removeCommandPrefix(includeCmd, SUBCOMMAND_PICTURE)
+                        val split = csv.split(CSV_PATTERN)
+                        check(split.size == 3) { "Wrong amount of parameters for a picture include command!" }
+                        InsertCommand(InsertCommand.Type.INCLUDE, listOf(SUBCOMMAND_PICTURE, split[0], split[1], split[2]))
                     }
                     else -> throw IllegalArgumentException("Unknown command! $command")
                 }

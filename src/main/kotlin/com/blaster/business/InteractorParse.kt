@@ -2,6 +2,8 @@ package com.blaster.business
 
 import com.blaster.data.inserts.Insert
 import com.blaster.data.inserts.InsertCommand
+import com.blaster.data.inserts.SUBCOMMAND_DECL
+import com.blaster.data.inserts.SUBCOMMAND_DEF
 import com.blaster.data.managers.lexing.LexingManager
 import com.blaster.data.managers.parsing.ParsingManager
 import com.blaster.platform.LEM_COMPONENT

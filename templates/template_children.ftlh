@@ -1,4 +1,4 @@
 <div class="child">
-    <h3>${cmd}</h3>
+    <h3>${path}</h3>
     ${children?no_esc}
 </div>

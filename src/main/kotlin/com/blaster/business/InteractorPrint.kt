@@ -1,9 +1,6 @@
 package com.blaster.business
 
-import com.blaster.data.inserts.Insert
-import com.blaster.data.inserts.InsertCode
-import com.blaster.data.inserts.InsertCommand
-import com.blaster.data.inserts.InsertText
+import com.blaster.data.inserts.*
 import com.blaster.data.managers.printing.PrintingManager
 import com.blaster.platform.LEM_COMPONENT
 import java.lang.IllegalStateException
@@ -33,11 +30,10 @@ class InteractorPrint {
                 is InsertCommand -> {
                     when (insert.type) {
                         InsertCommand.Type.INCLUDE -> {
-                            // todo: render children for all inserts, not just for commands
-                            result += printingManager.renderTemplate(
-                                "template_children.ftlh",
-                                hashMapOf("cmd" to insert.argument, "children" to printInserts(insert.children, true))
-                            ) + "\n"
+                            val includeResult = renderIncludeCommand(insert, child)
+                            if (includeResult != null) {
+                                result += includeResult
+                            }
                         }
                         InsertCommand.Type.HEADER -> {
                             result += printingManager.renderTemplate(
@@ -59,8 +55,37 @@ class InteractorPrint {
                         hashMapOf(codeTemplateClass(child), "code" to insert.code)) + "\n"
                 }
             }
+            if (insert.children.isNotEmpty()) {
+                // todo: not only for commands?
+                result += printingManager.renderTemplate(
+                    "template_children.ftlh",
+                    hashMapOf("path" to (insert as InsertCommand).argument, "children" to printInserts(insert.children, true))
+                ) + "\n"
+            }
         }
         return result.dropLast(1)
+    }
+
+    private fun renderIncludeCommand(command: InsertCommand, child: Boolean): String? {
+        when (command.subcommand) {
+            SUBCOMMAND_LINK -> {
+                val clazz = if (child) "link_child" else "link"
+                return printingManager.renderTemplate(
+                    "template_link.ftlh",
+                    hashMapOf("class" to clazz, "label" to command.argument, "descr" to command.argument1, "link" to command.argument2)
+                )
+            }
+            SUBCOMMAND_PICTURE -> {
+                val clazz = if (child) "picture_child" else "picture"
+                return printingManager.renderTemplate(
+                    "template_picture.ftlh",
+                    hashMapOf("class" to clazz, "label" to command.argument, "descr" to command.argument1, "link" to command.argument2)
+                )
+            }
+            else -> {
+                return null
+            }
+        }
     }
 
     private fun codeTemplateClass(child: Boolean) = "class" to if (child) "code_child" else "code"

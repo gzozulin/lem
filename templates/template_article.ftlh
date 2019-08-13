@@ -21,6 +21,12 @@
                 .text {
                 }
 
+                .link {
+                }
+
+                .picture {
+                }
+
                 .child {
                     border-radius: 3px;
                     background: #F1ECEC;
@@ -36,6 +42,12 @@
                 }
 
                 .text_child {
+                }
+
+                .link_child {
+                }
+
+                .picture_child {
                 }
     </style>
     <head>

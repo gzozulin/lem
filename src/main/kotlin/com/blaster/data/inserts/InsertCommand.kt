@@ -1,5 +1,16 @@
 package com.blaster.data.inserts
 
+const val COMMAND_INCLUDE       = "include"
+const val COMMAND_HEADER        = "header"
+const val COMMAND_OMIT          = "omit"
+
+const val SUBCOMMAND_DECL       = "decl"
+const val SUBCOMMAND_DEF        = "def"
+const val SUBCOMMAND_LINK       = "link"
+const val SUBCOMMAND_PICTURE    = "picture"
+const val SUBCOMMAND_H1         = "h1"
+const val SUBCOMMAND_H2         = "h2"
+
 data class InsertCommand(val type: Type, val arguments: List<String>) : Insert() {
     enum class Type { INCLUDE, OMIT, HEADER }
 
@@ -8,4 +19,10 @@ data class InsertCommand(val type: Type, val arguments: List<String>) : Insert()
 
     val argument: String
         get() = arguments[1]
+
+    val argument1: String
+        get() = arguments[2]
+
+    val argument2: String
+        get() = arguments[3]
 }

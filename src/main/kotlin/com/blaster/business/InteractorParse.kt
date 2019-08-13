@@ -68,12 +68,12 @@ class InteractorParse {
             if (insert is InsertCommand) {
                 when (insert.type) {
                     InsertCommand.Type.INCLUDE -> {
-                        when (insert.inclType) {
-                            InsertCommand.IncludeType.DECL -> {
-                                insert.children.addAll(parseDecl(insert.path))
+                        when (insert.subcommand) {
+                            SUBCOMMAND_DECL -> {
+                                insert.children.addAll(parseDecl(insert.argument))
                             }
-                            InsertCommand.IncludeType.DEF -> {
-                                insert.children.addAll(parseDef(insert.path))
+                            SUBCOMMAND_DEF -> {
+                                insert.children.addAll(parseDef(insert.argument))
                             }
                         }
                     }

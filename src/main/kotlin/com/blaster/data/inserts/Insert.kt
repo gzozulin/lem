@@ -1,3 +1,5 @@
 package com.blaster.data.inserts
 
-interface Insert
+open class Insert {
+    val children = ArrayList<Insert>()
+}

@@ -36,7 +36,7 @@ class InteractorLocation {
     fun locate(path: String): Location {
         if (path.contains(":")) { // todo: should be something in the lines of \w+(.\w+)*(::[\w]+)?
             val count = path.count { it == ':' }
-            check(count == 2) { "Syntactical error in the path! $path" }
+            check(count == 2) { "Syntactical error in the argument! $path" }
         }
         val clazz = extractClass(path)
         val file = locateFile(clazz)

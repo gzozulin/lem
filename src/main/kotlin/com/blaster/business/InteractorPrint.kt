@@ -32,7 +32,7 @@ class InteractorPrint {
                 is InsertCommand -> {
                     result += printingManager.renderTemplate(
                         "template_insert_children.ftlh",
-                        hashMapOf("cmd" to insert.path, "children" to printInserts(insert.children, true))
+                        hashMapOf("cmd" to insert.argument, "children" to printInserts(insert.children, true))
                     ) + "\n"
                 }
                 is InsertText -> {

@@ -2,11 +2,8 @@ package com.blaster.business
 
 import com.blaster.platform.LEM_COMPONENT
 import java.io.File
-import java.util.regex.Pattern
 import javax.inject.Inject
 import javax.inject.Named
-
-private val LOCATION_PATTERN = Pattern.compile("")
 
 open class Location(val file: File)
 

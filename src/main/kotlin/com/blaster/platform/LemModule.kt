@@ -71,17 +71,17 @@ class LemModule {
 
     @Singleton
     @Provides
-    fun extractorStatements() = ExtractorStatements()
+    fun extractorStatements() = InteractorStatements()
 
     @Singleton
     @Provides
-    fun extractorDeclaration() = ExtractorDeclarations()
+    fun extractorDeclaration() = InteractorDeclarations()
 
     @Singleton
     @Provides
-    fun extractTokens() = ExtractorTokens()
+    fun extractTokens() = InteractorTokens()
 
     @Singleton
     @Provides
-    fun extractorCommands() = ExtractorCommands()
+    fun extractorCommands() = InteractorCommands()
 }

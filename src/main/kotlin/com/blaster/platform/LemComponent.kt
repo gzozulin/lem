@@ -13,9 +13,9 @@ interface LemComponent {
     fun inject(interactorPrint: InteractorPrint)
     fun inject(printingManagerImpl: PrintingManagerImpl)
     fun inject(interactorLocation: InteractorLocation)
-    fun inject(extractorTokens: ExtractorTokens)
-    fun inject(extractorStatements: ExtractorStatements)
-    fun inject(extractorDeclarations: ExtractorDeclarations)
+    fun inject(interactorTokens: InteractorTokens)
+    fun inject(interactorStatements: InteractorStatements)
+    fun inject(interactorDeclarations: InteractorDeclarations)
 }
 
 val LEM_COMPONENT: LemComponent = DaggerLemComponent.builder().build()

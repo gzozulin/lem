@@ -2,7 +2,6 @@ package com.blaster.business
 
 import com.blaster.data.inserts.Insert
 import com.blaster.data.inserts.InsertCommand
-import com.blaster.data.inserts.InsertText
 import com.blaster.data.managers.lexing.LexingManager
 import com.blaster.data.managers.parsing.ParsingManager
 import com.blaster.platform.LEM_COMPONENT
@@ -19,10 +18,10 @@ class InteractorParse {
     lateinit var parsingManager: ParsingManager
 
     @Inject
-    lateinit var extractorStatements: ExtractorStatements
+    lateinit var interactorStatements: InteractorStatements
 
     @Inject
-    lateinit var extractorDeclarations: ExtractorDeclarations
+    lateinit var interactorDeclarations: InteractorDeclarations
 
     init {
         LEM_COMPONENT.inject(this)
@@ -37,7 +36,7 @@ class InteractorParse {
             is LocationMember -> parsingManager.locateMemberMethodStatements(tokenStream, parser, location)
             else -> throw UnsupportedOperationException()
         }
-        val inserts = extractorStatements.extractStatements(tokenStream, statements)
+        val inserts = interactorStatements.extractStatements(tokenStream, statements)
         return processCommands(inserts)
     }
 
@@ -53,7 +52,7 @@ class InteractorParse {
         }
         val inserts = ArrayList<Insert>()
         for (declaration in declarations) {
-            inserts.addAll(extractorDeclarations.extractDeclaration(tokenStream, declaration))
+            inserts.addAll(interactorDeclarations.extractDeclaration(tokenStream, declaration))
         }
         return processCommands(inserts)
     }

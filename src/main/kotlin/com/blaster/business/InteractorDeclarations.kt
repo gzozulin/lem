@@ -8,9 +8,10 @@ import org.antlr.v4.runtime.ParserRuleContext
 import org.antlr.v4.runtime.Token
 import javax.inject.Inject
 
-class ExtractorDeclarations {
+class InteractorDeclarations {
+
     @Inject
-    lateinit var extractorTokens: ExtractorTokens
+    lateinit var interactorTokens: InteractorTokens
 
     init {
         LEM_COMPONENT.inject(this)
@@ -29,7 +30,7 @@ class ExtractorDeclarations {
         } else {
             tokenStream.get(memberDecl.start.tokenIndex, lastToken.tokenIndex)
         }
-        return extractorTokens.extractStatements(tokens)
+        return interactorTokens.extractStatements(tokens)
     }
 
     private fun findPrevDeclaration(tokenStream: CommonTokenStream, index: Int): Token? {

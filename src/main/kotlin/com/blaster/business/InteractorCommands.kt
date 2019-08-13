@@ -3,7 +3,7 @@ package com.blaster.business
 import com.blaster.data.inserts.InsertCommand
 import java.lang.IllegalArgumentException
 
-class ExtractorCommands {
+class InteractorCommands {
     fun extractCommand(command: String): InsertCommand? {
         when {
             command.startsWith("include") -> {

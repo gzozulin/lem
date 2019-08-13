@@ -10,7 +10,7 @@ import com.blaster.platform.LEM_COMPONENT
 import org.antlr.v4.runtime.Token
 import javax.inject.Inject
 
-class ExtractorTokens {
+class InteractorTokens {
     private val lineRegex = "[\r]?[\n]".toRegex()
 
     @Inject
@@ -20,7 +20,7 @@ class ExtractorTokens {
     lateinit var parsingManager: ParsingManager
 
     @Inject
-    lateinit var extractorCommands: ExtractorCommands
+    lateinit var interactorCommands: InteractorCommands
 
     init {
         LEM_COMPONENT.inject(this)
@@ -42,7 +42,7 @@ class ExtractorTokens {
                 is StatementsParser.LineCommentContext -> {
                     val cleaned = cleanup(statement.text)
                     if (cleaned != null) {
-                        val command = extractorCommands.extractCommand(cleaned)
+                        val command = interactorCommands.extractCommand(cleaned)
                         if (command != null) {
                             result.add(command)
                         } else {

@@ -7,6 +7,7 @@ import com.blaster.data.inserts.SUBCOMMAND_DEF
 import com.blaster.data.managers.lexing.LexingManager
 import com.blaster.data.managers.parsing.ParsingManager
 import com.blaster.platform.LEM_COMPONENT
+import java.lang.IllegalStateException
 import javax.inject.Inject
 
 class InteractorParse {
@@ -85,6 +86,7 @@ class InteractorParse {
                         iterator.next()
                         iterator.remove()
                     }
+                    else -> throw IllegalStateException("Unknown type!")
                 }
             }
         }

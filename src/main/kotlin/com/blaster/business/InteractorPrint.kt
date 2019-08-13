@@ -6,6 +6,7 @@ import com.blaster.data.inserts.InsertCommand
 import com.blaster.data.inserts.InsertText
 import com.blaster.data.managers.printing.PrintingManager
 import com.blaster.platform.LEM_COMPONENT
+import java.lang.IllegalStateException
 import javax.inject.Inject
 
 class InteractorPrint {
@@ -30,19 +31,31 @@ class InteractorPrint {
         for (insert in inserts) {
             when (insert) {
                 is InsertCommand -> {
-                    result += printingManager.renderTemplate(
-                        "template_insert_children.ftlh",
-                        hashMapOf("cmd" to insert.argument, "children" to printInserts(insert.children, true))
-                    ) + "\n"
+                    when (insert.type) {
+                        InsertCommand.Type.INCLUDE -> {
+                            // todo: render children for all inserts, not just for commands
+                            result += printingManager.renderTemplate(
+                                "template_children.ftlh",
+                                hashMapOf("cmd" to insert.argument, "children" to printInserts(insert.children, true))
+                            ) + "\n"
+                        }
+                        InsertCommand.Type.HEADER -> {
+                            result += printingManager.renderTemplate(
+                                "template_header.ftlh",
+                                hashMapOf("type" to insert.subcommand, "header" to insert.argument)
+                            ) + "\n"
+                        }
+                        else -> throw IllegalStateException("Unhandled command!")
+                    }
                 }
                 is InsertText -> {
                     result += printingManager.renderTemplate(
-                        "template_insert_text.ftlh",
+                        "template_text.ftlh",
                         hashMapOf(textTemplateClass(child), "text" to insert.text)) + "\n"
                 }
                 is InsertCode -> {
                     result += printingManager.renderTemplate(
-                        "template_insert_code.ftlh",
+                        "template_code.ftlh",
                         hashMapOf(codeTemplateClass(child), "code" to insert.code)) + "\n"
                 }
             }

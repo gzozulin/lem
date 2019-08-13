@@ -45,14 +45,14 @@ class LemApp {
 The super main function
  */
 fun main() {
-    // header Lem app article
+    // header h1 Lem app article
 
-    // subheader We will start by creating a main class for our app.
+    // header h2 We will start by creating a main class for our app.
 
     val lemApp = LemApp()
     lemApp.render()
 
-    // subheader Now we can go to includes.
+    // header h2 Now we can go to includes.
 
     // include decl com.blaster.platform.LemApp
 }

@@ -47,6 +47,12 @@ The super main function
 fun main() {
     // header h1 Lem app article
 
+    // header h2 Rule #1 for writing a good article: minimize your barrier to entry. Make it easy for your reader to be drawn in.
+
+    /*A large opening paragraph at the start of an article is a huge barrier to entry. Your reader has to wade through a large wall of text before determining if the article is really interesting and worth reading. This requires a large expenditure of effort. Most people won’t bother.*/
+    /*Keep your opening short and punchy. A one-sentence or two-sentence leading paragraph is an easy buy-in. You can skim it and read it in barely more time than it would take to scroll past.*/
+    /*Start with something short and easy to engage with. Prove to your reader that you’re providing value, then ask them to expend effort.*/
+
     // header h2 We will start by creating a main class for our app.
 
 

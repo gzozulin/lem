@@ -86,7 +86,9 @@ class InteractorParse {
                         iterator.next()
                         iterator.remove()
                     }
-                    else -> throw IllegalStateException("Unknown type!")
+                    else -> {
+                        // do nothing
+                    }
                 }
             }
         }

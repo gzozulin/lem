@@ -7,7 +7,6 @@ import com.blaster.data.inserts.SUBCOMMAND_DEF
 import com.blaster.data.managers.lexing.LexingManager
 import com.blaster.data.managers.parsing.ParsingManager
 import com.blaster.platform.LEM_COMPONENT
-import java.lang.IllegalStateException
 import javax.inject.Inject
 
 class InteractorParse {
@@ -85,6 +84,23 @@ class InteractorParse {
                         iterator.remove()
                         iterator.next()
                         iterator.remove()
+                    }
+                    InsertCommand.Type.INLINE -> {
+                        iterator.remove()
+                        when (insert.subcommand) {
+                            SUBCOMMAND_DECL -> {
+                                val declarations = parseDecl(insert.argument)
+                                for (decl in declarations) {
+                                    iterator.add(decl)
+                                }
+                            }
+                            SUBCOMMAND_DEF -> {
+                                val definitions = parseDef(insert.argument)
+                                for (def in definitions) {
+                                    iterator.add(def)
+                                }
+                            }
+                        }
                     }
                     else -> {
                         // do nothing

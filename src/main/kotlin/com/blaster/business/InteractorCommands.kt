@@ -51,6 +51,20 @@ class InteractorCommands {
             command.startsWith(COMMAND_OMIT) -> {
                 return InsertCommand(InsertCommand.Type.OMIT, listOf())
             }
+            command.startsWith(COMMAND_INLINE) -> {
+                val inlineCmd = removeCommandPrefix(command, COMMAND_INLINE)
+                return when {
+                    inlineCmd.startsWith(SUBCOMMAND_DECL) -> {
+                        val path = removeCommandPrefix(inlineCmd, SUBCOMMAND_DECL)
+                        InsertCommand(InsertCommand.Type.INLINE, listOf(SUBCOMMAND_DECL, path))
+                    }
+                    inlineCmd.startsWith(SUBCOMMAND_DEF) -> {
+                        val path = removeCommandPrefix(inlineCmd, SUBCOMMAND_DEF)
+                        InsertCommand(InsertCommand.Type.INLINE, listOf(SUBCOMMAND_DEF, path))
+                    }
+                    else -> throw IllegalArgumentException("Unknown command! $command")
+                }
+            }
             else -> {
                 return null
             }

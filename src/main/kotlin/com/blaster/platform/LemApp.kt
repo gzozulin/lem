@@ -65,5 +65,5 @@ fun main() {
 
     // header h2 Now we can go to includes.
 
-    // include decl com.blaster.platform.LemApp
+    // inline decl com.blaster.platform.LemApp
 }

@@ -1,9 +1,6 @@
 package com.blaster.business
 
-import com.blaster.platform.LEM_COMPONENT
 import java.io.File
-import javax.inject.Inject
-import javax.inject.Named
 
 open class Location(val file: File)
 
@@ -20,26 +17,17 @@ class LocationGlobal(file: File, val identifier: String) : Location(file) {
 }
 
 class InteractorLocation {
-
-    @Inject
-    @field:Named("SOURCE_ROOT")
-    lateinit var sourceRoot: File
-
-    init {
-        LEM_COMPONENT.inject(this)
-    }
-
     // global method:       com.blaster.platform.LemAppKt::main
     // member in class:     com.blaster.platform.LemApp::render
     // class:               com.blaster.platform.LemApp
 
-    fun locate(path: String): Location {
+    fun locate(sourceRoot: File, path: String): Location {
         if (path.contains(":")) { // todo: should be something in the lines of \w+(.\w+)*(::[\w]+)?
             val count = path.count { it == ':' }
             check(count == 2) { "Syntactical error in the argument! $path" }
         }
         val clazz = extractClass(path)
-        val file = locateFile(clazz)
+        val file = locateFile(sourceRoot, clazz)
         return if (path.contains("::")) {
             val member = extractMember(path)
             if (clazz.endsWith("Kt")) {
@@ -61,7 +49,7 @@ class InteractorLocation {
         return path.substring(path.lastIndexOf(":") + 1, path.length)
     }
 
-    private fun locateFile(clazz: String): File {
+    private fun locateFile(sourceRoot: File, clazz: String): File {
         var filepath = clazz.replace(".", "/")
         if (filepath.endsWith("Kt")) {
             filepath = filepath.removeSuffix("Kt")

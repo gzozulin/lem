@@ -31,7 +31,7 @@ class InteractorTokens {
 
     fun extractStatements(tokenStream: CommonTokenStream, statements: KotlinParser.StatementsContext): List<Insert> {
         val tokens = tokenStream.getTokens(statements.start.tokenIndex + 1, statements.stop.tokenIndex - 1)
-        return extractStatementsInternal(tokens)
+        return extractTokens(tokens)
     }
 
     fun extractDeclaration(tokenStream: CommonTokenStream, memberDecl: ParserRuleContext): List<Insert> {
@@ -47,7 +47,7 @@ class InteractorTokens {
         } else {
             tokenStream.get(memberDecl.start.tokenIndex, lastToken.tokenIndex)
         }
-        return extractStatementsInternal(tokens)
+        return extractTokens(tokens)
     }
 
     private fun findPrevDeclaration(tokenStream: CommonTokenStream, index: Int): Token? {
@@ -64,7 +64,7 @@ class InteractorTokens {
         return null
     }
 
-    private fun extractStatementsInternal(tokens: List<Token>): List<Insert> {
+    private fun extractTokens(tokens: List<Token>): List<Insert> {
         val text = tokensToText(tokens)
         val (tokenStream, parser) = lexingManager.provideParserForStatememts(text)
         val statements = parsingManager.locateStatements(tokenStream, parser)

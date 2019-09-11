@@ -96,9 +96,6 @@ class InteractorParse {
     }
 
     private fun processCommands(inserts: List<Insert>): List<Insert> {
-        if (inserts.isEmpty()) {
-            return inserts
-        }
         val mutableList = ArrayList(inserts)
         val iterator = mutableList.listIterator()
         while (iterator.hasNext()) {

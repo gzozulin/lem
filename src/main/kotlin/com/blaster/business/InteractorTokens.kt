@@ -35,16 +35,16 @@ class InteractorTokens {
         val statements = parsingManager.locateStatements(tokenStream, parser)
         val result = ArrayList<Insert>()
         for (statement in statements) {
-            when (statement) {
-                is StatementsParser.DelimitedCommentContext -> {
-                    val cleaned = cleanup(statement.text)
-                    if (cleaned != null) {
+            val cleaned = cleanup(statement.text)
+            if (cleaned != null) {
+                when (statement) {
+                    is StatementsParser.DelimitedCommentContext -> {
                         result.add(InsertText(cleaned))
                     }
-                }
-                is StatementsParser.LineCommentContext -> {
-                    val cleaned = cleanup(statement.text)
-                    if (cleaned != null) {
+                    is StatementsParser.CodeContext -> {
+                        result.add(InsertCode(cleaned))
+                    }
+                    is StatementsParser.LineCommentContext -> {
                         val command = interactorCommands.extractCommand(cleaned)
                         if (command != null) {
                             result.add(command)
@@ -52,14 +52,8 @@ class InteractorTokens {
                             result.add(InsertText(cleaned))
                         }
                     }
+                    else -> throw IllegalStateException("UnknownStatement!")
                 }
-                is StatementsParser.CodeContext -> {
-                    val cleaned = cleanup(statement.text)
-                    if (cleaned != null) {
-                        result.add(InsertCode(cleaned))
-                    }
-                }
-                else -> throw IllegalStateException("UnknownStatement!")
             }
         }
         return result

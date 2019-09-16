@@ -27,23 +27,6 @@ class InteractorPrint {
         var result = ""
         for (insert in inserts) {
             when (insert) {
-                is InsertCommand -> {
-                    when (insert.type) {
-                        InsertCommand.Type.INCLUDE -> {
-                            val includeResult = renderIncludeCommand(insert, child)
-                            if (includeResult != null) {
-                                result += includeResult
-                            }
-                        }
-                        InsertCommand.Type.HEADER -> {
-                            result += printingManager.renderTemplate(
-                                "template_header.ftlh",
-                                hashMapOf("type" to insert.subcommand, "header" to insert.argument)
-                            ) + "\n"
-                        }
-                        else -> throw IllegalStateException("Unhandled command!")
-                    }
-                }
                 is InsertText -> {
                     result += printingManager.renderTemplate(
                         "template_text.ftlh",
@@ -53,6 +36,23 @@ class InteractorPrint {
                     result += printingManager.renderTemplate(
                         "template_code.ftlh",
                         hashMapOf(codeTemplateClass(child), "code" to insert.code)) + "\n"
+                }
+                is InsertCommand -> {
+                    when (insert.type) {
+                        InsertCommand.Type.HEADER -> {
+                            result += printingManager.renderTemplate(
+                                "template_header.ftlh",
+                                hashMapOf("type" to insert.subcommand, "header" to insert.argument)
+                            ) + "\n"
+                        }
+                        InsertCommand.Type.INCLUDE -> {
+                            val includeResult = renderIncludeCommand(insert, child)
+                            if (includeResult != null) {
+                                result += includeResult
+                            }
+                        }
+                        else -> throw IllegalStateException("Unhandled command!")
+                    }
                 }
             }
             if (insert.children.isNotEmpty()) {

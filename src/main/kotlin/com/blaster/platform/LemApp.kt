@@ -18,14 +18,14 @@ class LemApp {
 
     fun render(sources: List<Pair<File, String>>) {
         sources.forEach {
-            val parsed = interactorParse.parseDef(it.second)
-            interactorPrint.printArticle(it.second, parsed)
+            val parsed = interactorParse.parseDef(it.first, it.second)
+            interactorPrint.printArticle(it.first, it.second, parsed)
         }
     }
 }
 
 fun main() {
     val lemApp = LemApp()
-    val sources = listOf(File("") to "com.blaster.platform.LemAppKt::main")
+    val sources = listOf(File("src/main/kotlin") to "com.blaster.platform.LemAppKt::main")
     lemApp.render(sources)
 }

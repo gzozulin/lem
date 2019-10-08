@@ -11,6 +11,7 @@ import com.blaster.platform.LEM_COMPONENT
 import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.ParserRuleContext
 import org.antlr.v4.runtime.Token
+import java.io.File
 import javax.inject.Inject
 
 class InteractorParse {
@@ -30,8 +31,8 @@ class InteractorParse {
         LEM_COMPONENT.inject(this)
     }
 
-    fun parseDef(path: String): List<Insert> {
-        val location = interactorLocation.locate(path)
+    fun parseDef(sourceRoot: File, path: String): List<Insert> {
+        val location = interactorLocation.locate(sourceRoot, path)
         val (tokenStream, parser) = lexingManager.provideParserForKotlin(location.file)
         parser.reset()
         val statements = when (location) {
@@ -40,11 +41,11 @@ class InteractorParse {
             else -> throw UnsupportedOperationException()
         }
         val inserts = extractStatements(tokenStream, statements)
-        return processCommands(inserts)
+        return processCommands(sourceRoot, inserts)
     }
 
-    private fun parseDecl(path: String): List<Insert> {
-        val location = interactorLocation.locate(path)
+    private fun parseDecl(sourceRoot: File, path: String): List<Insert> {
+        val location = interactorLocation.locate(sourceRoot, path)
         val (tokenStream, parser) = lexingManager.provideParserForKotlin(location.file)
         parser.reset()
         val declarations = when (location) {
@@ -57,7 +58,7 @@ class InteractorParse {
         for (declaration in declarations) {
             inserts.addAll(extractDeclaration(tokenStream, declaration))
         }
-        return processCommands(inserts)
+        return processCommands(sourceRoot, inserts)
     }
 
     private fun extractStatements(tokenStream: CommonTokenStream, statements: KotlinParser.StatementsContext): List<Insert> {
@@ -95,7 +96,7 @@ class InteractorParse {
         return null
     }
 
-    private fun processCommands(inserts: List<Insert>): List<Insert> {
+    private fun processCommands(sourceRoot: File, inserts: List<Insert>): List<Insert> {
         val mutableList = ArrayList(inserts)
         val iterator = mutableList.listIterator()
         while (iterator.hasNext()) {
@@ -105,10 +106,10 @@ class InteractorParse {
                     InsertCommand.Type.INCLUDE -> {
                         when (insert.subcommand) {
                             SUBCOMMAND_DECL -> {
-                                insert.children.addAll(parseDecl(insert.argument))
+                                insert.children.addAll(parseDecl(sourceRoot, insert.argument))
                             }
                             SUBCOMMAND_DEF -> {
-                                insert.children.addAll(parseDef(insert.argument))
+                                insert.children.addAll(parseDef(sourceRoot, insert.argument))
                             }
                         }
                     }
@@ -122,13 +123,13 @@ class InteractorParse {
                         iterator.remove()
                         when (insert.subcommand) {
                             SUBCOMMAND_DECL -> {
-                                val declarations = parseDecl(insert.argument)
+                                val declarations = parseDecl(sourceRoot, insert.argument)
                                 for (decl in declarations) {
                                     iterator.add(decl)
                                 }
                             }
                             SUBCOMMAND_DEF -> {
-                                val definitions = parseDef(insert.argument)
+                                val definitions = parseDef(sourceRoot, insert.argument)
                                 for (def in definitions) {
                                     iterator.add(def)
                                 }

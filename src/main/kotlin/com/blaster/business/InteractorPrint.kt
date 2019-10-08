@@ -3,6 +3,7 @@ package com.blaster.business
 import com.blaster.data.inserts.*
 import com.blaster.data.managers.printing.PrintingManager
 import com.blaster.platform.LEM_COMPONENT
+import java.io.File
 import java.lang.IllegalStateException
 import javax.inject.Inject
 
@@ -17,8 +18,8 @@ class InteractorPrint {
         LEM_COMPONENT.inject(this)
     }
 
-    fun printArticle(path: String, parsed: List<Insert>) {
-        val located = interactorLocation.locate(path)
+    fun printArticle(sourceRoot: File, path: String, parsed: List<Insert>) {
+        val located = interactorLocation.locate(sourceRoot, path)
         val article = printingManager.renderTemplate("template_article.ftlh", hashMapOf("article" to printInserts(parsed)))
         printingManager.printArticle(located.file, article)
     }

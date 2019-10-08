@@ -54,31 +54,8 @@
         <title>Welcome!</title>
     </head>
     <body>
-            <h1>Lem app article</h1>
-
-    <h2>Rule #1 for writing a good article: minimize your barrier to entry. Make it easy for your reader to be drawn in.</h2>
-
-<div class="text">A large opening paragraph at the start of an article is a huge barrier to entry. Your reader has to wade through a large wall of text before determining if the article is really interesting and worth reading. This requires a large expenditure of effort. Most people won’t bother.</div>
-<div class="text">Keep your opening short and punchy. A one-sentence or two-sentence leading paragraph is an easy buy-in. You can skim it and read it in barely more time than it would take to scroll past.</div>
-<div class="text">Start with something short and easy to engage with. Prove to your reader that you’re providing value, then ask them to expend effort.</div>
-    <h2>We will start by creating a main class for our app.</h2>
-
-<div class="link">
-    <a href="https:github.com/antlr/grammars-v4/tree/master/kotlin">Kotlin grammar repo</a>
-    <p> This repo contains some of the grammars used throughout the article</p>
-</div><div class="picture">
-    <h3>This is a cool picture</h3>
-    <img src="https:ichef.bbci.co.uk/news/660/media/images/83351000/jpg/_83351971_explorer164gowerpicturebygarethjames.jpg" alt="This is a cool picture">
-    <p>This picture looks cool</p>
-</div><div class="code">val lemApp = LemApp()
-lemApp.render()</div>
-    <h2>Now we can go to includes.</h2>
-
-<div class="code">class LemApp </div>
-<div class="text">Sec prop</div>
-<div class="code">@Inject
-lateinit var interactorPrint: InteractorPrint</div>
-<div class="text">Main foo</div>
-<div class="code">fun render() </div>
+        <div class="code">val lemApp = LemApp()
+val sources = listOf(File(&quot;src/main/kotlin&quot;)to&quot;com.blaster.platform.LemAppKt::main&quot;)
+lemApp.render(sources)</div>
     </body>
 </html>

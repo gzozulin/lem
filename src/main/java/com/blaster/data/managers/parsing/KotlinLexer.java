@@ -1,6 +1,6 @@
 // Generated from KotlinLexer.g4 by ANTLR 4.7.2
 
-    package com.blaster.data.managers.parsing;
+package com.blaster.data.managers.parsing;
 
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;

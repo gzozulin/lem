@@ -26,9 +26,8 @@ class InteractorTokens {
         LEM_COMPONENT.inject(this)
     }
 
-    fun extractTokens(tokens: List<Token>): List<Insert> {
-        val text = tokensToText(tokens)
-        val (tokenStream, parser) = parsingManager.provideParserForStatememts(text)
+    fun extractTokens(code: String): List<Insert> {
+        val (tokenStream, parser) = parsingManager.provideParserForStatememts(code)
         val statements = kotlinManager.locateStatements(tokenStream, parser)
         val result = ArrayList<Insert>()
         for (statement in statements) {

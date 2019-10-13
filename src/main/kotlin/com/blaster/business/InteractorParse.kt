@@ -8,6 +8,7 @@ import com.blaster.data.managers.parsing.ParsingManager
 import com.blaster.data.managers.kotlin.KotlinParser
 import com.blaster.data.managers.kotlin.KotlinManager
 import com.blaster.platform.LEM_COMPONENT
+import io.reactivex.Observable
 import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.ParserRuleContext
 import org.antlr.v4.runtime.Token
@@ -33,67 +34,19 @@ class InteractorParse {
 
     fun parseDef(sourceRoot: File, path: String): List<Insert> {
         val location = interactorLocation.locate(sourceRoot, path)
-        val (tokenStream, parser) = parsingManager.provideParserForKotlin(location.file)
-        parser.reset()
-        val statements = when (location) {
-            is LocationGlobal -> kotlinManager.locateGlobalMethodStatements(tokenStream, parser, location)
-            is LocationMember -> kotlinManager.locateMemberMethodStatements(tokenStream, parser, location)
-            else -> throw UnsupportedOperationException()
-        }
-        val inserts = extractStatements(tokenStream, statements)
+        val definition = kotlinManager.extractDef(location)
+        val inserts = interactorTokens.extractTokens(definition)
         return processCommands(sourceRoot, inserts)
     }
 
     private fun parseDecl(sourceRoot: File, path: String): List<Insert> {
         val location = interactorLocation.locate(sourceRoot, path)
-        val (tokenStream, parser) = parsingManager.provideParserForKotlin(location.file)
-        parser.reset()
-        val declarations = when (location) {
-            is LocationGlobal -> listOf(kotlinManager.locateGlobalMethodDecl(tokenStream, parser, location))
-            is LocationMember -> listOf(kotlinManager.locateMemberDecl(tokenStream, parser, location))
-            is LocationClass -> kotlinManager.locateClassDecls(tokenStream, parser, location)
-            else -> throw UnsupportedOperationException()
-        }
-        val inserts = ArrayList<Insert>()
-        for (declaration in declarations) {
-            inserts.addAll(extractDeclaration(tokenStream, declaration))
-        }
+        val declarations = kotlinManager.extractDecl(location)
+        val inserts = Observable.fromIterable(declarations)
+            .flatMap { Observable.fromIterable(interactorTokens.extractTokens(it)) }
+            .toList()
+            .blockingGet()
         return processCommands(sourceRoot, inserts)
-    }
-
-    private fun extractStatements(tokenStream: CommonTokenStream, statements: KotlinParser.StatementsContext): List<Insert> {
-        val tokens = tokenStream.getTokens(statements.start.tokenIndex + 1, statements.stop.tokenIndex - 1)
-        return interactorTokens.extractTokens(tokens)
-    }
-
-    private fun extractDeclaration(tokenStream: CommonTokenStream, memberDecl: ParserRuleContext): List<Insert> {
-        val lastToken = when (memberDecl) {
-            is KotlinParser.ClassDeclarationContext    -> tokenStream.get(memberDecl.classBody().start.tokenIndex - 1)
-            is KotlinParser.FunctionDeclarationContext -> tokenStream.get(memberDecl.functionBody().start.tokenIndex - 1)
-            is KotlinParser.PropertyDeclarationContext -> memberDecl.stop
-            else -> throw UnsupportedOperationException("Unknown type of member!")
-        }
-        val prevDecl = findPrevDeclaration(tokenStream, memberDecl.start.tokenIndex)
-        val tokens = if (prevDecl != null) {
-            tokenStream.get(prevDecl.tokenIndex + 1, lastToken.tokenIndex)
-        } else {
-            tokenStream.get(memberDecl.start.tokenIndex, lastToken.tokenIndex)
-        }
-        return interactorTokens.extractTokens(tokens)
-    }
-
-    private fun findPrevDeclaration(tokenStream: CommonTokenStream, index: Int): Token? {
-        var current = index - 1
-        while(current >= 0) {
-            val token = tokenStream.get(current)
-            val text = token.text
-            // not hidden, not blank, not new line
-            if (token.channel != 1 && !text.isBlank()) {
-                return token
-            }
-            current--
-        }
-        return null
     }
 
     private fun processCommands(sourceRoot: File, inserts: List<Insert>): List<Insert> {

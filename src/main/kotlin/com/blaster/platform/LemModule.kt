@@ -1,8 +1,8 @@
 package com.blaster.platform
 
 import com.blaster.business.*
-import com.blaster.data.managers.parsing.ParsingManager
-import com.blaster.data.managers.parsing.ParsingManagerImpl
+import com.blaster.data.managers.statements.StatementsManager
+import com.blaster.data.managers.statements.StatementsManagerImpl
 import com.blaster.data.managers.kotlin.KotlinManager
 import com.blaster.data.managers.kotlin.KotlinManagerImpl
 import com.blaster.data.managers.printing.PrintingManager
@@ -41,7 +41,7 @@ class LemModule {
 
     @Singleton
     @Provides
-    fun lexingManager(): ParsingManager = ParsingManagerImpl()
+    fun lexingManager(): StatementsManager = StatementsManagerImpl()
 
     @Singleton
     @Provides
@@ -63,10 +63,6 @@ class LemModule {
     @Singleton
     @Provides
     fun providesPrintUseCase() = InteractorPrint()
-
-    @Singleton
-    @Provides
-    fun extractTokens() = InteractorTokens()
 
     @Singleton
     @Provides

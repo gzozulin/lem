@@ -1,34 +1,22 @@
-package com.blaster.business
+package com.blaster.data.managers.statements
 
 import com.blaster.data.inserts.Insert
 import com.blaster.data.inserts.InsertCode
 import com.blaster.data.inserts.InsertText
-import com.blaster.data.managers.parsing.ParsingManager
-import com.blaster.data.managers.kotlin.KotlinManager
-import com.blaster.data.managers.kotlin.StatementsParser
-import com.blaster.platform.LEM_COMPONENT
-import org.antlr.v4.runtime.Token
-import javax.inject.Inject
+import com.blaster.data.managers.kotlin.*
+import org.antlr.v4.runtime.CharStreams
+import org.antlr.v4.runtime.CommonTokenStream
+import org.antlr.v4.runtime.ParserRuleContext
 
-class InteractorTokens {
-    private val lineRegex = "[\r]?[\n]".toRegex()
+private val LINE_REGEX = "[\r]?[\n]".toRegex()
 
-    @Inject
-    lateinit var parsingManager: ParsingManager
+class StatementsManagerImpl : StatementsManager {
+    private val cacheForStatements = HashMap<String, Pair<CommonTokenStream, StatementsParser>>()
 
-    @Inject
-    lateinit var kotlinManager: KotlinManager
-
-    @Inject
-    lateinit var interactorCommands: InteractorCommands
-
-    init {
-        LEM_COMPONENT.inject(this)
-    }
-
-    fun extractTokens(code: String): List<Insert> {
-        val (tokenStream, parser) = parsingManager.provideParserForStatememts(code)
-        val statements = kotlinManager.locateStatements(tokenStream, parser)
+    override fun extractStatements(code: String): List<Insert> {
+        val (_, parser) = provideParserForStatememts(code)
+        parser.reset()
+        val statements = locateStatements(parser)
         val result = ArrayList<Insert>()
         for (statement in statements) {
             val cleaned = cleanup(statement.text)
@@ -41,17 +29,41 @@ class InteractorTokens {
                         result.add(InsertCode(cleaned))
                     }
                     is StatementsParser.LineCommentContext -> {
-                        val command = interactorCommands.extractCommand(cleaned)
-                        if (command != null) {
-                            result.add(command)
-                        } else {
-                            result.add(InsertText(cleaned))
-                        }
+                        result.add(InsertText(cleaned))
                     }
                     else -> throw IllegalStateException("UnknownStatement!")
                 }
             }
         }
+        return result
+    }
+
+    private fun provideParserForStatememts(key: String): Pair<CommonTokenStream, StatementsParser> {
+        var result = cacheForStatements[key]
+        if (result == null) {
+            val stream = CommonTokenStream(StatementsLexer(CharStreams.fromString(key)))
+            val parser = StatementsParser(stream)
+            result = stream to parser
+            cacheForStatements[key] = result
+        }
+        return result
+    }
+
+    private fun locateStatements(parser: StatementsParser): List<ParserRuleContext> {
+        val result = ArrayList<ParserRuleContext>()
+        object : StatementsBaseVisitor<Unit>() {
+            override fun visitLineComment(ctx: StatementsParser.LineCommentContext?) {
+                result.add(ctx!!)
+            }
+
+            override fun visitDelimitedComment(ctx: StatementsParser.DelimitedCommentContext?) {
+                result.add(ctx!!)
+            }
+
+            override fun visitCode(ctx: StatementsParser.CodeContext?) {
+                result.add(ctx!!)
+            }
+        }.visitStatements(parser.statements())
         return result
     }
 
@@ -75,15 +87,7 @@ class InteractorTokens {
     }
 
     private fun textToLines(string: String): List<String> {
-        return string.split(lineRegex)
-    }
-
-    private fun tokensToText(tokens: List<Token>): String {
-        var result = ""
-        for (token in tokens) {
-            result += token.text
-        }
-        return result
+        return string.split(LINE_REGEX)
     }
 
     private fun linesToText(lines: List<String>): String {

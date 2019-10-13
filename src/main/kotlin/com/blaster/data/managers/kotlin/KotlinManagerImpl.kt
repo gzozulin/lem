@@ -151,22 +151,4 @@ class KotlinManagerImpl : KotlinManager {
         check(result.isNotEmpty()) { "Nothing found for specified location $locationClass" }
         return result
     }
-
-    override fun locateStatements(tokenStream: CommonTokenStream, parser: StatementsParser): List<ParserRuleContext> {
-        val result = ArrayList<ParserRuleContext>()
-        object : StatementsBaseVisitor<Unit>() {
-            override fun visitLineComment(ctx: StatementsParser.LineCommentContext?) {
-                result.add(ctx!!)
-            }
-
-            override fun visitDelimitedComment(ctx: StatementsParser.DelimitedCommentContext?) {
-                result.add(ctx!!)
-            }
-
-            override fun visitCode(ctx: StatementsParser.CodeContext?) {
-                result.add(ctx!!)
-            }
-        }.visitStatements(parser.statements())
-        return result
-    }
 }

@@ -1,12 +1,84 @@
 package com.blaster.business
 
 import com.blaster.data.inserts.*
+import com.blaster.platform.LEM_COMPONENT
+import io.reactivex.Observable
+import java.io.File
 import java.lang.IllegalArgumentException
+import javax.inject.Inject
+import dagger.Lazy
 
 val CSV_PATTERN = ";".toPattern()
 
 class InteractorCommands {
-    fun extractCommand(command: String): InsertCommand? {
+    @Inject
+    lateinit var interactorParse: Lazy<InteractorParse>
+
+    init {
+        LEM_COMPONENT.inject(this)
+    }
+
+    fun identifyCommands(inserts: List<Insert>): List<Insert> = Observable.fromIterable(inserts)
+        .map {
+            if (it is InsertText) {
+                extractCommand(it.text) ?: it
+            } else {
+                it
+            }
+        }
+        .toList()
+        .blockingGet()
+
+    fun applyCommands(sourceRoot: File, inserts: List<Insert>): List<Insert> {
+        val mutableList = ArrayList(inserts)
+        val iterator = mutableList.listIterator()
+        while (iterator.hasNext()) {
+            val insert = iterator.next()
+            if (insert is InsertCommand) {
+                when (insert.type) {
+                    InsertCommand.Type.INCLUDE -> {
+                        when (insert.subcommand) {
+                            SUBCOMMAND_DECL -> {
+                                insert.children.addAll(interactorParse.get().parseDecl(sourceRoot, insert.argument))
+                            }
+                            SUBCOMMAND_DEF -> {
+                                insert.children.addAll(interactorParse.get().parseDef(sourceRoot, insert.argument))
+                            }
+                        }
+                    }
+                    InsertCommand.Type.OMIT -> {
+                        check(iterator.hasNext()) { "What to omit??" }
+                        iterator.remove()
+                        iterator.next()
+                        iterator.remove()
+                    }
+                    InsertCommand.Type.INLINE -> {
+                        iterator.remove()
+                        when (insert.subcommand) {
+                            SUBCOMMAND_DECL -> {
+                                val declarations = interactorParse.get().parseDecl(sourceRoot, insert.argument)
+                                for (decl in declarations) {
+                                    iterator.add(decl)
+                                }
+                            }
+                            SUBCOMMAND_DEF -> {
+                                val definitions = interactorParse.get().parseDef(sourceRoot, insert.argument)
+                                for (def in definitions) {
+                                    iterator.add(def)
+                                }
+                            }
+                        }
+                    }
+                    else -> {
+                        // do nothing
+                    }
+                }
+            }
+        }
+        return mutableList
+    }
+
+    private fun extractCommand(command: String): InsertCommand? {
         when {
             command.startsWith(COMMAND_INCLUDE) -> {
                 val includeCmd = removePrefix(command, COMMAND_INCLUDE)

@@ -10,7 +10,4 @@ import org.antlr.v4.runtime.ParserRuleContext
 interface KotlinManager {
     fun extractDef(location: Location): String
     fun extractDecl(location: Location): List<String>
-
-    // todo: should be refactored to its own parser
-    fun locateStatements(tokenStream: CommonTokenStream, parser: StatementsParser): List<ParserRuleContext>
 }

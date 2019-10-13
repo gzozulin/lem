@@ -16,16 +16,15 @@ class LocationGlobal(file: File, val identifier: String) : Location(file) {
     override fun toString(): String = "{file: $file, identifier: $identifier}"
 }
 
+val PATH_REGEX = "\\w+(\\.\\w+)+(::\\w+)?".toRegex()
+
 class InteractorLocation {
     // global method:       com.blaster.platform.LemAppKt::main
     // member in class:     com.blaster.platform.LemApp::render
     // class:               com.blaster.platform.LemApp
 
     fun locate(sourceRoot: File, path: String): Location {
-        if (path.contains(":")) { // todo: should be something in the lines of \w+(.\w+)*(::[\w]+)?
-            val count = path.count { it == ':' }
-            check(count == 2) { "Syntactical error in the argument! $path" }
-        }
+        check(PATH_REGEX.find(path)!!.value.length == path.length) { "Wrong path for the location: $path" }
         val clazz = extractClass(path)
         val file = locateFile(sourceRoot, clazz)
         return if (path.contains("::")) {

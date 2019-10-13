@@ -3,13 +3,10 @@ package com.blaster.business
 import com.blaster.data.inserts.Insert
 import com.blaster.data.inserts.InsertCode
 import com.blaster.data.inserts.InsertText
-import com.blaster.data.managers.lexing.LexingManager
-import com.blaster.data.managers.parsing.KotlinParser
 import com.blaster.data.managers.parsing.ParsingManager
-import com.blaster.data.managers.parsing.StatementsParser
+import com.blaster.data.managers.traversing.TraversingManager
+import com.blaster.data.managers.traversing.StatementsParser
 import com.blaster.platform.LEM_COMPONENT
-import org.antlr.v4.runtime.CommonTokenStream
-import org.antlr.v4.runtime.ParserRuleContext
 import org.antlr.v4.runtime.Token
 import javax.inject.Inject
 
@@ -17,10 +14,10 @@ class InteractorTokens {
     private val lineRegex = "[\r]?[\n]".toRegex()
 
     @Inject
-    lateinit var lexingManager: LexingManager
+    lateinit var parsingManager: ParsingManager
 
     @Inject
-    lateinit var parsingManager: ParsingManager
+    lateinit var traversingManager: TraversingManager
 
     @Inject
     lateinit var interactorCommands: InteractorCommands
@@ -31,8 +28,8 @@ class InteractorTokens {
 
     fun extractTokens(tokens: List<Token>): List<Insert> {
         val text = tokensToText(tokens)
-        val (tokenStream, parser) = lexingManager.provideParserForStatememts(text)
-        val statements = parsingManager.locateStatements(tokenStream, parser)
+        val (tokenStream, parser) = parsingManager.provideParserForStatememts(text)
+        val statements = traversingManager.locateStatements(tokenStream, parser)
         val result = ArrayList<Insert>()
         for (statement in statements) {
             val cleaned = cleanup(statement.text)

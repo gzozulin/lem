@@ -1,7 +1,7 @@
-package com.blaster.data.managers.parsing.visitors
+package com.blaster.data.managers.traversing.visitors
 
-import com.blaster.data.managers.parsing.KotlinParser
-import com.blaster.data.managers.parsing.KotlinParserBaseVisitor
+import com.blaster.data.managers.traversing.KotlinParser
+import com.blaster.data.managers.traversing.KotlinParserBaseVisitor
 
 class GlobalDeclVisitor(
     private val identifier: String,

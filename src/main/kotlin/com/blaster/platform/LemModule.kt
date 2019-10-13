@@ -1,10 +1,10 @@
 package com.blaster.platform
 
 import com.blaster.business.*
-import com.blaster.data.managers.lexing.LexingManager
-import com.blaster.data.managers.lexing.LexingManagerImpl
 import com.blaster.data.managers.parsing.ParsingManager
 import com.blaster.data.managers.parsing.ParsingManagerImpl
+import com.blaster.data.managers.traversing.TraversingManager
+import com.blaster.data.managers.traversing.TraversingManagerImpl
 import com.blaster.data.managers.printing.PrintingManager
 import com.blaster.data.managers.printing.PrintingManagerImpl
 import dagger.Module
@@ -41,7 +41,7 @@ class LemModule {
 
     @Singleton
     @Provides
-    fun lexingManager(): LexingManager = LexingManagerImpl()
+    fun lexingManager(): ParsingManager = ParsingManagerImpl()
 
     @Singleton
     @Provides
@@ -49,7 +49,7 @@ class LemModule {
 
     @Singleton
     @Provides
-    fun providesParsingManager(): ParsingManager = ParsingManagerImpl()
+    fun providesParsingManager(): TraversingManager = TraversingManagerImpl()
 
 
     @Singleton

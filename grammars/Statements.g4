@@ -1,7 +1,7 @@
 grammar Statements;
 
 @header {
-package com.blaster.data.managers.parsing;
+package com.blaster.data.managers.traversing;
 }
 
 DelimitedComment:   '/*' ( DelimitedComment | . )*? '*/';

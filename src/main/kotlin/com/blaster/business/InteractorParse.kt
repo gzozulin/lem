@@ -5,8 +5,8 @@ import com.blaster.data.inserts.InsertCommand
 import com.blaster.data.inserts.SUBCOMMAND_DECL
 import com.blaster.data.inserts.SUBCOMMAND_DEF
 import com.blaster.data.managers.parsing.ParsingManager
-import com.blaster.data.managers.traversing.KotlinParser
-import com.blaster.data.managers.traversing.TraversingManager
+import com.blaster.data.managers.kotlin.KotlinParser
+import com.blaster.data.managers.kotlin.KotlinManager
 import com.blaster.platform.LEM_COMPONENT
 import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.ParserRuleContext
@@ -22,7 +22,7 @@ class InteractorParse {
     lateinit var parsingManager: ParsingManager
 
     @Inject
-    lateinit var traversingManager: TraversingManager
+    lateinit var kotlinManager: KotlinManager
 
     @Inject
     lateinit var interactorTokens: InteractorTokens
@@ -36,8 +36,8 @@ class InteractorParse {
         val (tokenStream, parser) = parsingManager.provideParserForKotlin(location.file)
         parser.reset()
         val statements = when (location) {
-            is LocationGlobal -> traversingManager.locateGlobalMethodStatements(tokenStream, parser, location)
-            is LocationMember -> traversingManager.locateMemberMethodStatements(tokenStream, parser, location)
+            is LocationGlobal -> kotlinManager.locateGlobalMethodStatements(tokenStream, parser, location)
+            is LocationMember -> kotlinManager.locateMemberMethodStatements(tokenStream, parser, location)
             else -> throw UnsupportedOperationException()
         }
         val inserts = extractStatements(tokenStream, statements)
@@ -49,9 +49,9 @@ class InteractorParse {
         val (tokenStream, parser) = parsingManager.provideParserForKotlin(location.file)
         parser.reset()
         val declarations = when (location) {
-            is LocationGlobal -> listOf(traversingManager.locateGlobalMethodDecl(tokenStream, parser, location))
-            is LocationMember -> listOf(traversingManager.locateMemberDecl(tokenStream, parser, location))
-            is LocationClass -> traversingManager.locateClassDecls(tokenStream, parser, location)
+            is LocationGlobal -> listOf(kotlinManager.locateGlobalMethodDecl(tokenStream, parser, location))
+            is LocationMember -> listOf(kotlinManager.locateMemberDecl(tokenStream, parser, location))
+            is LocationClass -> kotlinManager.locateClassDecls(tokenStream, parser, location)
             else -> throw UnsupportedOperationException()
         }
         val inserts = ArrayList<Insert>()

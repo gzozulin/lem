@@ -4,8 +4,8 @@ import com.blaster.data.inserts.Insert
 import com.blaster.data.inserts.InsertCode
 import com.blaster.data.inserts.InsertText
 import com.blaster.data.managers.parsing.ParsingManager
-import com.blaster.data.managers.traversing.TraversingManager
-import com.blaster.data.managers.traversing.StatementsParser
+import com.blaster.data.managers.kotlin.KotlinManager
+import com.blaster.data.managers.kotlin.StatementsParser
 import com.blaster.platform.LEM_COMPONENT
 import org.antlr.v4.runtime.Token
 import javax.inject.Inject
@@ -17,7 +17,7 @@ class InteractorTokens {
     lateinit var parsingManager: ParsingManager
 
     @Inject
-    lateinit var traversingManager: TraversingManager
+    lateinit var kotlinManager: KotlinManager
 
     @Inject
     lateinit var interactorCommands: InteractorCommands
@@ -29,7 +29,7 @@ class InteractorTokens {
     fun extractTokens(tokens: List<Token>): List<Insert> {
         val text = tokensToText(tokens)
         val (tokenStream, parser) = parsingManager.provideParserForStatememts(text)
-        val statements = traversingManager.locateStatements(tokenStream, parser)
+        val statements = kotlinManager.locateStatements(tokenStream, parser)
         val result = ArrayList<Insert>()
         for (statement in statements) {
             val cleaned = cleanup(statement.text)

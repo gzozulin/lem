@@ -3,8 +3,8 @@ package com.blaster.platform
 import com.blaster.business.*
 import com.blaster.data.managers.parsing.ParsingManager
 import com.blaster.data.managers.parsing.ParsingManagerImpl
-import com.blaster.data.managers.traversing.TraversingManager
-import com.blaster.data.managers.traversing.TraversingManagerImpl
+import com.blaster.data.managers.kotlin.KotlinManager
+import com.blaster.data.managers.kotlin.KotlinManagerImpl
 import com.blaster.data.managers.printing.PrintingManager
 import com.blaster.data.managers.printing.PrintingManagerImpl
 import dagger.Module
@@ -49,7 +49,7 @@ class LemModule {
 
     @Singleton
     @Provides
-    fun providesParsingManager(): TraversingManager = TraversingManagerImpl()
+    fun providesParsingManager(): KotlinManager = KotlinManagerImpl()
 
 
     @Singleton

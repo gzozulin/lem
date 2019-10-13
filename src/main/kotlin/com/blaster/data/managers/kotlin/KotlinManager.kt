@@ -1,4 +1,4 @@
-package com.blaster.data.managers.traversing
+package com.blaster.data.managers.kotlin
 
 import com.blaster.business.LocationClass
 import com.blaster.business.LocationGlobal
@@ -6,7 +6,7 @@ import com.blaster.business.LocationMember
 import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.ParserRuleContext
 
-interface TraversingManager {
+interface KotlinManager {
     fun locateGlobalMethodStatements(tokenStream: CommonTokenStream, parser: KotlinParser, locationGlobal: LocationGlobal): KotlinParser.StatementsContext
     fun locateMemberMethodStatements(tokenStream: CommonTokenStream, parser: KotlinParser, locationMember: LocationMember): KotlinParser.StatementsContext
     fun locateGlobalMethodDecl(tokenStream: CommonTokenStream, parser: KotlinParser, locationGlobal: LocationGlobal): KotlinParser.FunctionDeclarationContext

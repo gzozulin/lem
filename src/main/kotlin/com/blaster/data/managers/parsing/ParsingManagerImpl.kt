@@ -1,9 +1,9 @@
 package com.blaster.data.managers.parsing
 
-import com.blaster.data.managers.traversing.KotlinLexer
-import com.blaster.data.managers.traversing.KotlinParser
-import com.blaster.data.managers.traversing.StatementsLexer
-import com.blaster.data.managers.traversing.StatementsParser
+import com.blaster.data.managers.kotlin.KotlinLexer
+import com.blaster.data.managers.kotlin.KotlinParser
+import com.blaster.data.managers.kotlin.StatementsLexer
+import com.blaster.data.managers.kotlin.StatementsParser
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
 import java.io.File

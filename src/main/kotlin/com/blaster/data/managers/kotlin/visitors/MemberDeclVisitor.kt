@@ -1,7 +1,7 @@
-package com.blaster.data.managers.traversing.visitors
+package com.blaster.data.managers.kotlin.visitors
 
-import com.blaster.data.managers.traversing.KotlinParser
-import com.blaster.data.managers.traversing.KotlinParserBaseVisitor
+import com.blaster.data.managers.kotlin.KotlinParser
+import com.blaster.data.managers.kotlin.KotlinParserBaseVisitor
 import org.antlr.v4.runtime.ParserRuleContext
 
 class MemberDeclVisitor(private val identifier: String?, private val lambda: (ParserRuleContext) -> Unit) :

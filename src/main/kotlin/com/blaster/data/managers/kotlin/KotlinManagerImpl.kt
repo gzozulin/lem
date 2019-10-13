@@ -1,16 +1,16 @@
-package com.blaster.data.managers.traversing
+package com.blaster.data.managers.kotlin
 
 import com.blaster.business.LocationClass
 import com.blaster.business.LocationGlobal
 import com.blaster.business.LocationMember
-import com.blaster.data.managers.traversing.visitors.ClassDeclVisitor
-import com.blaster.data.managers.traversing.visitors.GlobalDeclVisitor
-import com.blaster.data.managers.traversing.visitors.MemberDeclVisitor
-import com.blaster.data.managers.traversing.visitors.StatementsVisitor
+import com.blaster.data.managers.kotlin.visitors.ClassDeclVisitor
+import com.blaster.data.managers.kotlin.visitors.GlobalDeclVisitor
+import com.blaster.data.managers.kotlin.visitors.MemberDeclVisitor
+import com.blaster.data.managers.kotlin.visitors.StatementsVisitor
 import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.ParserRuleContext
 
-class TraversingManagerImpl : TraversingManager {
+class KotlinManagerImpl : KotlinManager {
     override fun locateGlobalMethodStatements(tokenStream: CommonTokenStream, parser: KotlinParser, locationGlobal: LocationGlobal): KotlinParser.StatementsContext {
         // todo: can be triggered by member with same name if comes first
         var result: KotlinParser.StatementsContext? = null

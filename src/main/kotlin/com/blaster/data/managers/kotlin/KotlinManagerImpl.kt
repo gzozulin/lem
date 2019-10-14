@@ -18,7 +18,7 @@ import java.io.File
 class KotlinManagerImpl : KotlinManager {
     private val parsers = HashMap<File, Pair<CommonTokenStream, KotlinParser>>()
 
-    override fun extractDef(location: Location): String {
+    override fun extractDefinition(location: Location): String {
         val (tokenStream, parser) = provideParserForKotlin(location.file)
         parser.reset()
         val statements = when (location) {
@@ -30,7 +30,7 @@ class KotlinManagerImpl : KotlinManager {
         return tokensToText(tokens)
     }
 
-    override fun extractDecl(location: Location): List<String> {
+    override fun extractDeclaration(location: Location): List<String> {
         val (tokenStream, parser) = provideParserForKotlin(location.file)
         parser.reset()
         val declarations = when (location) {

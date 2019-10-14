@@ -21,7 +21,7 @@ class InteractorCommands {
     fun identifyCommands(inserts: List<Insert>): List<Insert> = Observable.fromIterable(inserts)
         .map {
             if (it is InsertText) {
-                extractCommand(it.text) ?: it
+                identifyCommand(it.text) ?: it
             } else {
                 it
             }
@@ -78,7 +78,7 @@ class InteractorCommands {
         return mutableList
     }
 
-    private fun extractCommand(command: String): InsertCommand? {
+    private fun identifyCommand(command: String): InsertCommand? {
         when {
             command.startsWith(COMMAND_INCLUDE) -> {
                 val includeCmd = removePrefix(command, COMMAND_INCLUDE)

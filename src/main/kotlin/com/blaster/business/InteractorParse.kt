@@ -27,7 +27,7 @@ class InteractorParse {
 
     fun parseDef(sourceRoot: File, path: String): List<Insert> {
         val location = interactorLocation.locate(sourceRoot, path)
-        val definition = kotlinManager.extractDef(location)
+        val definition = kotlinManager.extractDefinition(location)
         val inserts = statementsManager.extractStatements(definition)
         val withCommands = interactorCommands.identifyCommands(inserts)
         return interactorCommands.applyCommands(sourceRoot, withCommands)
@@ -35,7 +35,7 @@ class InteractorParse {
 
     fun parseDecl(sourceRoot: File, path: String): List<Insert> {
         val location = interactorLocation.locate(sourceRoot, path)
-        val declarations = kotlinManager.extractDecl(location)
+        val declarations = kotlinManager.extractDeclaration(location)
         val inserts = Observable.fromIterable(declarations)
             .flatMap { Observable.fromIterable(statementsManager.extractStatements(it)) }
             .toList()

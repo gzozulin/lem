@@ -8,6 +8,6 @@ import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.ParserRuleContext
 
 interface KotlinManager {
-    fun extractDef(location: Location): String
-    fun extractDecl(location: Location): List<String>
+    fun extractDefinition(location: Location): String
+    fun extractDeclaration(location: Location): List<String>
 }

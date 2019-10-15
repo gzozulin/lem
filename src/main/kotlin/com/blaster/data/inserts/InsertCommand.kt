@@ -1,5 +1,7 @@
 package com.blaster.data.inserts
 
+const val COMMAND_IDENTIFIER    = "#"
+
 const val COMMAND_INCLUDE       = "include"
 const val COMMAND_HEADER        = "header"
 const val COMMAND_OMIT          = "omit"

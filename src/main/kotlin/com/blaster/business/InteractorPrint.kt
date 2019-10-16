@@ -18,10 +18,9 @@ class InteractorPrint {
         LEM_COMPONENT.inject(this)
     }
 
-    fun printArticle(sourceRoot: File, path: String, inserts: List<Insert>) {
-        val located = interactorLocation.locate(sourceRoot, path)
+    fun printArticle(output: File, inserts: List<Insert>) {
         val article = printingManager.renderTemplate("template_article.ftlh", hashMapOf("article" to printInserts(inserts)))
-        printingManager.printArticle(located.file, article)
+        printingManager.printArticle(output, article)
     }
 
     private fun printInserts(inserts: List<Insert>, child: Boolean = false): String {

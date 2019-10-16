@@ -16,16 +16,13 @@ class LemApp {
         LEM_COMPONENT.inject(this)
     }
 
-    fun render(sources: List<Pair<File, String>>) {
-        sources.forEach {
-            val parsed = interactorParse.parseDef(it.first, it.second)
-            interactorPrint.printArticle(it.first, it.second, parsed)
-        }
+    fun render(sourceRoot: File, scenarioFile: File, output: File) {
+        val parsed = interactorParse.parseScenario(sourceRoot, scenarioFile)
+        interactorPrint.printArticle(output, parsed)
     }
 }
 
 fun main() {
     val lemApp = LemApp()
-    val sources = listOf(File("src/main/kotlin") to "com.blaster.platform.LemAppKt::main")
-    lemApp.render(sources)
+    lemApp.render(File("src/main/kotlin"), File("scenarios/scenario_lem"), File("articles/LemApp.html"))
 }

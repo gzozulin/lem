@@ -32,8 +32,8 @@ class InteractorCommands {
         if (!command.startsWith(COMMAND_IDENTIFIER)) {
             return null
         }
-        command.removePrefix(COMMAND_IDENTIFIER)
-        val stack = command.split("\\s+".toRegex())
+        val noPrefix = command.removePrefix(COMMAND_IDENTIFIER).trim()
+        val stack = noPrefix.split("\\s+".toRegex())
         return when (val first = stack[0]) {
             COMMAND_INCLUDE -> identifyIncludeCommand(stack.subList(1, stack.size))
             COMMAND_HEADER -> identifyHeaderCommand(stack.subList(1, stack.size))

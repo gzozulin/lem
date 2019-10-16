@@ -1,6 +1,8 @@
 package com.blaster.business
 
 import com.blaster.data.inserts.Insert
+import com.blaster.data.inserts.InsertCode
+import com.blaster.data.inserts.InsertText
 import com.blaster.data.managers.kotlin.KotlinManager
 import com.blaster.data.managers.statements.StatementsManager
 import com.blaster.platform.LEM_COMPONENT
@@ -23,6 +25,21 @@ class InteractorParse {
 
     init {
         LEM_COMPONENT.inject(this)
+    }
+
+    fun parseScenario(sourceRoot: File, scenario: File): List<Insert> {
+        val inserts = statementsManager.extractStatements(scenario.readText())
+        val withCommands = interactorCommands.identifyCommands(inserts)
+        val textAndCommands = Observable.fromIterable(withCommands)
+            .map {
+                when (it) {
+                    is InsertCode -> InsertText(it.code) // converting all "code" to just text
+                    else -> it
+                }
+            }
+            .toList()
+            .blockingGet()
+        return interactorCommands.applyCommands(sourceRoot, textAndCommands)
     }
 
     fun parseDef(sourceRoot: File, path: String): List<Insert> {

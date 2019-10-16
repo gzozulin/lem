@@ -1,0 +1,1 @@
+ ./gradlew run --args='src/main/kotlin scenarios/scenario_lem articles/scenario_lem.html'

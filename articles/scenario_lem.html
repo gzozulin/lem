@@ -50,7 +50,18 @@ This file represent a scenario for the article.</div>
 <div class="child">
     <h3>com.blaster.platform.LemAppKt::main</h3>
     <div class="code_child">val lemApp = LemApp()
-lemApp.render(File(&quot;src/main/kotlin&quot;),File(&quot;scenarios/scenario_lem&quot;),File(&quot;articles/LemApp.html&quot;))</div>
+if (args.isEmpty()) {
+    println(&quot;No args, falling back to the defaults!&quot;)
+    return lemApp.render(File(&quot;src/main/kotlin&quot;),File(&quot;scenarios/scenario_lem&quot;),File(&quot;articles/scenario_lem.html&quot;))
+}
+check(args.size==3) { &quot;Wrong number of parameters!&quot; }
+val sourceRoot = File(args[0])
+check(sourceRoot.exists()) { &quot;Sources rout doesn&#39;t exists!&quot; }
+val scenarioFile = File(args[1])
+check(scenarioFile.exists()) { &quot;Scenario file doest&#39;t exists!&quot; }
+val output = File(args[2])
+check(output.parentFile.exists()) { &quot;Output folder doesn&#39;t exists!&quot; }
+lemApp.render(sourceRoot,scenarioFile,output)</div>
 </div>
 <div class="text">Continue describing stuff</div>
     </body>

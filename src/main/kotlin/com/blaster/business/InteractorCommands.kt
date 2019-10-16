@@ -103,11 +103,11 @@ class InteractorCommands {
         when (insert.subcommand) {
             SUBCOMMAND_DECL -> {
                 val declarations = interactorParse.get().parseDecl(sourceRoot, insert.argument)
-                Observable.fromIterable(declarations).subscribe { iterator.add(it) }
+                declarations.forEach { iterator.add(it) }
             }
             SUBCOMMAND_DEF -> {
                 val definitions = interactorParse.get().parseDef(sourceRoot, insert.argument)
-                Observable.fromIterable(definitions).subscribe { iterator.add(it) }
+                definitions.forEach { iterator.add(it) }
             }
         }
     }

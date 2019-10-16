@@ -28,28 +28,15 @@ class InteractorPrint {
         var result = ""
         for (insert in inserts) {
             when (insert) {
-                is InsertText -> {
-                    result += printingManager.renderTemplate(
-                        "template_text.ftlh",
-                        hashMapOf(textTemplateClass(child), "text" to insert.text)) + "\n"
-                }
-                is InsertCode -> {
-                    result += printingManager.renderTemplate(
-                        "template_code.ftlh",
-                        hashMapOf(codeTemplateClass(child), "code" to insert.code)) + "\n"
-                }
+                is InsertText -> result += renderText(insert.text, child) + "\n"
+                is InsertCode -> result += renderCode(insert.code, child) + "\n"
                 is InsertCommand -> {
                     when (insert.type) {
-                        InsertCommand.Type.HEADER -> {
-                            result += printingManager.renderTemplate(
-                                "template_header.ftlh",
-                                hashMapOf("type" to insert.subcommand, "header" to insert.argument)
-                            ) + "\n"
-                        }
+                        InsertCommand.Type.HEADER -> result += renderHeader(insert.subcommand, insert.argument) + "\n"
                         InsertCommand.Type.INCLUDE -> {
-                            val includeResult = renderIncludeCommand(insert, child)
-                            if (includeResult != null) {
-                                result += includeResult
+                            when (insert.subcommand) {
+                                SUBCOMMAND_LINK -> result + renderLink(insert.argument, insert.argument1, insert.argument2, child) + "\n"
+                                SUBCOMMAND_PICTURE -> result + renderPicture(insert.argument, insert.argument1, insert.argument2, child) + "\n"
                             }
                         }
                         else -> throw IllegalStateException("Unhandled command!")
@@ -57,38 +44,40 @@ class InteractorPrint {
                 }
             }
             if (insert.children.isNotEmpty()) {
-                // todo: not only for commands?
-                result += printingManager.renderTemplate(
-                    "template_children.ftlh",
-                    hashMapOf("path" to (insert as InsertCommand).argument, "children" to printInserts(insert.children, true))
-                ) + "\n"
+                result += renderChildren((insert as InsertCommand).argument, insert.children, true) + "\n"
             }
         }
         return result.dropLast(1)
     }
 
-    private fun renderIncludeCommand(command: InsertCommand, child: Boolean): String? {
-        when (command.subcommand) {
-            SUBCOMMAND_LINK -> {
-                val clazz = if (child) "link_child" else "link"
-                return printingManager.renderTemplate(
-                    "template_link.ftlh",
-                    hashMapOf("class" to clazz, "label" to command.argument, "descr" to command.argument1, "link" to command.argument2)
-                )
-            }
-            SUBCOMMAND_PICTURE -> {
-                val clazz = if (child) "picture_child" else "picture"
-                return printingManager.renderTemplate(
-                    "template_picture.ftlh",
-                    hashMapOf("class" to clazz, "label" to command.argument, "descr" to command.argument1, "link" to command.argument2)
-                )
-            }
-            else -> {
-                return null
-            }
-        }
+    private fun renderChildren(path: String, children: List<Insert>, child: Boolean): String {
+        return printingManager.renderTemplate(
+            "template_children.ftlh", hashMapOf("path" to path, "children" to printInserts(children, child)))
     }
 
-    private fun codeTemplateClass(child: Boolean) = "class" to if (child) "code_child" else "code"
-    private fun textTemplateClass(child: Boolean) = "class" to if (child) "text_child" else "text"
+    private fun renderText(text: String, child: Boolean): String {
+        val clz = if (child) "text_child" else "text"
+        return printingManager.renderTemplate("template_text.ftlh", hashMapOf("class" to clz, "text" to text))
+    }
+
+    private fun renderCode(code: String, child: Boolean): String {
+        val clz = if (child) "code_child" else "code"
+        return printingManager.renderTemplate("template_code.ftlh", hashMapOf("class" to clz, "code" to code))
+    }
+
+    private fun renderHeader(type: String, text: String): String {
+        return printingManager.renderTemplate("template_header.ftlh", hashMapOf("type" to type, "header" to text))
+    }
+
+    private fun renderLink(label: String, descr: String, link: String, child: Boolean): String {
+        val clz = if (child) "link_child" else "link"
+        return printingManager.renderTemplate(
+            "template_link.ftlh", hashMapOf("class" to clz, "label" to label, "descr" to descr, "link" to link))
+    }
+
+    private fun renderPicture(label: String, descr: String, link: String, child: Boolean): String {
+        val clz = if (child) "picture_child" else "picture"
+        return printingManager.renderTemplate(
+            "template_picture.ftlh", hashMapOf("class" to clz, "label" to label, "descr" to descr, "link" to link))
+    }
 }

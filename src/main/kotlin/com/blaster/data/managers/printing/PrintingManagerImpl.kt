@@ -17,6 +17,8 @@ class PrintingManagerImpl : PrintingManager {
     @Inject
     lateinit var configuration: Configuration
 
+    private val templateCache = HashMap<String, Template>()
+
     init {
         LEM_COMPONENT.inject(this)
     }
@@ -38,7 +40,6 @@ class PrintingManagerImpl : PrintingManager {
         }
     }
 
-    private val templateCache = HashMap<String, Template>()
     private fun getTemplate(id: String): Template {
         var template = templateCache[id]
         if (template == null) {

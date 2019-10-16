@@ -13,24 +13,15 @@
                     word-wrap: break-word;
                 }
 
-                .code {
-                    white-space: pre-wrap;
-                    background: #EBFCE3;
-                }
-
-                .text {
-                }
-
-                .link {
-                }
-
-                .picture {
-                }
-
                 .child {
                     border-radius: 3px;
                     background: #F1ECEC;
                     box-shadow: -5px 5px 10px rgba(0,0,0,0.3);
+                }
+
+                .code {
+                    white-space: pre-wrap;
+                    background: #EBFCE3;
                 }
 
                 .code_child {
@@ -41,14 +32,14 @@
                     margin: 1.6em 0;
                 }
 
-                .text_child {
-                }
+                .text {}
+                .text_child {}
 
-                .link_child {
-                }
+                .link {}
+                .link_child {}
 
-                .picture_child {
-                }
+                .picture {}
+                .picture_child {}
     </style>
     <head>
         <title>Welcome!</title>

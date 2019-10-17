@@ -1,4 +1,4 @@
-package com.blaster.data.inserts
+package com.blaster.data.paragraphs
 
 const val COMMAND_IDENTIFIER    = "#"
 
@@ -14,7 +14,7 @@ const val SUBCOMMAND_PICTURE    = "picture"
 const val SUBCOMMAND_H1         = "h1"
 const val SUBCOMMAND_H2         = "h2"
 
-data class InsertCommand(val type: Type, val arguments: List<String>) : Insert() {
+data class ParagraphCommand(val type: Type, val arguments: List<String>) : Paragraph() {
     enum class Type { INCLUDE, OMIT, HEADER, INLINE }
 
     val subcommand: String

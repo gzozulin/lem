@@ -1,8 +1,8 @@
 package com.blaster.data.managers.statements
 
-import com.blaster.data.inserts.Insert
-import com.blaster.data.inserts.InsertCode
-import com.blaster.data.inserts.InsertText
+import com.blaster.data.paragraphs.Paragraph
+import com.blaster.data.paragraphs.ParagraphCode
+import com.blaster.data.paragraphs.ParagraphText
 import com.blaster.data.managers.kotlin.*
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
@@ -13,23 +13,23 @@ private val LINE_REGEX = "[\r]?[\n]".toRegex()
 class StatementsManagerImpl : StatementsManager {
     private val cacheForStatements = HashMap<String, Pair<CommonTokenStream, StatementsParser>>()
 
-    override fun extractStatements(code: String): List<Insert> {
+    override fun extractStatements(code: String): List<Paragraph> {
         val (_, parser) = provideParserForStatememts(code)
         parser.reset()
         val statements = locateStatements(parser)
-        val result = ArrayList<Insert>()
+        val result = ArrayList<Paragraph>()
         for (statement in statements) {
             val cleaned = cleanup(statement.text)
             if (cleaned != null) {
                 when (statement) {
                     is StatementsParser.DelimitedCommentContext -> {
-                        result.add(InsertText(cleaned))
+                        result.add(ParagraphText(cleaned))
                     }
                     is StatementsParser.CodeContext -> {
-                        result.add(InsertCode(cleaned))
+                        result.add(ParagraphCode(cleaned))
                     }
                     is StatementsParser.LineCommentContext -> {
-                        result.add(InsertText(cleaned))
+                        result.add(ParagraphText(cleaned))
                     }
                     else -> throw IllegalStateException("UnknownStatement!")
                 }

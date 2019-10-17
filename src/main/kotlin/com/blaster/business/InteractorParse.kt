@@ -1,8 +1,8 @@
 package com.blaster.business
 
-import com.blaster.data.inserts.Insert
-import com.blaster.data.inserts.InsertCode
-import com.blaster.data.inserts.InsertText
+import com.blaster.data.paragraphs.Paragraph
+import com.blaster.data.paragraphs.ParagraphCode
+import com.blaster.data.paragraphs.ParagraphText
 import com.blaster.data.managers.kotlin.KotlinManager
 import com.blaster.data.managers.statements.StatementsManager
 import com.blaster.platform.LEM_COMPONENT
@@ -27,13 +27,13 @@ class InteractorParse {
         LEM_COMPONENT.inject(this)
     }
 
-    fun parseScenario(sourceRoot: File, scenario: File): List<Insert> {
+    fun parseScenario(sourceRoot: File, scenario: File): List<Paragraph> {
         val inserts = statementsManager.extractStatements(scenario.readText())
         val withCommands = interactorCommands.identifyCommands(inserts)
         val textAndCommands = Observable.fromIterable(withCommands)
             .map {
                 when (it) {
-                    is InsertCode -> InsertText(it.code) else -> it // converting all "code" to just text
+                    is ParagraphCode -> ParagraphText(it.code) else -> it // converting all "code" to just text
                 }
             }
             .toList()
@@ -41,7 +41,7 @@ class InteractorParse {
         return interactorCommands.applyCommands(sourceRoot, textAndCommands)
     }
 
-    fun parseDef(sourceRoot: File, path: String): List<Insert> {
+    fun parseDef(sourceRoot: File, path: String): List<Paragraph> {
         val location = interactorLocation.locate(sourceRoot, path)
         val definition = kotlinManager.extractDefinition(location)
         val inserts = statementsManager.extractStatements(definition)
@@ -49,7 +49,7 @@ class InteractorParse {
         return interactorCommands.applyCommands(sourceRoot, withCommands)
     }
 
-    fun parseDecl(sourceRoot: File, path: String): List<Insert> {
+    fun parseDecl(sourceRoot: File, path: String): List<Paragraph> {
         val location = interactorLocation.locate(sourceRoot, path)
         val declarations = kotlinManager.extractDeclaration(location)
         val inserts = Observable.fromIterable(declarations)

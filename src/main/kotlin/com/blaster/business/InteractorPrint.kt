@@ -1,6 +1,6 @@
 package com.blaster.business
 
-import com.blaster.data.inserts.*
+import com.blaster.data.paragraphs.*
 import com.blaster.data.managers.printing.PrintingManager
 import com.blaster.platform.LEM_COMPONENT
 import java.io.File
@@ -18,21 +18,21 @@ class InteractorPrint {
         LEM_COMPONENT.inject(this)
     }
 
-    fun printArticle(output: File, inserts: List<Insert>) {
-        val article = printingManager.renderTemplate("template_article.ftlh", hashMapOf("article" to printInserts(inserts)))
+    fun printArticle(output: File, paragraphs: List<Paragraph>) {
+        val article = printingManager.renderTemplate("template_article.ftlh", hashMapOf("article" to printInserts(paragraphs)))
         printingManager.printArticle(output, article)
     }
 
-    private fun printInserts(inserts: List<Insert>, child: Boolean = false): String {
+    private fun printInserts(paragraphs: List<Paragraph>, child: Boolean = false): String {
         var result = ""
-        for (insert in inserts) {
+        for (insert in paragraphs) {
             when (insert) {
-                is InsertText -> result += renderText(insert.text, child) + "\n"
-                is InsertCode -> result += renderCode(insert.code, child) + "\n"
-                is InsertCommand -> {
+                is ParagraphText -> result += renderText(insert.text, child) + "\n"
+                is ParagraphCode -> result += renderCode(insert.code, child) + "\n"
+                is ParagraphCommand -> {
                     when (insert.type) {
-                        InsertCommand.Type.HEADER -> result += renderHeader(insert.subcommand, insert.argument) + "\n"
-                        InsertCommand.Type.INCLUDE -> {
+                        ParagraphCommand.Type.HEADER -> result += renderHeader(insert.subcommand, insert.argument) + "\n"
+                        ParagraphCommand.Type.INCLUDE -> {
                             when (insert.subcommand) {
                                 SUBCOMMAND_LINK -> result + renderLink(insert.argument, insert.argument1, insert.argument2, child) + "\n"
                                 SUBCOMMAND_PICTURE -> result + renderPicture(insert.argument, insert.argument1, insert.argument2, child) + "\n"
@@ -43,13 +43,13 @@ class InteractorPrint {
                 }
             }
             if (insert.children.isNotEmpty()) {
-                result += renderChildren((insert as InsertCommand).argument, insert.children) + "\n"
+                result += renderChildren((insert as ParagraphCommand).argument, insert.children) + "\n"
             }
         }
         return result.dropLast(1)
     }
 
-    private fun renderChildren(path: String, children: List<Insert>): String {
+    private fun renderChildren(path: String, children: List<Paragraph>): String {
         return printingManager.renderTemplate(
             "template_children.ftlh", hashMapOf("path" to path, "children" to printInserts(children, true)))
     }

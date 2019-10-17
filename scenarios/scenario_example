@@ -1,0 +1,7 @@
+This scenario contains all of the features of the Lem.
+It serves as our End-to-end test.
+
+// #header; h1; The Lem Application
+// #include; def; com.blaster.platform.LemAppKt::main
+
+Further on we can compare the result of the generation from this one with the ideal variant.

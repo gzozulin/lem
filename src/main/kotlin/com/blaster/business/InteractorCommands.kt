@@ -1,6 +1,6 @@
 package com.blaster.business
 
-import com.blaster.data.inserts.*
+import com.blaster.data.paragraphs.*
 import com.blaster.platform.LEM_COMPONENT
 import dagger.Lazy
 import io.reactivex.Observable
@@ -17,9 +17,9 @@ class InteractorCommands {
         LEM_COMPONENT.inject(this)
     }
 
-    fun identifyCommands(inserts: List<Insert>): List<Insert> = Observable.fromIterable(inserts)
+    fun identifyCommands(paragraphs: List<Paragraph>): List<Paragraph> = Observable.fromIterable(paragraphs)
         .map {
-            if (it is InsertText) {
+            if (it is ParagraphText) {
                 identifyCommand(it.text) ?: it
             } else {
                 it
@@ -28,7 +28,7 @@ class InteractorCommands {
         .toList()
         .blockingGet()
 
-    private fun identifyCommand(command: String): InsertCommand? {
+    private fun identifyCommand(command: String): ParagraphCommand? {
         if (!command.startsWith(COMMAND_IDENTIFIER)) {
             return null
         }
@@ -43,52 +43,52 @@ class InteractorCommands {
         }
     }
 
-    private fun identifyIncludeCommand(stack: List<String>): InsertCommand? {
+    private fun identifyIncludeCommand(stack: List<String>): ParagraphCommand? {
         return when(val first = stack[0]) {
-            SUBCOMMAND_DECL -> InsertCommand(InsertCommand.Type.INCLUDE, listOf(SUBCOMMAND_DECL, stack[1]))
-            SUBCOMMAND_DEF -> InsertCommand(InsertCommand.Type.INCLUDE, listOf(SUBCOMMAND_DEF, stack[1]))
+            SUBCOMMAND_DECL -> ParagraphCommand(ParagraphCommand.Type.INCLUDE, listOf(SUBCOMMAND_DECL, stack[1]))
+            SUBCOMMAND_DEF -> ParagraphCommand(ParagraphCommand.Type.INCLUDE, listOf(SUBCOMMAND_DEF, stack[1]))
             SUBCOMMAND_LINK -> {
                 check(stack.size == 4) { "Wrong amount of parameters for a link include command!" }
-                InsertCommand(InsertCommand.Type.INCLUDE, listOf(SUBCOMMAND_LINK, stack[1], stack[2], stack[3]))
+                ParagraphCommand(ParagraphCommand.Type.INCLUDE, listOf(SUBCOMMAND_LINK, stack[1], stack[2], stack[3]))
             }
             SUBCOMMAND_PICTURE -> {
                 check(stack.size == 4) { "Wrong amount of parameters for a link include command!" }
-                InsertCommand(InsertCommand.Type.INCLUDE, listOf(SUBCOMMAND_PICTURE, stack[1], stack[2], stack[3]))
+                ParagraphCommand(ParagraphCommand.Type.INCLUDE, listOf(SUBCOMMAND_PICTURE, stack[1], stack[2], stack[3]))
             }
             else -> throw IllegalStateException("Unknown subcommand! $first")
         }
     }
 
-    private fun identifyHeaderCommand(stack: List<String>): InsertCommand? {
+    private fun identifyHeaderCommand(stack: List<String>): ParagraphCommand? {
         return when (val first = stack[0]) {
-            SUBCOMMAND_H1 -> InsertCommand(InsertCommand.Type.HEADER, listOf(SUBCOMMAND_H1, stack[1]))
-            SUBCOMMAND_H2 -> InsertCommand(InsertCommand.Type.HEADER, listOf(SUBCOMMAND_H2, stack[1]))
+            SUBCOMMAND_H1 -> ParagraphCommand(ParagraphCommand.Type.HEADER, listOf(SUBCOMMAND_H1, stack[1]))
+            SUBCOMMAND_H2 -> ParagraphCommand(ParagraphCommand.Type.HEADER, listOf(SUBCOMMAND_H2, stack[1]))
             else -> throw IllegalStateException("Unknown subcommand! $first")
         }
     }
 
-    private fun identifyInlineCommand(stack: List<String>): InsertCommand? {
+    private fun identifyInlineCommand(stack: List<String>): ParagraphCommand? {
         return when (val first = stack[0]) {
-            SUBCOMMAND_DECL -> InsertCommand(InsertCommand.Type.INLINE, listOf(SUBCOMMAND_DECL, stack[1]))
-            SUBCOMMAND_DEF -> InsertCommand(InsertCommand.Type.INLINE, listOf(SUBCOMMAND_DEF, stack[1]))
+            SUBCOMMAND_DECL -> ParagraphCommand(ParagraphCommand.Type.INLINE, listOf(SUBCOMMAND_DECL, stack[1]))
+            SUBCOMMAND_DEF -> ParagraphCommand(ParagraphCommand.Type.INLINE, listOf(SUBCOMMAND_DEF, stack[1]))
             else -> throw IllegalStateException("Unknown subcommand! $first")
         }
     }
 
-    private fun identifyOmitCommand(): InsertCommand? {
-        return InsertCommand(InsertCommand.Type.OMIT, listOf())
+    private fun identifyOmitCommand(): ParagraphCommand? {
+        return ParagraphCommand(ParagraphCommand.Type.OMIT, listOf())
     }
 
-    fun applyCommands(sourceRoot: File, inserts: List<Insert>): List<Insert> {
-        val mutableList = ArrayList(inserts)
+    fun applyCommands(sourceRoot: File, paragraphs: List<Paragraph>): List<Paragraph> {
+        val mutableList = ArrayList(paragraphs)
         val iterator = mutableList.listIterator()
         while (iterator.hasNext()) {
             val insert = iterator.next()
-            if (insert is InsertCommand) {
+            if (insert is ParagraphCommand) {
                 when (insert.type) {
-                    InsertCommand.Type.INCLUDE -> applyIncludeCommand(insert, sourceRoot)
-                    InsertCommand.Type.OMIT -> applyOmitCommand(iterator)
-                    InsertCommand.Type.INLINE -> applyInlineCommand(iterator, insert, sourceRoot)
+                    ParagraphCommand.Type.INCLUDE -> applyIncludeCommand(insert, sourceRoot)
+                    ParagraphCommand.Type.OMIT -> applyOmitCommand(iterator)
+                    ParagraphCommand.Type.INLINE -> applyInlineCommand(iterator, insert, sourceRoot)
                     else -> {} // do nothing
                 }
             }
@@ -96,7 +96,7 @@ class InteractorCommands {
         return mutableList
     }
 
-    private fun applyInlineCommand(iterator: MutableListIterator<Insert>, insert: InsertCommand, sourceRoot: File) {
+    private fun applyInlineCommand(iterator: MutableListIterator<Paragraph>, insert: ParagraphCommand, sourceRoot: File) {
         iterator.remove()
         when (insert.subcommand) {
             SUBCOMMAND_DECL -> {
@@ -110,14 +110,14 @@ class InteractorCommands {
         }
     }
 
-    private fun applyIncludeCommand(insert: InsertCommand, sourceRoot: File) {
+    private fun applyIncludeCommand(insert: ParagraphCommand, sourceRoot: File) {
         when (insert.subcommand) {
             SUBCOMMAND_DECL -> insert.children.addAll(interactorParse.get().parseDecl(sourceRoot, insert.argument))
             SUBCOMMAND_DEF -> insert.children.addAll(interactorParse.get().parseDef(sourceRoot, insert.argument))
         }
     }
 
-    private fun applyOmitCommand(iterator: MutableListIterator<Insert>) {
+    private fun applyOmitCommand(iterator: MutableListIterator<Paragraph>) {
         check(iterator.hasNext()) { "What to omit??" }
         iterator.remove()
         iterator.next()

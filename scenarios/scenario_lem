@@ -34,10 +34,20 @@ When all of the commands are applied and we have a final list of paragraphs
 Printing each resulting paragraph into an html page with the help of templates
 
 // #header; h2; Parsing the article
-(do it last one)???
+Few words about ANTLR4
+Kotlin grammar and Statements grammar
+Parsing the scenario (def InteractorParse::parseScenario)
+Extracting the commands (def InteractorCommands::identifyCommand(s))
+Applying commands (def InteractorCommands::applyCommands)
+Locating code by path (def InteractorLocation::locate)
+Extracting the definitions (def InteractorParse::parseDef)
+Extracting the declarations (def InteractorParse::parseDecl)
 
 // #header; h2; Printing the article
-???
+Few words about FreeTemplate
+Printing the list of paragraphs (def InteractorPrint::printParagraphs)
+Helper methods (decls InteractorPrint::*)
+Printing the article (def InteractorPrint::printArticle())
 
 // #header; h2; What's next?
 There is not tool, which works equally well for every job

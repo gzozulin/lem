@@ -45,8 +45,121 @@
         <title>Welcome!</title>
     </head>
     <body>
-        <div class="text">Hello, my name is Gregory.
-This file represent a scenario for the article.</div>
+            <h1>The Lem Application</h1>
+
+<div class="text">Why? What?
+    Many of us have hobby/craft/art
+    How to showcase it to the like-minded
+    Many approaches - articles, youtube, Wikipedia, podcasts
+    Specific properties: code/text sync, compilable, pause at any time
+    Literate programming
+    The C self compiling assembler approach
+    This article - example and first use case
+    Why it is called Lem? (pic Lem collage)
+The CLEAN architecture of the app
+    What is the CLEAN architecture
+    Where it came from
+    Why it is useful
+    How the code organized according to it
+Dependencies boilerplate
+    Dependency Injection concept
+    Create stuff only once
+    Google Dagger 2 to the rescue
+    Specifying our dependencies (decl LemModule)
+    Clarifying the rules of injection (decl LemComponent)
+The main function
+    A typical story - entry point
+    Main function (def LemApp::main):
+        LemApp class and instance
+        List of article sources
+        For each of them
+        Parsing the root of the source
+        Result: a list of inserts (decl Insert (Text/Code/Cmd))
+        Printing the result
+Parsing the code
+    Few words about ANTLR4
+    Kotlin ANTLR grammar (+reference)
+    Recursive nature of the parsing
+    Locating the specified objects (decl LocationInteractor)
+    Preparing (caching/resetting) stream and parser (decl LexingManager)
+    Retreiving statements and declarations (decl ParsingManager)
+    Parsing definitions (def InteractorParse::parseDef)
+        Locate the object (ref LocationInteractor)
+        Get stream and parser (ref LexingManager)
+        Retreive statements (ref ParsingManager)
+        Extract inserts from statements (ref InteractorTokens)
+        Call to process commands (ref InteractorParse::processCommands)
+    Parsing declarations (def InteractorParse::parseDecl)
+        Locate the object (ref LocationInteractor)
+        Get stream and parser (ref LexingManager)
+        Retreive declarations (ref ParsingManager)
+        Extract inserts from declarations (ref InteractorTokens)
+        Call to process commands (ref InteractorParse::processCommands)
+    Extracting statements (def InteractorParser::extractStatements)
+        Simpler of two
+        The first and the last token of the statements
+        Getteing all tokens from the stream including hidden ones
+        Finally extracting tokens (ref InteractorTokens::extractTokens)
+    Extracting declarations (def InteractorParser::extractDeclaration)
+        A little bit more envolved, than previous
+        Different types of declarations: class, property, method
+        Last token for class: beginning of the class body
+        Last token for method: beginning of method body
+        Last token for property: end of the property declaration
+        To find the beginning of the declaration including hidden tokens (commentaries), we&#39;re looking for the end of the previous declaration (def InteractorParse::findPrevDeclaration)
+        If prev declaration found - grabbing the tokens from the end of the prev declaration to the end of the current one
+        If prev declaration not found (EoF) - grabbing tokens from the beginning of the current declaration to the end of it
+        Finally extracting tokens (ref InteractorTokens::extractTokens)
+    Extracting tokens (def InteractorTokens::extractTokens)
+        Special ANTLR grammar: separating comments and code
+        First thing first: tokens to text (def InteractorTokens::tokensToText)
+        Stream and parser for statements (ref LexingManager)
+        Locating statements (ref ParsingManager)
+        For each statement found:
+        Cleaning text (decl cleanup, decl textToLines, decl trimCommonSpaces, decl linesToText)
+        For delimited comments creating InsertText
+        For just code creating InsertCode
+        For single line comments: 1) trying to extract command (ref InteractorCommands) 2) If no commands - creating InsertText
+    Extracting commands (def InteractorCommands::extractCommand)
+        Dissecting commands from left to right, word by word
+        Going to the next level (decl InteractorCommands::removePrefix)
+        Include command
+        Header command
+        Inline command
+        Omit command
+        Return null if it is not a known command
+        Will discuss the meaning of the commands in the next chapter
+    Processing commands (def InteractorParse::processCommands)
+        Those commands affects the structure of the article
+        Executed after parsing on already extracted list of inserts
+        Since those commands affects the structure - lets convert them to a mutable list
+        For each insert in the list:
+        If the insert is a command:
+        Based on the type of the command:
+        Recursively include other pieces of the article
+        Omit parts of the article
+        Recursively inline other pieces of the article
+        Finally, return the modified list of inserts
+Printing the article
+    Few words about Apache&#39;s FreeMarker
+    Recursive nature of the printing (follows the structure of inserts - graph)
+    Rendering of a template (PrintingManager::renderTemplate)
+    Template inside of template inside of template
+    Printing inserts (def InteractorPrint::printInserts)
+        Param - a list of inserts, each of which is a graph
+        If text - render corresponding template
+        If code - render corresponding template
+        If a command:
+            Just a header - render corresponding template
+            Link of a picture - separate call (def renderIncludeCommand)
+    Printing the article (def InteractorPrint::printArticle)
+        Location from path - we need that to create the article&#39;s file
+        Rendering the body of the article with main template (containing page and styles)
+        Flushing the result into an actual file. Done.
+What&#39;s next?
+    A general, one-sentence summary
+    A focused summary of the main points without repetition
+    Something new / opinion of the author</div>
 <div class="child">
     <h3>com.blaster.platform.LemAppKt::main</h3>
     <div class="code_child">val lemApp = LemApp()

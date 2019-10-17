@@ -7,7 +7,7 @@ import io.reactivex.Observable
 import java.io.File
 import javax.inject.Inject
 
-val CSV_PATTERN = ";".toPattern()
+val CSV_PATTERN = ";\\s?".toPattern()
 
 class InteractorCommands {
     @Inject
@@ -32,8 +32,8 @@ class InteractorCommands {
         if (!command.startsWith(COMMAND_IDENTIFIER)) {
             return null
         }
-        val noPrefix = command.removePrefix(COMMAND_IDENTIFIER).trim()
-        val stack = noPrefix.split("\\s+".toRegex())
+        val noPrefix = command.removePrefix(COMMAND_IDENTIFIER)
+        val stack = noPrefix.split(CSV_PATTERN)
         return when (val first = stack[0]) {
             COMMAND_INCLUDE -> identifyIncludeCommand(stack.subList(1, stack.size))
             COMMAND_HEADER -> identifyHeaderCommand(stack.subList(1, stack.size))
@@ -48,14 +48,12 @@ class InteractorCommands {
             SUBCOMMAND_DECL -> InsertCommand(InsertCommand.Type.INCLUDE, listOf(SUBCOMMAND_DECL, stack[1]))
             SUBCOMMAND_DEF -> InsertCommand(InsertCommand.Type.INCLUDE, listOf(SUBCOMMAND_DEF, stack[1]))
             SUBCOMMAND_LINK -> {
-                val split = stack[1].split(CSV_PATTERN)
-                check(split.size == 3) { "Wrong amount of parameters for a link include command!" }
-                InsertCommand(InsertCommand.Type.INCLUDE, listOf(SUBCOMMAND_LINK, split[0], split[1], split[2]))
+                check(stack.size == 4) { "Wrong amount of parameters for a link include command!" }
+                InsertCommand(InsertCommand.Type.INCLUDE, listOf(SUBCOMMAND_LINK, stack[1], stack[2], stack[3]))
             }
             SUBCOMMAND_PICTURE -> {
-                val split = stack[1].split(CSV_PATTERN)
-                check(split.size == 3) { "Wrong amount of parameters for a link include command!" }
-                InsertCommand(InsertCommand.Type.INCLUDE, listOf(SUBCOMMAND_PICTURE, split[0], split[1], split[2]))
+                check(stack.size == 4) { "Wrong amount of parameters for a link include command!" }
+                InsertCommand(InsertCommand.Type.INCLUDE, listOf(SUBCOMMAND_PICTURE, stack[1], stack[2], stack[3]))
             }
             else -> throw IllegalStateException("Unknown subcommand! $first")
         }
@@ -91,7 +89,7 @@ class InteractorCommands {
                     InsertCommand.Type.INCLUDE -> applyIncludeCommand(insert, sourceRoot)
                     InsertCommand.Type.OMIT -> applyOmitCommand(iterator)
                     InsertCommand.Type.INLINE -> applyInlineCommand(iterator, insert, sourceRoot)
-                    else -> throw IllegalStateException("Unhandled command type! " + insert.type)
+                    else -> {} // do nothing
                 }
             }
         }

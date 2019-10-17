@@ -43,15 +43,15 @@ class InteractorPrint {
                 }
             }
             if (insert.children.isNotEmpty()) {
-                result += renderChildren((insert as InsertCommand).argument, insert.children, true) + "\n"
+                result += renderChildren((insert as InsertCommand).argument, insert.children) + "\n"
             }
         }
         return result.dropLast(1)
     }
 
-    private fun renderChildren(path: String, children: List<Insert>, child: Boolean): String {
+    private fun renderChildren(path: String, children: List<Insert>): String {
         return printingManager.renderTemplate(
-            "template_children.ftlh", hashMapOf("path" to path, "children" to printInserts(children, child)))
+            "template_children.ftlh", hashMapOf("path" to path, "children" to printInserts(children, true)))
     }
 
     private fun renderText(text: String, child: Boolean): String {

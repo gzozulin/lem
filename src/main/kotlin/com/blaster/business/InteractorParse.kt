@@ -33,8 +33,7 @@ class InteractorParse {
         val textAndCommands = Observable.fromIterable(withCommands)
             .map {
                 when (it) {
-                    is InsertCode -> InsertText(it.code) // converting all "code" to just text
-                    else -> it
+                    is InsertCode -> InsertText(it.code) else -> it // converting all "code" to just text
                 }
             }
             .toList()

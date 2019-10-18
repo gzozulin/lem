@@ -24,11 +24,6 @@ class LemModule {
 
     @Singleton
     @Provides
-    @Named("ARTICLES_FILE")
-    fun provideArticlesFile() = File("articles")
-
-    @Singleton
-    @Provides
     fun provideFreemarkerConfig(@Named("TEMPLATES_FILE") templatesFile: File): Configuration {
         val cfg = Configuration(Configuration.VERSION_2_3_27)
         cfg.setDirectoryForTemplateLoading(templatesFile)
@@ -67,4 +62,8 @@ class LemModule {
     @Singleton
     @Provides
     fun extractorCommands() = InteractorCommands()
+
+    @Singleton
+    @Provides
+    fun interactorFormat() = InteractorFormat()
 }

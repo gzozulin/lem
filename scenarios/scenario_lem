@@ -1,6 +1,6 @@
-// #header; h1; The Lem Application
+#header; h1; The Lem Application
 
-// #header; h2; Why? What?
+#header; h2; Why? What?
 Many of us have hobby/craft/art
 How to showcase it to the like-minded
 Many approaches - articles, youtube, Wikipedia, podcasts
@@ -10,20 +10,20 @@ The C self compiling assembler approach
 This article - example and first use case
 Why it is called Lem? (pic Lem collage)
 
-// #header; h2; The CLEAN architecture of the app
+#header; h2; The CLEAN architecture of the app
 What is the CLEAN architecture
 Where it came from
 Why it is useful
 How the code organized according to it
 
-// #header; h2; Dependencies boilerplate
+#header; h2; Dependencies boilerplate
 Dependency Injection concept
 Create stuff only once
 Google Dagger 2 to the rescue
 Specifying our dependencies (decl LemModule)
 Clarifying the rules of injection (decl LemComponent)
 
-// #header; h2; The pipeline overview
+#header; h2; The pipeline overview
 Main entry point (def LemApp::main())
 Scenario Stage (parsing the Scenario, result is a list of paragraphs and commands)
 Applying the commands to the resulting list
@@ -33,7 +33,7 @@ Going back to the stage of applying commands recursively
 When all of the commands are applied and we have a final list of paragraphs
 Printing each resulting paragraph into an html page with the help of templates
 
-// #header; h2; Parsing the article
+#header; h2; Parsing the article
 Few words about ANTLR4
 Kotlin grammar and Statements grammar
 Parsing the scenario (def InteractorParse::parseScenario)
@@ -43,13 +43,12 @@ Locating code by path (def InteractorLocation::locate)
 Extracting the definitions (def InteractorParse::parseDef)
 Extracting the declarations (def InteractorParse::parseDecl)
 
-// #header; h2; Printing the article
+#header; h2; Printing the article
 Few words about FreeTemplate
 Printing the list of paragraphs (def InteractorPrint::printParagraphs)
 Helper methods (decls InteractorPrint::*)
 Printing the article (def InteractorPrint::printArticle())
-
-// #header; h2; What's next?
+#header; h2; What's next?
 There is not tool, which works equally well for every job
 The idea behind Lem is to be versatile enough
 In this article I has shown a full pipeline of the project: from the preparation of the article to the printing stage

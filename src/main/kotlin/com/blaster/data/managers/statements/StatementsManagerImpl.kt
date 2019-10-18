@@ -1,14 +1,14 @@
 package com.blaster.data.managers.statements
 
+import com.blaster.data.managers.kotlin.StatementsBaseVisitor
+import com.blaster.data.managers.kotlin.StatementsLexer
+import com.blaster.data.managers.kotlin.StatementsParser
 import com.blaster.data.paragraphs.Paragraph
 import com.blaster.data.paragraphs.ParagraphCode
 import com.blaster.data.paragraphs.ParagraphText
-import com.blaster.data.managers.kotlin.*
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.ParserRuleContext
-
-private val LINE_REGEX = "[\r]?[\n]".toRegex()
 
 class StatementsManagerImpl : StatementsManager {
     private val cacheForStatements = HashMap<String, Pair<CommonTokenStream, StatementsParser>>()
@@ -19,20 +19,17 @@ class StatementsManagerImpl : StatementsManager {
         val statements = locateStatements(parser)
         val result = ArrayList<Paragraph>()
         for (statement in statements) {
-            val cleaned = cleanup(statement.text)
-            if (cleaned != null) {
-                when (statement) {
-                    is StatementsParser.DelimitedCommentContext -> {
-                        result.add(ParagraphText(cleaned))
-                    }
-                    is StatementsParser.CodeContext -> {
-                        result.add(ParagraphCode(cleaned))
-                    }
-                    is StatementsParser.LineCommentContext -> {
-                        result.add(ParagraphText(cleaned))
-                    }
-                    else -> throw IllegalStateException("UnknownStatement!")
+            when (statement) {
+                is StatementsParser.DelimitedCommentContext -> {
+                    result.add(ParagraphText(statement.text.removePrefix("/*").removeSuffix("*/").trim()))
                 }
+                is StatementsParser.LineCommentContext -> {
+                    result.add(ParagraphText(statement.text.removePrefix("/*").trim()))
+                }
+                is StatementsParser.CodeContext -> {
+                    result.add(ParagraphCode(statement.text))
+                }
+                else -> throw IllegalStateException("UnknownStatement!")
             }
         }
         return result
@@ -65,58 +62,5 @@ class StatementsManagerImpl : StatementsManager {
             }
         }.visitStatements(parser.statements())
         return result
-    }
-
-    private fun cleanup(text: String): String? {
-        val noComments = text
-            .replace("/*", "")
-            .replace("*/", "")
-            .replace("//", "")
-        if (noComments.isEmpty()) {
-            return null
-        }
-        val lines =  textToLines(noComments)
-        if (lines.isEmpty()) {
-            return null
-        }
-        val trimmed = trimCommonSpaces(lines)
-        if (trimmed.isEmpty()) {
-            return null
-        }
-        return linesToText(trimmed)
-    }
-
-    private fun textToLines(string: String): List<String> {
-        return string.split(LINE_REGEX)
-    }
-
-    private fun linesToText(lines: List<String>): String {
-        var result = ""
-        lines.forEach{ result += it + '\n' }
-        return result.dropLast(1)
-    }
-
-    private fun trimCommonSpaces(lines: List<String>): List<String> {
-        val clean = ArrayList<String>()
-        for (line in lines) {
-            if (line.isNotBlank()) {
-                clean.add(line)
-            }
-        }
-        var min = Int.MAX_VALUE
-        for (line in clean) {
-            var index = 0
-            while (line[index] == ' ') {
-                index++
-            }
-            if (index < min) {
-                min = index
-            }
-        }
-        val trimmed = ArrayList<String>()
-        for (line in clean) {
-            trimmed.add(line.substring(min, line.length))
-        }
-        return trimmed
     }
 }

@@ -7,13 +7,8 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.StringWriter
 import javax.inject.Inject
-import javax.inject.Named
 
 class PrintingManagerImpl : PrintingManager {
-    @Inject
-    @field:Named("ARTICLES_FILE")
-    lateinit var articlesDir: File
-
     @Inject
     lateinit var configuration: Configuration
 
@@ -31,11 +26,10 @@ class PrintingManagerImpl : PrintingManager {
     }
 
     override fun printArticle(file: File, article: String) {
-        val articleFile = articleFile(file)
-        if (articleFile.exists()) {
-            articleFile.delete()
+        if (file.exists()) {
+            file.delete()
         }
-        articleWriter(articleFile).use {
+        articleWriter(file).use {
             it.write(article)
         }
     }
@@ -48,8 +42,6 @@ class PrintingManagerImpl : PrintingManager {
         }
         return template!!
     }
-
-    private fun articleFile(root: File) = File(articlesDir.absoluteFile, root.nameWithoutExtension + ".html")
 
     private fun articleWriter(articleFile: File) = FileOutputStream(articleFile, true).bufferedWriter()
 }

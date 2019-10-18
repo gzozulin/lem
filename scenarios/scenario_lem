@@ -37,6 +37,8 @@ Printing each resulting paragraph into an html page with the help of templates
 Few words about ANTLR4
 Kotlin grammar and Statements grammar
 Parsing the scenario (def InteractorParse::parseScenario)
+Formatting the statements (def IteractorFormate::formateText) ???
+Formatting the code (def InteractorFormate::formateCode) ???
 Extracting the commands (def InteractorCommands::identifyCommand(s))
 Applying commands (def InteractorCommands::applyCommands)
 Locating code by path (def InteractorLocation::locate)

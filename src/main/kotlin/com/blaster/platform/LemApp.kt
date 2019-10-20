@@ -26,7 +26,7 @@ fun main(args: Array<String>) {
     val lemApp = LemApp()
     if (args.isEmpty()) {
         println("No args, falling back to the defaults!")
-        return lemApp.render(File("src/main/kotlin"), File("scenarios/scenario_lem"), File("articles/scenario_lem.html"))
+        return lemApp.render(File("src/main/kotlin"), File("scenarios/scenario_lem.txt"), File("articles/scenario_lem.html"))
     }
     check(args.size == 3) { "Wrong number of parameters!" }
     val sourceRoot = File(args[0])

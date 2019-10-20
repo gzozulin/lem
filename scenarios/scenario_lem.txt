@@ -1,0 +1,63 @@
+#header; h1; The Lem Application
+
+#header; h2; Why? What?
+Many of us have a hobby or an art or a craft of some sort. But how to showcase it to the like-minded audience? There are many ways out there: you can write an article, you can create a video on YouTube, you can maintain a page on Wikipedia. You can even create your podcast series. Each of those approaches has its advantages and disadvantages. Some are a bit more entertaining, and the others are easier to produce. In my opinion, my craft - the art of programming - requires a unique approach.
+
+I saw many videos about programming on YouTube. Their main disadvantage is the fact that it is quite hard to follow them. Imagine if you want to recreate or learn some specific details from the video. You will have to pause all the time, and you cannot copy the code snippets from the video. And sometimes, the details of the algorithms or complex mechanics are not explained deep enough due to the specifics of the medium.
+
+Articles have disadvantages as well - especially the old ones. The codebase has a tendency to develop over time: bugs are fixed, ideas getting mature. If you ever read the technical articles about ancient and established products, you probably noticed what I am talking about - when the code and the text diverge significantly.
+
+One of the approaches I liked was a so-called literate programming first time introduced by Donald Knuth. In this case, source code behaves like an open book. The author explains the codebase in proper order and with an in-depth explanation, available on the spot. I want to develop a tool that allows defining a codebase in a particular manner. Imagine, if you have an article, which can be compiled as a part of the codebase. This approach allows the code and the text to always be in sync - even if the project is being modified over time.
+
+One more influence is the example of the C programming language. When you port a C compiler on a different hardware platform, C becomes a self-compiling assembler. You start with porting a basic functionality, then more advanced features of the language can be added on top of it while utilizing the basics. This article is something along those lines. Over time, more features will be added to the tool, and the material will be updated. This article is an example and a first use case for this tool.
+
+I decided to call this tool Lem in the memory of one of my favorite authors - Stanislav Lem. He was a Polish writer of science fiction, philosophy and satire, and a trained physician. His books were a source of great inspiration during my childhood and early youth. If you have never read those - make yourself a favor.
+
+Let's now start discussing the internal construction of the tool. We will dive deep into the application by explaining the foundations - the architecture of the application.
+
+#header; h2; The CLEAN architecture of the app
+What is the CLEAN architecture
+Where it came from
+Why it is useful
+How the code organized according to it
+
+#header; h2; Dependencies boilerplate
+Dependency Injection concept
+Create stuff only once
+Google Dagger 2 to the rescue
+Specifying our dependencies (decl LemModule)
+Clarifying the rules of injection (decl LemComponent)
+
+#header; h2; The pipeline overview
+Main entry point (def LemApp::main())
+Scenario Stage (parsing the Scenario, result is a list of paragraphs and commands)
+Applying the commands to the resulting list
+As a result of some commands, parsing code into the code snippets and comments
+Additional commands are extracted from the comments
+Going back to the stage of applying commands recursively
+When all of the commands are applied and we have a final list of paragraphs
+Printing each resulting paragraph into an html page with the help of templates
+
+#header; h2; Parsing the article
+Few words about ANTLR4
+Kotlin grammar and Statements grammar
+Parsing the scenario (def InteractorParse::parseScenario)
+Formatting the statements (def IteractorFormate::formateText) ???
+Formatting the code (def InteractorFormate::formateCode) ???
+Extracting the commands (def InteractorCommands::identifyCommand(s))
+Applying commands (def InteractorCommands::applyCommands)
+Locating code by path (def InteractorLocation::locate)
+Extracting the definitions (def InteractorParse::parseDef)
+Extracting the declarations (def InteractorParse::parseDecl)
+
+#header; h2; Printing the article
+Few words about FreeTemplate
+Printing the list of paragraphs (def InteractorPrint::printParagraphs)
+Helper methods (decls InteractorPrint::*)
+Printing the article (def InteractorPrint::printArticle())
+#header; h2; What's next?
+There is not tool, which works equally well for every job
+The idea behind Lem is to be versatile enough
+In this article I has shown a full pipeline of the project: from the preparation of the article to the printing stage
+The main target for Lem is to be a handy helper in explaining the Blaster - an offline renderer on which I am working on
+Hope this article was interesting enough and will be glad to see you next time!

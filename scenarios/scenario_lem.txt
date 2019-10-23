@@ -16,10 +16,25 @@ I decided to call this tool Lem in the memory of one of my favorite authors - St
 Let's now start discussing the internal construction of the tool. We will dive deep into the application by explaining the foundations - the architecture of the application.
 
 #header; h2; The CLEAN architecture of the app
-What is the CLEAN architecture
-Where it came from
-Why it is useful
-How the code organized according to it
+Every application should have some meaningful structure behind it. This structure, commonly known as the application architecture, is the primary reference while reading and understanding the code. The common fallacy behind the application architectures is to exist just for the sake of existing. A good sign of it is when the design is too restrictive and rigid when it is hard to add use cases, which were not evident during the designing stage. To avoid this common pitfall, I am usually trying to use something as flexible as possible. The most important part of the design is to do not restrict yourself. As we all know, premature optimization is the root of all evil.
+
+That is why I often employ a so-called CLEAN design. This approach was created and formalized by "Uncle" Bob Martin based on several other architectural designs. I like the flexibility and fundamental ideas behind this design.
+
+The main point behind the CLEAN design is the principle of Separation of Concerns. From Wikipedia: Separation of Concerns is a design principle for separating a computer program into distinct sections so that each section addresses a separate concern. This approach allows you to represent your application as a sort of layered pie, where each layer serves to its purpose.
+
+The main layers are Presentational Layer, Business Logic Layer, and Data Access Layer. If done from the beginning, the application can be dissected into three distinct aspects without too much hassle. That gives the ability to work abstractly and independently, brings enormous benefits during the testing stage.
+
+Presentational Layer contains all of the logic for interacting with the platform on which your application is running. It can be something as straightforward as a Web or a mobile device, but also it can be something a bit more obscured, like a CLI style application.
+
+Business Layer contains all of the mechanics of the application. Theoretically, it should be simple to take your Business layer and move it to the other platform like a drop-in replacement. This layer is also subdivided into specific use cases.
+
+Data Access Layer, as the name suggests, is mostly an abstraction over the actual entities on which you operate during the application lifecycle.
+
+I am not following the design too strictly to allow myself some slack. In my opinion, every tool can be adjusted for a job.
+
+In the code of the application, each layer is represented by its package. "platform" for the Presentational layer, "business" is for Business Layer, and "data" is for Data Access Layer. Each package is further divided according to its own needs. For example, the Business Business Layer package contains Interactors. Each Interactor represents a set of Use Cases with similar responsibilities grouped. Data Layer is represented by Entities and Managers to access those entities. And since we aren't creating any UI, the Platform Layer is straightforward - the application class represents it.
+
+In the next chapter, we will talk about additional auxiliary facilities, which serve as a typical boilerplate for the rest of the code.
 
 #header; h2; Dependencies boilerplate
 Dependency Injection concept

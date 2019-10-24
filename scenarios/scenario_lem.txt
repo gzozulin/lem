@@ -37,11 +37,21 @@ In the code of the application, each layer is represented by its package. "platf
 In the next chapter, we will talk about additional auxiliary facilities, which serve as a typical boilerplate for the rest of the code.
 
 #header; h2; Dependencies boilerplate
-Dependency Injection concept
-Create stuff only once
-Google Dagger 2 to the rescue
-Specifying our dependencies (decl LemModule)
-Clarifying the rules of injection (decl LemComponent)
+The key to managing the complexity of a growing project is the modularization. Modularization is a division of a system or a product into physically and functionally distinct units to allow removal and replacement. Those units have to reference each other somehow. And also we would like to allow ourselves some control and flexibility over those references. Wouldn't it be cool to be able to just remove and replace parts of the system without interrupting others?
+
+All of that is possible with a Dependency Injection system. In software engineering, Dependency Injection is a technique, whereby one object supplies the dependencies of another object. With such system you control the creation, the destruction and a lifecycle of every component. For example you can decide if you will have only one instance of the component and therefore it will be marked as a singleton, or it will be created every time when it is required.
+
+One more advantage of a good Dependency Injection framework is that it allows you to significantly reduce the amount of boilerplate code. Instead of dragging each dependency through the chain of constructors, you can simply inject a field through the DI on the creation stage.
+
+This particular project uses Google's Dagger 2 to facilitate DI. One of the primary advantages of Dagger 2 over most other DI frameworks is that its strictly generated implementation - no reflexion. It means that the boilerplate code, needed for the injection, is generated during the compile time, rather being constructed during runtime through the reflexion mechanisms. That is a performance boost, of course.
+
+First of all, in order to employ Dagger 2 for our needs, we have to specify out dependencies. This happens in a so-called Dagger 2 module. Those are application defined classes, which provides all of the necessary information about how to create and manage your application units:
+#include; decl; com.blaster.platform.LemModule
+
+The next task is to clarify the rules on how to resolve the actual dependencies. For example we can restrict a certain set of dependencies to be available only for the specified classes. Those rules can be defined in the Dagger 2 component:
+#include; decl; com.blaster.platform.LemComponent
+
+In the next chapter we will discuss a general overview of the application pipeline.
 
 #header; h2; The pipeline overview
 Main entry point (def LemApp::main())

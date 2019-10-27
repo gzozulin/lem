@@ -47,7 +47,7 @@ class KotlinManagerImpl : KotlinManager {
 
     private fun extractDeclaration(tokenStream: CommonTokenStream, memberDecl: ParserRuleContext): String {
         val lastToken = when (memberDecl) {
-            is KotlinParser.ClassDeclarationContext    -> {
+            is KotlinParser.ClassDeclarationContext -> {
                 if (memberDecl.classBody() != null) {
                     tokenStream.get(memberDecl.classBody().start.tokenIndex - 1)
                 } else {

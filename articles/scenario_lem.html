@@ -70,11 +70,61 @@
 <p class="text">In the next chapter, we will talk about additional auxiliary facilities, which serve as a typical boilerplate for the rest of the code.</p>
     <h2>Dependencies boilerplate</h2>
 
-<p class="text">Dependency Injection concept</p>
-<p class="text">Create stuff only once</p>
-<p class="text">Google Dagger 2 to the rescue</p>
-<p class="text">Specifying our dependencies (decl LemModule)</p>
-<p class="text">Clarifying the rules of injection (decl LemComponent)</p>
+<p class="text">The key to managing the complexity of a growing project is the modularization. Modularization is a division of a system or a product into physically and functionally distinct units to allow removal and replacement. Those units have to reference each other somehow. And also we would like to allow ourselves some control and flexibility over those references. Wouldn&#39;t it be cool to be able to just remove and replace parts of the system without interrupting others?</p>
+<p class="text">All of that is possible with a Dependency Injection system. In software engineering, Dependency Injection is a technique, whereby one object supplies the dependencies of another object. With such system you control the creation, the destruction and a lifecycle of every component. For example you can decide if you will have only one instance of the component and therefore it will be marked as a singleton, or it will be created every time when it is required.</p>
+<p class="text">One more advantage of a good Dependency Injection framework is that it allows you to significantly reduce the amount of boilerplate code. Instead of dragging each dependency through the chain of constructors, you can simply inject a field through the DI on the creation stage.</p>
+<p class="text">This particular project uses Google&#39;s Dagger 2 to facilitate DI. One of the primary advantages of Dagger 2 over most other DI frameworks is that its strictly generated implementation - no reflexion. It means that the boilerplate code, needed for the injection, is generated during the compile time, rather being constructed during runtime through the reflexion mechanisms. That is a performance boost, of course.</p>
+<p class="text">First of all, in order to employ Dagger 2 for our needs, we have to specify out dependencies. This happens in a so-called Dagger 2 module. Those are application defined classes, which provides all of the necessary information about how to create and manage your application units:</p>
+<div class="child">
+    <h3>com.blaster.platform.LemModule</h3>
+    <div class="code_child">@Module
+class LemModule </div>
+<div class="code_child">@Singleton
+@Provides
+@Named(&quot;TEMPLATES_FILE&quot;)
+fun provideTemplatesFile() </div>
+<div class="code_child">@Singleton
+@Provides
+fun provideFreemarkerConfig(@Named(&quot;TEMPLATES_FILE&quot;)templatesFile:File): Configuration </div>
+<div class="code_child">@Singleton
+@Provides
+fun lexingManager(): StatementsManager </div>
+<div class="code_child">@Singleton
+@Provides
+fun providePrintingManager(): PrintingManager </div>
+<div class="code_child">@Singleton
+@Provides
+fun providesParsingManager(): KotlinManager </div>
+<div class="code_child">@Singleton
+@Provides
+fun providesLocatorUseCse() </div>
+<div class="code_child">@Singleton
+@Provides
+fun providesParseUseCase() </div>
+<div class="code_child">@Singleton
+@Provides
+fun providesPrintUseCase() </div>
+<div class="code_child">@Singleton
+@Provides
+fun extractorCommands() </div>
+<div class="code_child">@Singleton
+@Provides
+fun interactorFormat() </div>
+</div>
+<p class="text">The next task is to clarify the rules on how to resolve the actual dependencies. For example we can restrict a certain set of dependencies to be available only for the specified classes. Those rules can be defined in the Dagger 2 component:</p>
+<div class="child">
+    <h3>com.blaster.platform.LemComponent</h3>
+    <div class="code_child">@Singleton
+@Component(modules=[LemModule::class])
+interface LemComponent </div>
+<div class="code_child">fun inject(lemApp:LemApp)</div>
+<div class="code_child">fun inject(interactorParse:InteractorParse)</div>
+<div class="code_child">fun inject(interactorPrint:InteractorPrint)</div>
+<div class="code_child">fun inject(printingManagerImpl:PrintingManagerImpl)</div>
+<div class="code_child">fun inject(interactorLocation:InteractorLocation)</div>
+<div class="code_child">fun inject(interactorCommands:InteractorCommands)</div>
+</div>
+<p class="text">In the next chapter we will discuss a general overview of the application pipeline.</p>
     <h2>The pipeline overview</h2>
 
 <p class="text">Main entry point (def LemApp::main())</p>

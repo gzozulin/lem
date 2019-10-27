@@ -47,8 +47,20 @@ class KotlinManagerImpl : KotlinManager {
 
     private fun extractDeclaration(tokenStream: CommonTokenStream, memberDecl: ParserRuleContext): String {
         val lastToken = when (memberDecl) {
-            is KotlinParser.ClassDeclarationContext    -> tokenStream.get(memberDecl.classBody().start.tokenIndex - 1)
-            is KotlinParser.FunctionDeclarationContext -> tokenStream.get(memberDecl.functionBody().start.tokenIndex - 1)
+            is KotlinParser.ClassDeclarationContext    -> {
+                if (memberDecl.classBody() != null) {
+                    tokenStream.get(memberDecl.classBody().start.tokenIndex - 1)
+                } else {
+                    tokenStream.get(memberDecl.stop.tokenIndex) // class have no body
+                }
+            }
+            is KotlinParser.FunctionDeclarationContext -> {
+                if (memberDecl.functionBody() != null) {
+                    tokenStream.get(memberDecl.functionBody().start.tokenIndex - 1)
+                } else {
+                    tokenStream.get(memberDecl.stop.tokenIndex) // function have no body
+                }
+            }
             is KotlinParser.PropertyDeclarationContext -> memberDecl.stop
             else -> throw UnsupportedOperationException("Unknown type of member!")
         }

@@ -54,14 +54,27 @@ The next task is to clarify the rules on how to resolve the actual dependencies.
 In the next chapter we will discuss a general overview of the application pipeline.
 
 #header; h2; The pipeline overview
-Main entry point (def LemApp::main())
-Scenario Stage (parsing the Scenario, result is a list of paragraphs and commands)
-Applying the commands to the resulting list
-As a result of some commands, parsing code into the code snippets and comments
-Additional commands are extracted from the comments
-Going back to the stage of applying commands recursively
-When all of the commands are applied and we have a final list of paragraphs
-Printing each resulting paragraph into an html page with the help of templates
+Let us start by briefly defining what we want to achieve with this application. My original idea was to have a tool that allows you to process the code into a readable article. Since this processing can be done every time the code is updated, we can maintain parity between the codebase and the material. The process can be dissected into distinct stages. In this chapter, we will overview those stages and define a goal for each of those.
+
+The application starts its lifecycle, similarly to most of the JVM-based applications, with the main entry point. The main task at this stage is to handle the parameters and parse the properties of the following operation.
+#include; def; com.blaster.platform.LemAppKt::main
+After the main classes are created, and the parameters are consumed, we can move to the Scenario Stage.
+
+When I am writing the articles, I usually start by outlining the table of contents. Then I follow up by adding a little bit of text for every point in the draft. In our application, this blueprint is represented by the article scenario. A scenario is a template, which sets the stage for the rest of the article. The scenario file contains text paragraphs and commands definitions to be executed. Scenario Stage starts by parsing the scenario file, and as a result, we receive a list of sections and commands which were found.
+
+When we have a list of paragraphs and first extracted commands on hands, we can move to the next stage, which is Commands Stage. Commands stage takes the current result and applies the first commands to it. Commands can be something as simple as adding a header or changing a font, or it can be something more complicated - for example, something which will modify the structure of the article or include snippets of code to it.
+
+In most of the cases, as a result of some commands execution, some code will be queued to be parsed. That is how we keep a permanent link between an article and a codebase. As a result of the parsing of the code, we will receive snippets and comments. It is possible to have additional commands in those comments. Those commands will follow the same procedure: after being extracted from the comments, they will be applied to a current result. You can immediately notice the recursive nature of the process.
+
+Those steps can repeat many times. When finally, all of the commands are extracted and applied, and we have a list final list of paragraphs, we can move on to the next stage.
+
+The final stage in the lifecycle of our application is the Printing Stage. At this stage, we take the list of paragraphs from the previous steps and convert them into an HTML page with the help of templates.
+
+Each paragraph goes through its own type of template, which will apply different properties of the text and rendering - and will end up in the final HTML representation of the article.
+
+So, to summarize, we start with the scenario for the article. We parse this scenario and extract the paragraphs of text and commands from it. Then we apply those commands to the current result. Some of those commands will require to parse the additional pieces of code. We will proceed by parsing the code into code snippets and comments. Comments can contain commands, as well. Extracted commands will be recursively applied to the body of the article. And finally, we will print the result all together with the help of the HTML templates.
+
+In the next chapter, we will have a closer look at how things are parsed.
 
 #header; h2; Parsing the article
 Few words about ANTLR4

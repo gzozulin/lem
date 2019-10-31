@@ -34,43 +34,50 @@ class InteractorCommands {
         }
         val noPrefix = command.removePrefix(COMMAND_IDENTIFIER)
         val stack = noPrefix.split(CSV_PATTERN)
-        return when (val first = stack[0]) {
-            COMMAND_INCLUDE -> identifyIncludeCommand(stack.subList(1, stack.size))
-            COMMAND_HEADER -> identifyHeaderCommand(stack.subList(1, stack.size))
-            COMMAND_INLINE -> identifyInlineCommand(stack.subList(1, stack.size))
-            COMMAND_OMIT -> identifyOmitCommand()
+        val first = stack[0]
+        return when {
+            first == COMMAND_INCLUDE -> identifyIncludeCommand(stack.subList(1, stack.size))
+            first == COMMAND_HEADER -> identifyHeaderCommand(stack.subList(1, stack.size))
+            first == COMMAND_INLINE -> identifyInlineCommand(stack.subList(1, stack.size))
+            first == COMMAND_OMIT -> identifyOmitCommand()
             else -> throw IllegalStateException("Unknown command! $first")
         }
     }
 
     private fun identifyIncludeCommand(stack: List<String>): ParagraphCommand? {
-        return when(val first = stack[0]) {
-            SUBCOMMAND_DECL -> ParagraphCommand(ParagraphCommand.Type.INCLUDE, listOf(SUBCOMMAND_DECL, stack[1]))
-            SUBCOMMAND_DEF -> ParagraphCommand(ParagraphCommand.Type.INCLUDE, listOf(SUBCOMMAND_DEF, stack[1]))
-            SUBCOMMAND_LINK -> {
+        val first = stack[0]
+        return when {
+            first == SUBCOMMAND_DECL -> ParagraphCommand(ParagraphCommand.Type.INCLUDE, listOf(SUBCOMMAND_DECL, stack[1]))
+            first == SUBCOMMAND_DEF -> ParagraphCommand(ParagraphCommand.Type.INCLUDE, listOf(SUBCOMMAND_DEF, stack[1]))
+            first == SUBCOMMAND_LINK -> {
                 check(stack.size == 4) { "Wrong amount of parameters for a link include command!" }
                 ParagraphCommand(ParagraphCommand.Type.INCLUDE, listOf(SUBCOMMAND_LINK, stack[1], stack[2], stack[3]))
             }
-            SUBCOMMAND_PICTURE -> {
+            first == SUBCOMMAND_PICTURE -> {
                 check(stack.size == 4) { "Wrong amount of parameters for a link include command!" }
-                ParagraphCommand(ParagraphCommand.Type.INCLUDE, listOf(SUBCOMMAND_PICTURE, stack[1], stack[2], stack[3]))
+                ParagraphCommand(
+                    ParagraphCommand.Type.INCLUDE,
+                    listOf(SUBCOMMAND_PICTURE, stack[1], stack[2], stack[3])
+                )
             }
             else -> throw IllegalStateException("Unknown subcommand! $first")
         }
     }
 
     private fun identifyHeaderCommand(stack: List<String>): ParagraphCommand? {
-        return when (val first = stack[0]) {
-            SUBCOMMAND_H1 -> ParagraphCommand(ParagraphCommand.Type.HEADER, listOf(SUBCOMMAND_H1, stack[1]))
-            SUBCOMMAND_H2 -> ParagraphCommand(ParagraphCommand.Type.HEADER, listOf(SUBCOMMAND_H2, stack[1]))
+        val first = stack[0]
+        return when {
+            first == SUBCOMMAND_H1 -> ParagraphCommand(ParagraphCommand.Type.HEADER, listOf(SUBCOMMAND_H1, stack[1]))
+            first == SUBCOMMAND_H2 -> ParagraphCommand(ParagraphCommand.Type.HEADER, listOf(SUBCOMMAND_H2, stack[1]))
             else -> throw IllegalStateException("Unknown subcommand! $first")
         }
     }
 
     private fun identifyInlineCommand(stack: List<String>): ParagraphCommand? {
-        return when (val first = stack[0]) {
-            SUBCOMMAND_DECL -> ParagraphCommand(ParagraphCommand.Type.INLINE, listOf(SUBCOMMAND_DECL, stack[1]))
-            SUBCOMMAND_DEF -> ParagraphCommand(ParagraphCommand.Type.INLINE, listOf(SUBCOMMAND_DEF, stack[1]))
+        val first = stack[0]
+        return when {
+            first == SUBCOMMAND_DECL -> ParagraphCommand(ParagraphCommand.Type.INLINE, listOf(SUBCOMMAND_DECL, stack[1]))
+            first == SUBCOMMAND_DEF -> ParagraphCommand(ParagraphCommand.Type.INLINE, listOf(SUBCOMMAND_DEF, stack[1]))
             else -> throw IllegalStateException("Unknown subcommand! $first")
         }
     }
@@ -89,14 +96,19 @@ class InteractorCommands {
                     ParagraphCommand.Type.INCLUDE -> applyIncludeCommand(insert, sourceRoot)
                     ParagraphCommand.Type.OMIT -> applyOmitCommand(iterator)
                     ParagraphCommand.Type.INLINE -> applyInlineCommand(iterator, insert, sourceRoot)
-                    else -> {} // do nothing
+                    else -> {
+                    } // do nothing
                 }
             }
         }
         return mutableList
     }
 
-    private fun applyInlineCommand(iterator: MutableListIterator<Paragraph>, insert: ParagraphCommand, sourceRoot: File) {
+    private fun applyInlineCommand(
+        iterator: MutableListIterator<Paragraph>,
+        insert: ParagraphCommand,
+        sourceRoot: File
+    ) {
         iterator.remove()
         when (insert.subcommand) {
             SUBCOMMAND_DECL -> {

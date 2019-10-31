@@ -76,19 +76,38 @@ So, to summarize, we start with the scenario for the article. We parse this scen
 
 In the next chapter, we will have a closer look at how things are parsed.
 
-#header; h2; Parsing the article
-Few words about ANTLR4
-Kotlin grammar and Statements grammar
-Parsing the scenario (def InteractorParse::parseScenario)
-Formatting the statements (def IteractorFormate::formateText) ???
-Formatting the code (def InteractorFormate::formateCode) ???
-Extracting the commands (def InteractorCommands::identifyCommand(s))
-Applying commands (def InteractorCommands::applyCommands)
-Locating code by path (def InteractorLocation::locate)
-Extracting the definitions (def InteractorParse::parseDef)
-Extracting the declarations (def InteractorParse::parseDecl)
+#header; h2; The Parsing Stage
+In this chapter we will see the details of the parsing of the scenario. Parsing of a modern programming language is an extremely complex task. And this task is far outside of the reach of this article. If you need to parse multiple languages and formats, the complexity of this task can easily outweigh the gain from the project.
 
-#header; h2; Printing the article
+To avoid the unnecessary complexity and to facilitate parsing we will be using a tool called ANTLR4. What is especially good about this tool is that it comes with already available grammars for most of the modern languages. Those grammars are contributed and supported by people, who are highly proficient with the languages in question.
+
+We will employ two grammar files for our task at hand. One is for Kotlin language, another is our custom grammar which allows us to separate the code from the comments. If we would like to add the support for languages, other than Kotlin in future, we always can do this by expanding the pool of available grammars.
+
+I will not discuss the creation of the grammars and how to use ANTLR4 because it is outside of the scope of this article. For simplicity we can think about it as if some tool will just convert the provided language constructs into the classes, available for consumption in the language of our choice - in our case - Kotlin.
+
+Let us start with a first step - parsing of the scenario file, passed from the input arguments.
+#include; def; com.blaster.business.InteractorParse::parseScenario
+
+The scenario will produce a list of paragraphs and commands, which were identified. Let's see, how the identification of the commands works.
+#include; def; com.blaster.business.InteractorCommands::identifyCommands
+
+After the commands are identified, we can finally apply them.
+#include; def; com.blaster.business.InteractorCommands::applyCommands
+
+As we already know some commands will request to include the additional code to showcase the mechanics. Such a command will have a command name, command arguments and the path of the code to be included. Here is the code, responsible for locating of the snippets:
+#include; def; com.blaster.business.InteractorLocation::locate
+
+The author of the scenario can choose how to include the code. We can either include definitions of declarations of methods and classes. The difference is that sometimes you want to include the body of the method and sometimes you just want to mention it. Let us see how parsing of the requested definitions works.
+#include; def; com.blaster.business.InteractorParse::parseDef
+
+Parsing of the requested declarations works very similarly.
+#include; def; com.blaster.business.InteractorParse::parseDecl
+
+After the command is executed and the snippet of the code is included the commentaries in the code can contain additional commands. In this case we will recursively go back to the stage of application of commands.
+
+Finally, after all of that is done, we should have an end result of the parsing stage. This result will be passed to the next stage which is printing of the article. We will have a look on the details of the printing in the next chapter.
+
+#header; h2; The Printing stage
 Few words about FreeTemplate
 Printing the list of paragraphs (def InteractorPrint::printParagraphs)
 Helper methods (decls InteractorPrint::*)

@@ -121,11 +121,14 @@ class KotlinManagerImpl : KotlinManager {
     private fun locateMemberMethodStatements(parser: KotlinParser, locationMember: LocationMember): KotlinParser.StatementsContext {
         var result: KotlinParser.StatementsContext? = null
         ClassDeclVisitor(locationMember.clazz) { classDecl ->
-            GlobalDeclVisitor(locationMember.identifier) { functionDecl ->
+            val globalDecl = GlobalDeclVisitor(locationMember.identifier) { functionDecl ->
                 StatementsVisitor { statements ->
                     result = statements
                 }.visit(functionDecl.functionBody())
-            }.visitClassBody(classDecl.classBody())
+            }
+            if (classDecl.classBody() != null) { // the class can have no body
+                globalDecl.visitClassBody(classDecl.classBody())
+            }
         }.visitKotlinFile(parser.kotlinFile())
         checkNotNull(result) { "Nothing found for specified location $locationMember" }
         return result!!

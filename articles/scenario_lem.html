@@ -189,20 +189,101 @@ lemApp.render(sourceRoot,scenarioFile,output)</div>
 <p class="text"></p>
 <p class="text">In the next chapter, we will have a closer look at how things are parsed.</p>
 <p class="text"></p>
-    <h2>Parsing the article</h2>
+    <h2>The Parsing Stage</h2>
 
-<p class="text">Few words about ANTLR4</p>
-<p class="text">Kotlin grammar and Statements grammar</p>
-<p class="text">Parsing the scenario (def InteractorParse::parseScenario)</p>
-<p class="text">Formatting the statements (def IteractorFormate::formateText) ???</p>
-<p class="text">Formatting the code (def InteractorFormate::formateCode) ???</p>
-<p class="text">Extracting the commands (def InteractorCommands::identifyCommand(s))</p>
-<p class="text">Applying commands (def InteractorCommands::applyCommands)</p>
-<p class="text">Locating code by path (def InteractorLocation::locate)</p>
-<p class="text">Extracting the definitions (def InteractorParse::parseDef)</p>
-<p class="text">Extracting the declarations (def InteractorParse::parseDecl)</p>
+<p class="text">In this chapter, we will see the details of the parsing of the scenario. Parsing of a modern programming language is an incredibly complex task. And this task is far outside of the reach of this article. If you need to parse multiple languages and formats, the complexity of this task can easily outweigh the gain from the project.</p>
 <p class="text"></p>
-    <h2>Printing the article</h2>
+<p class="text">To avoid unnecessary complexity and to facilitate parsing, we will be using a tool called ANTLR4. What is especially good about this tool is that it comes with already available grammar for most of the modern languages. Those grammars are contributed and supported by people who are highly proficient with the languages in question.</p>
+<p class="text"></p>
+<p class="text">We will employ two grammar files for our task at hand. One is for Kotlin language, and another is our custom grammar, which allows us to separate the code from the comments. If we would like to add the support for languages, other than Kotlin in the future, we always can do this by expanding the pool of available grammar.</p>
+<p class="text"></p>
+<p class="text">I will not discuss the creation of the grammars and how to use ANTLR4 because it is outside of the scope of this article. For simplicity, we can think about it as if some tool will convert the provided language constructs into the classes, available for consumption in the language of our choice - in our case - Kotlin.</p>
+<p class="text"></p>
+<p class="text">Let us start with a first step - parsing of the scenario file, passed from the input arguments.</p>
+<div class="child">
+    <h3>com.blaster.business.InteractorParse::parseScenario</h3>
+    <div class="code_child">.applyCommands(sourceRoot,it</div>
+</div>
+<p class="text"></p>
+<p class="text">The scenario will produce a list of paragraphs and commands, which were identified. Let&#39;s see how the identification of the commands works.</p>
+<div class="child">
+    <h3>com.blaster.business.InteractorCommands::identifyCommands</h3>
+    <div class="code_child">(itisParagraphText) {
+               identifyCommand(it.text) ?: it
+           } else {
+               it
+           }</div>
+</div>
+<p class="text"></p>
+<p class="text">After the commands are identified, we can finally apply them.</p>
+<div class="child">
+    <h3>com.blaster.business.InteractorCommands::applyCommands</h3>
+    <div class="code_child">val mutableList = ArrayList(paragraphs)
+val iterator = mutableList.listIterator()
+while (iterator.hasNext()) {
+    val insert = iterator.next()
+    if (insertisParagraphCommand) {
+        when (insert.type) {
+            ParagraphCommand.Type.INCLUDE -&gt; applyIncludeCommand(insert,sourceRoot)
+            ParagraphCommand.Type.OMIT -&gt; applyOmitCommand(iterator)
+            ParagraphCommand.Type.INLINE -&gt; applyInlineCommand(iterator,insert,sourceRoot)
+            else -&gt; {
+            } </div>
+<p class="text_child">// do nothing</p>
+<div class="code_child">        }
+    }
+}
+return mutableList</div>
+</div>
+<p class="text"></p>
+<p class="text">As we already know, some commands will request to include the additional code to showcase the mechanics. Such a command will have a command name, command arguments, and the path of the code to be included. Here is the code, responsible for locating the snippets:</p>
+<div class="child">
+    <h3>com.blaster.business.InteractorLocation::locate</h3>
+    <div class="code_child">check(PATH_REGEX.find(path)!!.value.length==path.length) { &quot;Wrong path for the location: $path&quot; }
+val clazz = extractClass(path)
+val file = locateFile(sourceRoot,clazz)
+return if (path.contains(&quot;::&quot;)) {
+    val member = extractMember(path)
+    if (clazz.endsWith(&quot;Kt&quot;)) {
+        LocationGlobal(file,member)
+    } else {
+        LocationMember(file,clazz,member)
+    }
+} else {
+    LocationClass(file,clazz)
+}</div>
+</div>
+<p class="text"></p>
+<p class="text">The author of the scenario can choose how to include the code. We can either include definitions of declarations of methods and classes. The difference is that sometimes you want to include the body of the method, and sometimes you want to mention it. Let us see how parsing of the requested definitions works.</p>
+<div class="child">
+    <h3>com.blaster.business.InteractorParse::parseDef</h3>
+    <div class="code_child">val location = interactorLocation.locate(sourceRoot,path)
+val definition = kotlinManager.extractDefinition(location)
+val paragraphs = statementsManager.extractStatements(definition)
+val formatted = formatParagraphs(paragraphs)
+val withCommands = interactorCommands.identifyCommands(formatted)
+return interactorCommands.applyCommands(sourceRoot,withCommands)</div>
+</div>
+<p class="text"></p>
+<p class="text">Parsing of the requested declarations works very similarly.</p>
+<div class="child">
+    <h3>com.blaster.business.InteractorParse::parseDecl</h3>
+    <div class="code_child">val location = interactorLocation.locate(sourceRoot,path)
+val declarations = kotlinManager.extractDeclaration(location)
+val paragraphs = Observable.fromIterable(declarations)
+    .flatMap { Observable.fromIterable(statementsManager.extractStatements(it)) }
+    .toList()
+    .blockingGet()
+val formatted = formatParagraphs(paragraphs)
+val withCommands = interactorCommands.identifyCommands(formatted)
+return interactorCommands.applyCommands(sourceRoot,withCommands)</div>
+</div>
+<p class="text"></p>
+<p class="text">After the command is executed and the snippet of the code is included, the commentaries in the code can contain additional commands. In this case, we will recursively go back to the stage of the application of commands.</p>
+<p class="text"></p>
+<p class="text">Finally, after all of that is done, we should have a result of the parsing stage. This result will be passed to the next step, which is the printing of the article. We will have a look at the details of the printing in the next chapter.</p>
+<p class="text"></p>
+    <h2>The Printing stage</h2>
 
 <p class="text">Few words about FreeTemplate</p>
 <p class="text">Printing the list of paragraphs (def InteractorPrint::printParagraphs)</p>

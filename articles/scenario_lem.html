@@ -226,11 +226,10 @@ while (iterator.hasNext()) {
         when (insert.type) {
             ParagraphCommand.Type.INCLUDE -&gt; applyIncludeCommand(insert,sourceRoot)
             ParagraphCommand.Type.OMIT -&gt; applyOmitCommand(iterator)
-            ParagraphCommand.Type.INLINE -&gt; applyInlineCommand(iterator,insert,sourceRoot)
-            else -&gt; {
-            } </div>
-<p class="text_child">// do nothing</p>
-<div class="code_child">        }
+            ParagraphCommand.Type.INLINE -&gt; applyInlineCommand(iterator,insert,sourceRoot)</div>
+<p class="text_child">// else do nothing</p>
+<div class="code_child">            else -&gt; { }
+        }
     }
 }
 return mutableList</div>

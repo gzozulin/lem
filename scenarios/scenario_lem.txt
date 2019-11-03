@@ -81,7 +81,7 @@ In this chapter, we will see the details of the parsing of the scenario. Parsing
 
 To avoid unnecessary complexity and to facilitate parsing, we will be using a tool called ANTLR4. What is especially good about this tool is that it comes with already available grammar for most of the modern languages. Those grammars are contributed and supported by people who are highly proficient with the languages in question.
 
-We will employ two grammar files for our task at hand. One is for Kotlin language, and another is our custom grammar, which allows us to separate the code from the comments. If we would like to add the support for languages, other than Kotlin in the future, we always can do this by expanding the pool of available grammar.
+We will employ two grammar files for our task at hand. One is for Kotlin language, and another is our custom grammar, which allows us to separate the code from the comments. what is a target of meditationIf we would like to add the support for languages, other than Kotlin in the future, we always can do this by expanding the pool of available grammar.
 
 I will not discuss the creation of the grammars and how to use ANTLR4 because it is outside of the scope of this article. For simplicity, we can think about it as if some tool will convert the provided language constructs into the classes, available for consumption in the language of our choice - in our case - Kotlin.
 

@@ -7,7 +7,6 @@ import com.blaster.business.LocationMember
 import com.blaster.data.managers.kotlin.visitors.ClassDeclVisitor
 import com.blaster.data.managers.kotlin.visitors.GlobalDeclVisitor
 import com.blaster.data.managers.kotlin.visitors.MemberDeclVisitor
-import com.blaster.data.managers.kotlin.visitors.StatementsVisitor
 import io.reactivex.Observable
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
@@ -26,7 +25,7 @@ class KotlinManagerImpl : KotlinManager {
             is LocationMember -> locateMemberMethodStatements(parser, location)
             else -> throw UnsupportedOperationException()
         }
-        val tokens = tokenStream.getTokens(statements.start.tokenIndex + 1, statements.stop.tokenIndex - 1)
+        val tokens = tokenStream.getTokens(statements.start.tokenIndex, statements.stop.tokenIndex)
         return tokensToText(tokens)
     }
 
@@ -106,25 +105,21 @@ class KotlinManagerImpl : KotlinManager {
         return result
     }
 
-    private fun locateGlobalMethodStatements(parser: KotlinParser, locationGlobal: LocationGlobal): KotlinParser.StatementsContext {
+    private fun locateGlobalMethodStatements(parser: KotlinParser, locationGlobal: LocationGlobal): KotlinParser.FunctionBodyContext {
         // todo: can be triggered by member with same name if comes first
-        var result: KotlinParser.StatementsContext? = null
+        var result: KotlinParser.FunctionBodyContext? = null
         GlobalDeclVisitor(locationGlobal.identifier) { functionDecl ->
-            StatementsVisitor { statements ->
-                result = statements
-            }.visit(functionDecl.functionBody())
+            result = functionDecl.functionBody()
         }.visitKotlinFile(parser.kotlinFile())
         checkNotNull(result) { "Nothing found for specified location $locationGlobal" }
         return result!!
     }
 
-    private fun locateMemberMethodStatements(parser: KotlinParser, locationMember: LocationMember): KotlinParser.StatementsContext {
-        var result: KotlinParser.StatementsContext? = null
+    private fun locateMemberMethodStatements(parser: KotlinParser, locationMember: LocationMember): KotlinParser.FunctionBodyContext {
+        var result: KotlinParser.FunctionBodyContext? = null
         ClassDeclVisitor(locationMember.clazz) { classDecl ->
             val globalDecl = GlobalDeclVisitor(locationMember.identifier) { functionDecl ->
-                StatementsVisitor { statements ->
-                    result = statements
-                }.visit(functionDecl.functionBody())
+                result = functionDecl.functionBody()
             }
             if (classDecl.classBody() != null) { // the class can have no body
                 globalDecl.visitClassBody(classDecl.classBody())

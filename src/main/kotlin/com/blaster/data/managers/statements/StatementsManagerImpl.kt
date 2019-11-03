@@ -24,7 +24,7 @@ class StatementsManagerImpl : StatementsManager {
                     result.add(ParagraphText(statement.text.removePrefix("/*").removeSuffix("*/").trim()))
                 }
                 is StatementsParser.LineCommentContext -> {
-                    result.add(ParagraphText(statement.text.removePrefix("/*").trim()))
+                    result.add(ParagraphText(statement.text.removePrefix("//").trim()))
                 }
                 is StatementsParser.CodeContext -> {
                     result.add(ParagraphCode(statement.text))

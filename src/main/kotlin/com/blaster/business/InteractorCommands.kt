@@ -97,7 +97,7 @@ class InteractorCommands {
                     ParagraphCommand.Type.OMIT -> applyOmitCommand(iterator)
                     ParagraphCommand.Type.INLINE -> applyInlineCommand(iterator, insert, sourceRoot)
 
-                    // else do nothing
+                    // Else do nothing
                     else -> { }
                 }
             }

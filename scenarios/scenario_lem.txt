@@ -109,9 +109,10 @@ Finally, after all of that is done, we should have a result of the parsing stage
 
 #header; h2; The Printing stage
 Few words about FreeTemplate
+Printing the article (def InteractorPrint::printArticle())
 Printing the list of paragraphs (def InteractorPrint::printParagraphs)
 Helper methods (decls InteractorPrint::*)
-Printing the article (def InteractorPrint::printArticle())
+
 #header; h2; What's next?
 There is not tool, which works equally well for every job
 The idea behind Lem is to be versatile enough

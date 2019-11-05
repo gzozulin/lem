@@ -96,7 +96,6 @@ class InteractorCommands {
                     ParagraphCommand.Type.INCLUDE -> applyIncludeCommand(insert, sourceRoot)
                     ParagraphCommand.Type.OMIT -> applyOmitCommand(iterator)
                     ParagraphCommand.Type.INLINE -> applyInlineCommand(iterator, insert, sourceRoot)
-
                     // Else do nothing
                     else -> { }
                 }

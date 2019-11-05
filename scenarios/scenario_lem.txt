@@ -108,10 +108,21 @@ After the command is executed and the snippet of the code is included, the comme
 Finally, after all of that is done, we should have a result of the parsing stage. This result will be passed to the next step, which is the printing of the article. We will have a look at the details of the printing in the next chapter.
 
 #header; h2; The Printing stage
-Few words about FreeTemplate
-Printing the article (def InteractorPrint::printArticle())
-Printing the list of paragraphs (def InteractorPrint::printParagraphs)
-Helper methods (decls InteractorPrint::*)
+The target destination of our article is an HTML file. We want to create those by parsing the codebase and executing steps required by the commands.
+
+But how to render the actual HTML? Without a proper tool, that can be a very challenging task. For our purposes, we will use a library called FreeMarker.
+
+Apache's FreeMarker is a template engine - a Java library to generate text output (HTML Web pages, e-mails, configuration files, source code, etc.) based on the templates and changing data. Templates are written in a FreeMarker Template Language (FTL), which is a simple specialized language. And, usually, a general-purpose programming language (like Java) is used to prepare data. Let us see how is that implemented by looking at the source code:
+#include; def; com.blaster.business.InteractorPrint::printParagraphs
+
+We are printing paragraphs by delegating pieces of the tasks to the helper methods, like this one:
+#include; def; com.blaster.business.InteractorPrint::printText
+Each of those will handle its piece of the overall article accordingly.
+
+And, finally, when we have a body of the HTML page, we can wrap it into the article. The article contains header, styles, and body declaration.
+#include; def; com.blaster.business.InteractorPrint::printArticle
+
+At this point, we had a look at all steps required for processing the article - starting from the scenario and until the actual HTML output. Of course, we did not cover everything. The best place to find each and every detail is the source code. But I hope, at this point, most of the high-level concepts are explained and understood.
 
 #header; h2; What's next?
 There is not tool, which works equally well for every job

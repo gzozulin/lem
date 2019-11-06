@@ -18,8 +18,11 @@ class InteractorPrint {
         LEM_COMPONENT.inject(this)
     }
 
+    // Parameters of this function are: the output file and a list of paragraphs to be printed
     fun printArticle(output: File, paragraphs: List<Paragraph>) {
+        // After receiving a list of paragraphs, we wrap them into an article template
         val article = printingManager.renderTemplate("template_article.ftlh", hashMapOf("article" to printParagraphs(paragraphs)))
+        // The result is sent to printing manager to be put into a file
         printingManager.printArticle(output, article)
     }
 

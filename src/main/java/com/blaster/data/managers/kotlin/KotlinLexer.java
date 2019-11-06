@@ -1,9 +1,11 @@
 // Generated from KotlinLexer.g4 by ANTLR 4.7.2
 
-package com.blaster.data.managers.kotlin;
+    package com.blaster.data.managers.kotlin;
 
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.Token;
+import org.antlr.v4.runtime.TokenStream;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
@@ -1441,7 +1443,7 @@ public class KotlinLexer extends Lexer {
 		"\u0094\2\u08d0\u08d1\3\2\2\2\u08d1\u08d2\b\u0117|\2\u08d2\u0232\3\2\2"+
 		"\2\u08d3\u08d6\5\13\4\2\u08d4\u08d6\5\t\3\2\u08d5\u08d3\3\2\2\2\u08d5"+
 		"\u08d4\3\2\2\2\u08d6\u08d7\3\2\2\2\u08d7\u08d8\b\u0118\2\2\u08d8\u0234"+
-		"\3\2\2\2\u08d9\u08da\5\r\5\2\u08da\u08db\3\2\2\2\u08db\u08dc\b\u0119}"+
+		"\3\2\2\2\u08d9\u08da\5\r\5\2\u08da\u08db\3\2\2\2\u08db\u08dc\b\u0119\2"+
 		"\2\u08dc\u0236\3\2\2\2\u08dd\u08de\5\17\6\2\u08de\u08df\3\2\2\2\u08df"+
 		"\u08e0\b\u011a}\2\u08e0\u0238\3\2\2\2\u08e1\u08e2\7$\2\2\u08e2\u08e3\3"+
 		"\2\2\2\u08e3\u08e4\b\u011b\6\2\u08e4\u023a\3\2\2\2\u08e5\u08e6\5\u012d"+

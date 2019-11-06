@@ -4,7 +4,7 @@ import com.blaster.data.paragraphs.ParagraphCode
 import com.blaster.data.paragraphs.ParagraphText
 import io.reactivex.Observable
 
-private val LINE_REGEX = "[\r]?[\n]+".toRegex()
+private val LINE_REGEX = "[\r*\n]+".toRegex()
 
 class InteractorFormat {
     fun textToParagraphs(text: String): List<ParagraphText> = Observable.just(text)
@@ -15,6 +15,7 @@ class InteractorFormat {
 
     fun formatCode(code: String): ParagraphCode = Observable.just(code)
         .map { textToLines(it) }
+        .map { removeEmpty(it) }
         .map { trimCommonSpaces(it) }
         .map { linesToText(it) }
         .map { ParagraphCode(it) }
@@ -30,15 +31,14 @@ class InteractorFormat {
         return result.dropLast(1)
     }
 
+    private fun removeEmpty(lines: List<String>) = Observable.fromIterable(lines)
+        .filter { it.isNotBlank() }
+        .toList()
+        .blockingGet()
+
     private fun trimCommonSpaces(lines: List<String>): List<String> {
-        val clean = ArrayList<String>()
-        for (line in lines) {
-            if (line.isNotBlank()) {
-                clean.add(line)
-            }
-        }
         var min = Int.MAX_VALUE
-        for (line in clean) {
+        for (line in lines) {
             var index = 0
             while (line[index] == ' ') {
                 index++
@@ -48,7 +48,7 @@ class InteractorFormat {
             }
         }
         val trimmed = ArrayList<String>()
-        for (line in clean) {
+        for (line in lines) {
             trimmed.add(line.substring(min, line.length))
         }
         return trimmed

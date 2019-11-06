@@ -1,8 +1,5 @@
 package com.blaster.data.managers.statements
 
-import com.blaster.data.managers.kotlin.StatementsBaseVisitor
-import com.blaster.data.managers.kotlin.StatementsLexer
-import com.blaster.data.managers.kotlin.StatementsParser
 import com.blaster.data.paragraphs.Paragraph
 import com.blaster.data.paragraphs.ParagraphCode
 import com.blaster.data.paragraphs.ParagraphText
@@ -19,6 +16,9 @@ class StatementsManagerImpl : StatementsManager {
         val statements = locateStatements(parser)
         val result = ArrayList<Paragraph>()
         for (statement in statements) {
+            if (statement.text.isBlank()) {
+                continue // todo: parsing statements includes empty strings somehow
+            }
             when (statement) {
                 is StatementsParser.DelimitedCommentContext -> {
                     result.add(ParagraphText(statement.text.removePrefix("/*").removeSuffix("*/").trim()))
@@ -38,7 +38,13 @@ class StatementsManagerImpl : StatementsManager {
     private fun provideParserForStatememts(key: String): Pair<CommonTokenStream, StatementsParser> {
         var result = cacheForStatements[key]
         if (result == null) {
-            val stream = CommonTokenStream(StatementsLexer(CharStreams.fromString(key)))
+            val stream = CommonTokenStream(
+                StatementsLexer(
+                    CharStreams.fromString(
+                        key
+                    )
+                )
+            )
             val parser = StatementsParser(stream)
             result = stream to parser
             cacheForStatements[key] = result

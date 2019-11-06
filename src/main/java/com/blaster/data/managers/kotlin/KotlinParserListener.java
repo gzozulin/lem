@@ -5,262 +5,262 @@
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
 /**
- * This interface defines a complete listener for a parseDef tree produced by
+ * This interface defines a complete listener for a parse tree produced by
  * {@link KotlinParser}.
  */
 public interface KotlinParserListener extends ParseTreeListener {
 	/**
-	 * Enter a parseDef tree produced by {@link KotlinParser#kotlinFile}.
-	 * @param ctx the parseDef tree
+	 * Enter a parse tree produced by {@link KotlinParser#kotlinFile}.
+	 * @param ctx the parse tree
 	 */
 	void enterKotlinFile(KotlinParser.KotlinFileContext ctx);
 	/**
-	 * Exit a parseDef tree produced by {@link KotlinParser#kotlinFile}.
-	 * @param ctx the parseDef tree
+	 * Exit a parse tree produced by {@link KotlinParser#kotlinFile}.
+	 * @param ctx the parse tree
 	 */
 	void exitKotlinFile(KotlinParser.KotlinFileContext ctx);
 	/**
-	 * Enter a parseDef tree produced by {@link KotlinParser#script}.
-	 * @param ctx the parseDef tree
+	 * Enter a parse tree produced by {@link KotlinParser#script}.
+	 * @param ctx the parse tree
 	 */
 	void enterScript(KotlinParser.ScriptContext ctx);
 	/**
-	 * Exit a parseDef tree produced by {@link KotlinParser#script}.
-	 * @param ctx the parseDef tree
+	 * Exit a parse tree produced by {@link KotlinParser#script}.
+	 * @param ctx the parse tree
 	 */
 	void exitScript(KotlinParser.ScriptContext ctx);
 	/**
-	 * Enter a parseDef tree produced by {@link KotlinParser#preamble}.
-	 * @param ctx the parseDef tree
+	 * Enter a parse tree produced by {@link KotlinParser#preamble}.
+	 * @param ctx the parse tree
 	 */
 	void enterPreamble(KotlinParser.PreambleContext ctx);
 	/**
-	 * Exit a parseDef tree produced by {@link KotlinParser#preamble}.
-	 * @param ctx the parseDef tree
+	 * Exit a parse tree produced by {@link KotlinParser#preamble}.
+	 * @param ctx the parse tree
 	 */
 	void exitPreamble(KotlinParser.PreambleContext ctx);
 	/**
-	 * Enter a parseDef tree produced by {@link KotlinParser#fileAnnotations}.
-	 * @param ctx the parseDef tree
+	 * Enter a parse tree produced by {@link KotlinParser#fileAnnotations}.
+	 * @param ctx the parse tree
 	 */
 	void enterFileAnnotations(KotlinParser.FileAnnotationsContext ctx);
 	/**
-	 * Exit a parseDef tree produced by {@link KotlinParser#fileAnnotations}.
-	 * @param ctx the parseDef tree
+	 * Exit a parse tree produced by {@link KotlinParser#fileAnnotations}.
+	 * @param ctx the parse tree
 	 */
 	void exitFileAnnotations(KotlinParser.FileAnnotationsContext ctx);
 	/**
-	 * Enter a parseDef tree produced by {@link KotlinParser#fileAnnotation}.
-	 * @param ctx the parseDef tree
+	 * Enter a parse tree produced by {@link KotlinParser#fileAnnotation}.
+	 * @param ctx the parse tree
 	 */
 	void enterFileAnnotation(KotlinParser.FileAnnotationContext ctx);
 	/**
-	 * Exit a parseDef tree produced by {@link KotlinParser#fileAnnotation}.
-	 * @param ctx the parseDef tree
+	 * Exit a parse tree produced by {@link KotlinParser#fileAnnotation}.
+	 * @param ctx the parse tree
 	 */
 	void exitFileAnnotation(KotlinParser.FileAnnotationContext ctx);
 	/**
-	 * Enter a parseDef tree produced by {@link KotlinParser#packageHeader}.
-	 * @param ctx the parseDef tree
+	 * Enter a parse tree produced by {@link KotlinParser#packageHeader}.
+	 * @param ctx the parse tree
 	 */
 	void enterPackageHeader(KotlinParser.PackageHeaderContext ctx);
 	/**
-	 * Exit a parseDef tree produced by {@link KotlinParser#packageHeader}.
-	 * @param ctx the parseDef tree
+	 * Exit a parse tree produced by {@link KotlinParser#packageHeader}.
+	 * @param ctx the parse tree
 	 */
 	void exitPackageHeader(KotlinParser.PackageHeaderContext ctx);
 	/**
-	 * Enter a parseDef tree produced by {@link KotlinParser#importList}.
-	 * @param ctx the parseDef tree
+	 * Enter a parse tree produced by {@link KotlinParser#importList}.
+	 * @param ctx the parse tree
 	 */
 	void enterImportList(KotlinParser.ImportListContext ctx);
 	/**
-	 * Exit a parseDef tree produced by {@link KotlinParser#importList}.
-	 * @param ctx the parseDef tree
+	 * Exit a parse tree produced by {@link KotlinParser#importList}.
+	 * @param ctx the parse tree
 	 */
 	void exitImportList(KotlinParser.ImportListContext ctx);
 	/**
-	 * Enter a parseDef tree produced by {@link KotlinParser#importHeader}.
-	 * @param ctx the parseDef tree
+	 * Enter a parse tree produced by {@link KotlinParser#importHeader}.
+	 * @param ctx the parse tree
 	 */
 	void enterImportHeader(KotlinParser.ImportHeaderContext ctx);
 	/**
-	 * Exit a parseDef tree produced by {@link KotlinParser#importHeader}.
-	 * @param ctx the parseDef tree
+	 * Exit a parse tree produced by {@link KotlinParser#importHeader}.
+	 * @param ctx the parse tree
 	 */
 	void exitImportHeader(KotlinParser.ImportHeaderContext ctx);
 	/**
-	 * Enter a parseDef tree produced by {@link KotlinParser#importAlias}.
-	 * @param ctx the parseDef tree
+	 * Enter a parse tree produced by {@link KotlinParser#importAlias}.
+	 * @param ctx the parse tree
 	 */
 	void enterImportAlias(KotlinParser.ImportAliasContext ctx);
 	/**
-	 * Exit a parseDef tree produced by {@link KotlinParser#importAlias}.
-	 * @param ctx the parseDef tree
+	 * Exit a parse tree produced by {@link KotlinParser#importAlias}.
+	 * @param ctx the parse tree
 	 */
 	void exitImportAlias(KotlinParser.ImportAliasContext ctx);
 	/**
-	 * Enter a parseDef tree produced by {@link KotlinParser#topLevelObject}.
-	 * @param ctx the parseDef tree
+	 * Enter a parse tree produced by {@link KotlinParser#topLevelObject}.
+	 * @param ctx the parse tree
 	 */
 	void enterTopLevelObject(KotlinParser.TopLevelObjectContext ctx);
 	/**
-	 * Exit a parseDef tree produced by {@link KotlinParser#topLevelObject}.
-	 * @param ctx the parseDef tree
+	 * Exit a parse tree produced by {@link KotlinParser#topLevelObject}.
+	 * @param ctx the parse tree
 	 */
 	void exitTopLevelObject(KotlinParser.TopLevelObjectContext ctx);
 	/**
-	 * Enter a parseDef tree produced by {@link KotlinParser#classDeclaration}.
-	 * @param ctx the parseDef tree
+	 * Enter a parse tree produced by {@link KotlinParser#classDeclaration}.
+	 * @param ctx the parse tree
 	 */
 	void enterClassDeclaration(KotlinParser.ClassDeclarationContext ctx);
 	/**
-	 * Exit a parseDef tree produced by {@link KotlinParser#classDeclaration}.
-	 * @param ctx the parseDef tree
+	 * Exit a parse tree produced by {@link KotlinParser#classDeclaration}.
+	 * @param ctx the parse tree
 	 */
 	void exitClassDeclaration(KotlinParser.ClassDeclarationContext ctx);
 	/**
-	 * Enter a parseDef tree produced by {@link KotlinParser#primaryConstructor}.
-	 * @param ctx the parseDef tree
+	 * Enter a parse tree produced by {@link KotlinParser#primaryConstructor}.
+	 * @param ctx the parse tree
 	 */
 	void enterPrimaryConstructor(KotlinParser.PrimaryConstructorContext ctx);
 	/**
-	 * Exit a parseDef tree produced by {@link KotlinParser#primaryConstructor}.
-	 * @param ctx the parseDef tree
+	 * Exit a parse tree produced by {@link KotlinParser#primaryConstructor}.
+	 * @param ctx the parse tree
 	 */
 	void exitPrimaryConstructor(KotlinParser.PrimaryConstructorContext ctx);
 	/**
-	 * Enter a parseDef tree produced by {@link KotlinParser#classParameters}.
-	 * @param ctx the parseDef tree
+	 * Enter a parse tree produced by {@link KotlinParser#classParameters}.
+	 * @param ctx the parse tree
 	 */
 	void enterClassParameters(KotlinParser.ClassParametersContext ctx);
 	/**
-	 * Exit a parseDef tree produced by {@link KotlinParser#classParameters}.
-	 * @param ctx the parseDef tree
+	 * Exit a parse tree produced by {@link KotlinParser#classParameters}.
+	 * @param ctx the parse tree
 	 */
 	void exitClassParameters(KotlinParser.ClassParametersContext ctx);
 	/**
-	 * Enter a parseDef tree produced by {@link KotlinParser#classParameter}.
-	 * @param ctx the parseDef tree
+	 * Enter a parse tree produced by {@link KotlinParser#classParameter}.
+	 * @param ctx the parse tree
 	 */
 	void enterClassParameter(KotlinParser.ClassParameterContext ctx);
 	/**
-	 * Exit a parseDef tree produced by {@link KotlinParser#classParameter}.
-	 * @param ctx the parseDef tree
+	 * Exit a parse tree produced by {@link KotlinParser#classParameter}.
+	 * @param ctx the parse tree
 	 */
 	void exitClassParameter(KotlinParser.ClassParameterContext ctx);
 	/**
-	 * Enter a parseDef tree produced by {@link KotlinParser#delegationSpecifiers}.
-	 * @param ctx the parseDef tree
+	 * Enter a parse tree produced by {@link KotlinParser#delegationSpecifiers}.
+	 * @param ctx the parse tree
 	 */
 	void enterDelegationSpecifiers(KotlinParser.DelegationSpecifiersContext ctx);
 	/**
-	 * Exit a parseDef tree produced by {@link KotlinParser#delegationSpecifiers}.
-	 * @param ctx the parseDef tree
+	 * Exit a parse tree produced by {@link KotlinParser#delegationSpecifiers}.
+	 * @param ctx the parse tree
 	 */
 	void exitDelegationSpecifiers(KotlinParser.DelegationSpecifiersContext ctx);
 	/**
-	 * Enter a parseDef tree produced by {@link KotlinParser#delegationSpecifier}.
-	 * @param ctx the parseDef tree
+	 * Enter a parse tree produced by {@link KotlinParser#delegationSpecifier}.
+	 * @param ctx the parse tree
 	 */
 	void enterDelegationSpecifier(KotlinParser.DelegationSpecifierContext ctx);
 	/**
-	 * Exit a parseDef tree produced by {@link KotlinParser#delegationSpecifier}.
-	 * @param ctx the parseDef tree
+	 * Exit a parse tree produced by {@link KotlinParser#delegationSpecifier}.
+	 * @param ctx the parse tree
 	 */
 	void exitDelegationSpecifier(KotlinParser.DelegationSpecifierContext ctx);
 	/**
-	 * Enter a parseDef tree produced by {@link KotlinParser#constructorInvocation}.
-	 * @param ctx the parseDef tree
+	 * Enter a parse tree produced by {@link KotlinParser#constructorInvocation}.
+	 * @param ctx the parse tree
 	 */
 	void enterConstructorInvocation(KotlinParser.ConstructorInvocationContext ctx);
 	/**
-	 * Exit a parseDef tree produced by {@link KotlinParser#constructorInvocation}.
-	 * @param ctx the parseDef tree
+	 * Exit a parse tree produced by {@link KotlinParser#constructorInvocation}.
+	 * @param ctx the parse tree
 	 */
 	void exitConstructorInvocation(KotlinParser.ConstructorInvocationContext ctx);
 	/**
-	 * Enter a parseDef tree produced by {@link KotlinParser#explicitDelegation}.
-	 * @param ctx the parseDef tree
+	 * Enter a parse tree produced by {@link KotlinParser#explicitDelegation}.
+	 * @param ctx the parse tree
 	 */
 	void enterExplicitDelegation(KotlinParser.ExplicitDelegationContext ctx);
 	/**
-	 * Exit a parseDef tree produced by {@link KotlinParser#explicitDelegation}.
-	 * @param ctx the parseDef tree
+	 * Exit a parse tree produced by {@link KotlinParser#explicitDelegation}.
+	 * @param ctx the parse tree
 	 */
 	void exitExplicitDelegation(KotlinParser.ExplicitDelegationContext ctx);
 	/**
-	 * Enter a parseDef tree produced by {@link KotlinParser#classBody}.
-	 * @param ctx the parseDef tree
+	 * Enter a parse tree produced by {@link KotlinParser#classBody}.
+	 * @param ctx the parse tree
 	 */
 	void enterClassBody(KotlinParser.ClassBodyContext ctx);
 	/**
-	 * Exit a parseDef tree produced by {@link KotlinParser#classBody}.
-	 * @param ctx the parseDef tree
+	 * Exit a parse tree produced by {@link KotlinParser#classBody}.
+	 * @param ctx the parse tree
 	 */
 	void exitClassBody(KotlinParser.ClassBodyContext ctx);
 	/**
-	 * Enter a parseDef tree produced by {@link KotlinParser#classMemberDeclaration}.
-	 * @param ctx the parseDef tree
+	 * Enter a parse tree produced by {@link KotlinParser#classMemberDeclaration}.
+	 * @param ctx the parse tree
 	 */
 	void enterClassMemberDeclaration(KotlinParser.ClassMemberDeclarationContext ctx);
 	/**
-	 * Exit a parseDef tree produced by {@link KotlinParser#classMemberDeclaration}.
-	 * @param ctx the parseDef tree
+	 * Exit a parse tree produced by {@link KotlinParser#classMemberDeclaration}.
+	 * @param ctx the parse tree
 	 */
 	void exitClassMemberDeclaration(KotlinParser.ClassMemberDeclarationContext ctx);
 	/**
-	 * Enter a parseDef tree produced by {@link KotlinParser#anonymousInitializer}.
-	 * @param ctx the parseDef tree
+	 * Enter a parse tree produced by {@link KotlinParser#anonymousInitializer}.
+	 * @param ctx the parse tree
 	 */
 	void enterAnonymousInitializer(KotlinParser.AnonymousInitializerContext ctx);
 	/**
-	 * Exit a parseDef tree produced by {@link KotlinParser#anonymousInitializer}.
-	 * @param ctx the parseDef tree
+	 * Exit a parse tree produced by {@link KotlinParser#anonymousInitializer}.
+	 * @param ctx the parse tree
 	 */
 	void exitAnonymousInitializer(KotlinParser.AnonymousInitializerContext ctx);
 	/**
-	 * Enter a parseDef tree produced by {@link KotlinParser#secondaryConstructor}.
-	 * @param ctx the parseDef tree
+	 * Enter a parse tree produced by {@link KotlinParser#secondaryConstructor}.
+	 * @param ctx the parse tree
 	 */
 	void enterSecondaryConstructor(KotlinParser.SecondaryConstructorContext ctx);
 	/**
-	 * Exit a parseDef tree produced by {@link KotlinParser#secondaryConstructor}.
-	 * @param ctx the parseDef tree
+	 * Exit a parse tree produced by {@link KotlinParser#secondaryConstructor}.
+	 * @param ctx the parse tree
 	 */
 	void exitSecondaryConstructor(KotlinParser.SecondaryConstructorContext ctx);
 	/**
-	 * Enter a parseDef tree produced by {@link KotlinParser#constructorDelegationCall}.
-	 * @param ctx the parseDef tree
+	 * Enter a parse tree produced by {@link KotlinParser#constructorDelegationCall}.
+	 * @param ctx the parse tree
 	 */
 	void enterConstructorDelegationCall(KotlinParser.ConstructorDelegationCallContext ctx);
 	/**
-	 * Exit a parseDef tree produced by {@link KotlinParser#constructorDelegationCall}.
-	 * @param ctx the parseDef tree
+	 * Exit a parse tree produced by {@link KotlinParser#constructorDelegationCall}.
+	 * @param ctx the parse tree
 	 */
 	void exitConstructorDelegationCall(KotlinParser.ConstructorDelegationCallContext ctx);
 	/**
-	 * Enter a parseDef tree produced by {@link KotlinParser#enumClassBody}.
-	 * @param ctx the parseDef tree
+	 * Enter a parse tree produced by {@link KotlinParser#enumClassBody}.
+	 * @param ctx the parse tree
 	 */
 	void enterEnumClassBody(KotlinParser.EnumClassBodyContext ctx);
 	/**
-	 * Exit a parseDef tree produced by {@link KotlinParser#enumClassBody}.
-	 * @param ctx the parseDef tree
+	 * Exit a parse tree produced by {@link KotlinParser#enumClassBody}.
+	 * @param ctx the parse tree
 	 */
 	void exitEnumClassBody(KotlinParser.EnumClassBodyContext ctx);
 	/**
-	 * Enter a parseDef tree produced by {@link KotlinParser#enumEntries}.
-	 * @param ctx the parseDef tree
+	 * Enter a parse tree produced by {@link KotlinParser#enumEntries}.
+	 * @param ctx the parse tree
 	 */
 	void enterEnumEntries(KotlinParser.EnumEntriesContext ctx);
 	/**
-	 * Exit a parseDef tree produced by {@link KotlinParser#enumEntries}.
-	 * @param ctx the parseDef tree
+	 * Exit a parse tree produced by {@link KotlinParser#enumEntries}.
+	 * @param ctx the parse tree
 	 */
 	void exitEnumEntries(KotlinParser.EnumEntriesContext ctx);
 	/**
-	 * Enter a parseDef tree produced by {@link KotlinParser#enumEntry}.
+	 * Enter a parse tree produced by {@link KotlinParser#enumEntry}.
 	 * @param ctx the parse tree
 	 */
 	void enterEnumEntry(KotlinParser.EnumEntryContext ctx);

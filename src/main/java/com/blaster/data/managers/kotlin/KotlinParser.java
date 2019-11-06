@@ -8,6 +8,8 @@ import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.misc.*;
 import org.antlr.v4.runtime.tree.*;
 import java.util.List;
+import java.util.Iterator;
+import java.util.ArrayList;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class KotlinParser extends Parser {
@@ -131,7 +133,7 @@ public class KotlinParser extends Parser {
 			"classModifier", "memberModifier", "visibilityModifier", "varianceAnnotation", 
 			"functionModifier", "propertyModifier", "inheritanceModifier", "parameterModifier", 
 			"typeParameterModifier", "labelDefinition", "annotations", "annotation", 
-			"annotationList", "annotationUseSiteTarget", "unescapedAnnotation", "clazz",
+			"annotationList", "annotationUseSiteTarget", "unescapedAnnotation", "identifier", 
 			"simpleIdentifier", "semi", "anysemi"
 		};
 	}

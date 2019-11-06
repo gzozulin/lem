@@ -20,13 +20,12 @@ class KotlinManagerImpl : KotlinManager {
     override fun extractDefinition(location: Location): String {
         val (tokenStream, parser) = provideParserForKotlin(location.file)
         parser.reset()
-        val statements = when (location) {
-            is LocationGlobal -> locateGlobalMethodStatements(parser, location)
-            is LocationMember -> locateMemberMethodStatements(parser, location)
+        val declaration = when (location) {
+            is LocationGlobal -> locateGlobalMethodDefinition(parser, location)
+            is LocationMember -> locateMemberMethodDefinition(parser, location)
             else -> throw UnsupportedOperationException()
         }
-        val tokens = tokenStream.getTokens(statements.start.tokenIndex, statements.stop.tokenIndex)
-        return tokensToText(tokens)
+        return extractDefinition(tokenStream, declaration)
     }
 
     override fun extractDeclaration(location: Location): List<String> {
@@ -42,6 +41,10 @@ class KotlinManagerImpl : KotlinManager {
             .map { extractDeclaration(tokenStream, it) }
             .toList()
             .blockingGet()
+    }
+
+    private fun extractDefinition(tokenStream: CommonTokenStream, memberDef: ParserRuleContext): String {
+        return extractTokens(tokenStream, memberDef, memberDef.stop)
     }
 
     private fun extractDeclaration(tokenStream: CommonTokenStream, memberDecl: ParserRuleContext): String {
@@ -63,11 +66,15 @@ class KotlinManagerImpl : KotlinManager {
             is KotlinParser.PropertyDeclarationContext -> memberDecl.stop
             else -> throw UnsupportedOperationException("Unknown type of member!")
         }
-        val prevDecl = findPrevDeclaration(tokenStream, memberDecl.start.tokenIndex)
+        return extractTokens(tokenStream, memberDecl, lastToken)
+    }
+
+    private fun extractTokens(tokenStream: CommonTokenStream, member: ParserRuleContext, lastToken: Token): String {
+        val prevDecl = findPrevDeclaration(tokenStream, member.start.tokenIndex)
         val tokens = if (prevDecl != null) {
             tokenStream.get(prevDecl.tokenIndex + 1, lastToken.tokenIndex)
         } else {
-            tokenStream.get(memberDecl.start.tokenIndex, lastToken.tokenIndex)
+            tokenStream.get(member.start.tokenIndex, lastToken.tokenIndex)
         }
         return tokensToText(tokens)
     }
@@ -105,21 +112,21 @@ class KotlinManagerImpl : KotlinManager {
         return result
     }
 
-    private fun locateGlobalMethodStatements(parser: KotlinParser, locationGlobal: LocationGlobal): KotlinParser.FunctionBodyContext {
+    private fun locateGlobalMethodDefinition(parser: KotlinParser, locationGlobal: LocationGlobal): KotlinParser.FunctionDeclarationContext {
         // todo: can be triggered by member with same name if comes first
-        var result: KotlinParser.FunctionBodyContext? = null
+        var result: KotlinParser.FunctionDeclarationContext? = null
         GlobalDeclVisitor(locationGlobal.identifier) { functionDecl ->
-            result = functionDecl.functionBody()
+            result = functionDecl
         }.visitKotlinFile(parser.kotlinFile())
         checkNotNull(result) { "Nothing found for specified location $locationGlobal" }
         return result!!
     }
 
-    private fun locateMemberMethodStatements(parser: KotlinParser, locationMember: LocationMember): KotlinParser.FunctionBodyContext {
-        var result: KotlinParser.FunctionBodyContext? = null
+    private fun locateMemberMethodDefinition(parser: KotlinParser, locationMember: LocationMember): KotlinParser.FunctionDeclarationContext {
+        var result: KotlinParser.FunctionDeclarationContext? = null
         ClassDeclVisitor(locationMember.clazz) { classDecl ->
             val globalDecl = GlobalDeclVisitor(locationMember.identifier) { functionDecl ->
-                result = functionDecl.functionBody()
+                result = functionDecl
             }
             if (classDecl.classBody() != null) { // the class can have no body
                 globalDecl.visitClassBody(classDecl.classBody())

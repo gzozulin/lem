@@ -22,12 +22,16 @@ class LemApp {
     }
 }
 
+// This is an application main entry point. The only parameter is an array of command line arguments
 fun main(args: Array<String>) {
+    // We will create the application class first
     val lemApp = LemApp()
+    // If we do not have any arguments - we will fall back to the default values
     if (args.isEmpty()) {
         println("No args, falling back to the defaults!")
         return lemApp.render(File("src/main/kotlin"), File("scenarios/scenario_lem.txt"), File("articles/scenario_lem.html"))
     }
+    // After that we will extract the necessary settings one by one while checking the actual values in the process
     check(args.size == 3) { "Wrong number of parameters!" }
     val sourceRoot = File(args[0])
     check(sourceRoot.exists()) { "Sources rout doesn't exists!" }
@@ -35,5 +39,6 @@ fun main(args: Array<String>) {
     check(scenarioFile.exists()) { "Scenario file doest't exists!" }
     val output = File(args[2])
     check(output.parentFile.exists()) { "Output folder doesn't exists!" }
+    // When everything is extracted - we can proceed to rendering of the task
     lemApp.render(sourceRoot, scenarioFile, output)
 }

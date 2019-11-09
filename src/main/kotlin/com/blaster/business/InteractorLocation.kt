@@ -18,15 +18,21 @@ class LocationGlobal(file: File, val identifier: String) : Location(file) {
 
 val PATH_REGEX = "\\w+(\\.\\w+)+(::\\w+)?".toRegex()
 
-class InteractorLocation {
-    // global method:       com.blaster.platform.LemAppKt::main
-    // member in class:     com.blaster.platform.LemApp::render
-    // class:               com.blaster.platform.LemApp
+// global method:       com.blaster.platform.LemAppKt::main
+// member in class:     com.blaster.platform.LemApp::render
+// class:               com.blaster.platform.LemApp
 
+class InteractorLocation {
+
+    // This routine helps us to locate pieces of code, pointed out by path parameter. It returns a class, which represents the location of the found snippet.
     fun locate(sourceRoot: File, path: String): Location {
+        // First of all we want to assert if the path is formatted properly. This allows to highlight errors early
         check(PATH_REGEX.find(path)!!.value.length == path.length) { "Wrong path for the location: $path" }
+        // We start by extracting the class from path string. It simply grabs everything before ':'
         val clazz = extractClass(path)
+        // Next we want to retreive the actual file, containing the class. We do that by looking at the sources root and a package
         val file = locateFile(sourceRoot, clazz)
+        // Now we can choose it this is a path to a whole class or to one of its members. We can be sure that the it is a global function or property if the class name ends with 'Kt' according to a Kotlin notation. Else it is a path to a standalone class
         return if (path.contains("::")) {
             val member = extractMember(path)
             if (clazz.endsWith("Kt")) {

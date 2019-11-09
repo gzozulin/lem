@@ -74,55 +74,38 @@
 <p class="text">All of that is possible with a Dependency Injection system. In software engineering, Dependency Injection is a technique, whereby one object supplies the dependencies of another object. With such system you control the creation, the destruction and a lifecycle of every component. For example you can decide if you will have only one instance of the component and therefore it will be marked as a singleton, or it will be created every time when it is required.</p>
 <p class="text">One more advantage of a good Dependency Injection framework is that it allows you to significantly reduce the amount of boilerplate code. Instead of dragging each dependency through the chain of constructors, you can simply inject a field through the DI on the creation stage.</p>
 <p class="text">This particular project uses Google&#39;s Dagger 2 to facilitate DI. One of the primary advantages of Dagger 2 over most other DI frameworks is that its strictly generated implementation - no reflexion. It means that the boilerplate code, needed for the injection, is generated during the compile time, rather being constructed during runtime through the reflexion mechanisms. That is a performance boost, of course.</p>
-<p class="text">First of all, in order to employ Dagger 2 for our needs, we have to specify out dependencies. This happens in a so-called Dagger 2 module. Those are application defined classes, which provides all of the necessary information about how to create and manage your application units:</p>
+<p class="text">First of all, in order to employ Dagger 2 for our needs, we have to specify out dependencies. This happens in a so-called Dagger 2 module. Those are application defined classes, which provides all of the necessary information about how to create and manage your application units. You simply need to provide an instance of the class and annotate it accordingly. Here is an example:</p>
 <div class="child">
-    <h3>com.blaster.platform.LemModule</h3>
-    <div class="code_child">@Module
-class LemModule </div>
-<div class="code_child">@Singleton
+    <h3>com.blaster.platform.LemModule::interactorParse</h3>
+    <p class="text_child">This method will create InteractorParse instance and inject it into the rest of the application. Its annotation tells us, that only one instance of this class will be created.</p>
+<p class="code_child">@Singleton
 @Provides
-@Named(&quot;TEMPLATES_FILE&quot;)
-fun provideTemplatesFile() </div>
-<div class="code_child">@Singleton
-@Provides
-fun provideFreemarkerConfig(@Named(&quot;TEMPLATES_FILE&quot;) templatesFile: File): Configuration </div>
-<div class="code_child">@Singleton
-@Provides
-fun lexingManager(): StatementsManager </div>
-<div class="code_child">@Singleton
-@Provides
-fun providePrintingManager(): PrintingManager </div>
-<div class="code_child">@Singleton
-@Provides
-fun providesParsingManager(): KotlinManager </div>
-<div class="code_child">@Singleton
-@Provides
-fun providesLocatorUseCse() </div>
-<div class="code_child">@Singleton
-@Provides
-fun providesParseUseCase() </div>
-<div class="code_child">@Singleton
-@Provides
-fun providesPrintUseCase() </div>
-<div class="code_child">@Singleton
-@Provides
-fun extractorCommands() </div>
-<div class="code_child">@Singleton
-@Provides
-fun interactorFormat() </div>
+fun interactorParse() = InteractorParse()</p>
+
 </div>
-<p class="text">The next task is to clarify the rules on how to resolve the actual dependencies. For example we can restrict a certain set of dependencies to be available only for the specified classes. Those rules can be defined in the Dagger 2 component:</p>
+<p class="text">With DI framework we also can provide unique files and settings:</p>
 <div class="child">
-    <h3>com.blaster.platform.LemComponent</h3>
-    <div class="code_child">@Singleton
-@Component(modules = [LemModule::class])
-interface LemComponent </div>
-<div class="code_child">fun inject(lemApp: LemApp)</div>
-<div class="code_child">fun inject(interactorParse: InteractorParse)</div>
-<div class="code_child">fun inject(interactorPrint: InteractorPrint)</div>
-<div class="code_child">fun inject(printingManagerImpl: PrintingManagerImpl)</div>
-<div class="code_child">fun inject(interactorLocation: InteractorLocation)</div>
-<div class="code_child">fun inject(interactorCommands: InteractorCommands)</div>
+    <h3>com.blaster.platform.LemModule::freemarkerConfig</h3>
+    <p class="text_child">This methos will provide the configuration for the FreeMarker template engine. Its only parameter is a place, where we store the templates. This parameter is fulfilled by DI as well.</p>
+<p class="code_child">@Singleton
+@Provides
+fun freemarkerConfig(@Named(&quot;TEMPLATES_FILE&quot;) templatesFile: File): Configuration {
+    val cfg = Configuration(Configuration.VERSION_2_3_27)
+    cfg.setDirectoryForTemplateLoading(templatesFile)
+    cfg.defaultEncoding = &quot;UTF-8&quot;
+    cfg.templateExceptionHandler = TemplateExceptionHandler.RETHROW_HANDLER
+    cfg.logTemplateExceptions = false
+    cfg.wrapUncheckedExceptions = true
+    return cfg
+}</p>
+
+</div>
+<p class="text">The next task is to clarify the rules on how to resolve the actual dependencies. For example we can restrict a certain set of dependencies to be available only for the specified classes. Those rules can be defined in the Dagger 2 component. It is an interface, which specifies what can be injected where. After Dagger 2 will finish code generation, we will receive an implementation of this interface. The example can be a following call:</p>
+<div class="child">
+    <h3>com.blaster.platform.LemComponent::inject</h3>
+    <p class="text_child">This call will allow us to inject classes declared in LemModule into the InteractorCommands</p>
+<p class="code_child">fun inject(interactorCommands: InteractorCommands)</p>
+
 </div>
 <p class="text">In the next chapter we will discuss a general overview of the application pipeline.</p>
     <h2>The pipeline overview</h2>
@@ -131,21 +114,27 @@ interface LemComponent </div>
 <p class="text">The application starts its lifecycle, similarly to most of the JVM-based applications, with the main entry point. The main task at this stage is to handle the parameters and parse the properties of the following operation.</p>
 <div class="child">
     <h3>com.blaster.platform.LemAppKt::main</h3>
-    <div class="code_child">fun main(args: Array&lt;String&gt;) {
-    val lemApp = LemApp()
-    if (args.isEmpty()) {
-        println(&quot;No args, falling back to the defaults!&quot;)
-        return lemApp.render(File(&quot;src/main/kotlin&quot;), File(&quot;scenarios/scenario_lem.txt&quot;), File(&quot;articles/scenario_lem.html&quot;))
-    }
-    check(args.size == 3) { &quot;Wrong number of parameters!&quot; }
-    val sourceRoot = File(args[0])
-    check(sourceRoot.exists()) { &quot;Sources rout doesn&#39;t exists!&quot; }
-    val scenarioFile = File(args[1])
-    check(scenarioFile.exists()) { &quot;Scenario file doest&#39;t exists!&quot; }
-    val output = File(args[2])
-    check(output.parentFile.exists()) { &quot;Output folder doesn&#39;t exists!&quot; }
-    lemApp.render(sourceRoot, scenarioFile, output)
-}</div>
+    <p class="text_child">This is an application main entry point. The only parameter is an array of command line arguments</p>
+<p class="code_child">fun main(args: Array&lt;String&gt;) {</p>
+<p class="text_child">We will create the application class first</p>
+<p class="code_child">val lemApp = LemApp()</p>
+<p class="text_child">If we do not have any arguments - we will fall back to the default values</p>
+<p class="code_child">if (args.isEmpty()) {
+    println(&quot;No args, falling back to the defaults!&quot;)
+    return lemApp.render(File(&quot;src/main/kotlin&quot;), File(&quot;scenarios/scenario_lem.txt&quot;), File(&quot;articles/scenario_lem.html&quot;))
+}</p>
+<p class="text_child">After that we will extract the necessary settings one by one while checking the actual values in the process</p>
+<p class="code_child">check(args.size == 3) { &quot;Wrong number of parameters!&quot; }
+val sourceRoot = File(args[0])
+check(sourceRoot.exists()) { &quot;Sources rout doesn&#39;t exists!&quot; }
+val scenarioFile = File(args[1])
+check(scenarioFile.exists()) { &quot;Scenario file doest&#39;t exists!&quot; }
+val output = File(args[2])
+check(output.parentFile.exists()) { &quot;Output folder doesn&#39;t exists!&quot; }</p>
+<p class="text_child">When everything is extracted - we can proceed to rendering of the task</p>
+<p class="code_child">    lemApp.render(sourceRoot, scenarioFile, output)
+}</p>
+
 </div>
 <p class="text">After the main classes are created, and the parameters are consumed, we can move to the Scenario Stage.</p>
 <p class="text">When I am writing the articles, I usually start by outlining the table of contents. Then I follow up by adding a little bit of text for every point in the draft. In our application, this blueprint is represented by the article scenario. A scenario is a template, which sets the stage for the rest of the article. The scenario file contains text paragraphs and commands definitions to be executed. Scenario Stage starts by parsing the scenario file, and as a result, we receive a list of sections and commands which were found.</p>
@@ -160,64 +149,87 @@ interface LemComponent </div>
 
 <p class="text">In this chapter, we will see the details of the parsing of the scenario. Parsing of a modern programming language is an incredibly complex task. And this task is far outside of the reach of this article. If you need to parse multiple languages and formats, the complexity of this task can easily outweigh the gain from the project.</p>
 <p class="text">To avoid unnecessary complexity and to facilitate parsing, we will be using a tool called ANTLR4. What is especially good about this tool is that it comes with already available grammar for most of the modern languages. Those grammars are contributed and supported by people who are highly proficient with the languages in question.</p>
-<p class="text">We will employ two grammar files for our task at hand. One is for Kotlin language, and another is our custom grammar, which allows us to separate the code from the comments. what is a target of meditationIf we would like to add the support for languages, other than Kotlin in the future, we always can do this by expanding the pool of available grammar.</p>
+<p class="text">We will employ two grammar files for our task at hand. One is for Kotlin language, and another is our custom grammar, which allows us to separate the code from the comments. If we would like to add the support for languages, other than Kotlin in the future, we always can do this by expanding the pool of available grammar.</p>
 <p class="text">I will not discuss the creation of the grammars and how to use ANTLR4 because it is outside of the scope of this article. For simplicity, we can think about it as if some tool will convert the provided language constructs into the classes, available for consumption in the language of our choice - in our case - Kotlin.</p>
 <p class="text">Let us start with a first step - parsing of the scenario file, passed from the input arguments.</p>
 <div class="child">
     <h3>com.blaster.business.InteractorParse::parseScenario</h3>
-    <div class="code_child">fun parseScenario(sourceRoot: File, scenario: File): List&lt;Paragraph&gt; =
-    Observable.just(scenario)
-        .map { interactorFormat.textToParagraphs(scenario.readText()) }
-        .map { interactorCommands.identifyCommands(it) }
-        .map { interactorCommands.applyCommands(sourceRoot, it) }
-        .blockingFirst()</div>
+    <p class="text_child">This call will convert a scenario file into a list of paragraphs. The parameters are self explanatory.</p>
+<p class="code_child">fun parseScenario(sourceRoot: File, scenario: File): List&lt;Paragraph&gt; = Observable.just(scenario)</p>
+<p class="text_child">First operation of this method is to convert text in the scenario file into a distinct paragraphs. Paragraphs are separated by the new lines.</p>
+<p class="code_child">.map { interactorFormat.textToParagraphs(scenario.readText()) }</p>
+<p class="text_child">The next operation is to identify commands in those paragraphs if any</p>
+<p class="code_child">.map { interactorCommands.identifyCommands(it) }</p>
+<p class="text_child">And finally, if we found any commands - we will apply them to the current result</p>
+<p class="code_child">.map { interactorCommands.applyCommands(sourceRoot, it) }
+.blockingFirst()</p>
+
 </div>
 <p class="text">The scenario will produce a list of paragraphs and commands, which were identified. Let&#39;s see how the identification of the commands works.</p>
 <div class="child">
-    <h3>com.blaster.business.InteractorCommands::identifyCommands</h3>
-    <div class="code_child">fun identifyCommands(paragraphs: List&lt;Paragraph&gt;): List&lt;Paragraph&gt; = Observable.fromIterable(paragraphs)
-    .map {
-        if (it is ParagraphText) {
-            identifyCommand(it.text) ?: it
-        } else {
-            it
-        }
+    <h3>com.blaster.business.InteractorCommands::identifyCommand</h3>
+    <p class="text_child">Main commands identification routine</p>
+<p class="code_child">private fun identifyCommand(command: String): ParagraphCommand? {</p>
+<p class="text_child">We prefix all of the commands in the text with a &#39;#&#39; symbol. If it is not found - it is not a command</p>
+<p class="code_child">if (!command.startsWith(COMMAND_IDENTIFIER)) {
+    return null
+}</p>
+<p class="text_child">Removing the prefix and converting a command into a stack of words</p>
+<p class="code_child">val noPrefix = command.removePrefix(COMMAND_IDENTIFIER)
+val stack = noPrefix.split(CSV_PATTERN)
+val first = stack[0]</p>
+<p class="text_child">Then identifying each command family by command name. We remove the head of the stack each time when we go to the next level. Each command family will be parsed in the similar fashion, until nothing is left on the stack</p>
+<p class="code_child">    return when {
+        first == COMMAND_INCLUDE -&gt; identifyIncludeCommand(stack.subList(1, stack.size))
+        first == COMMAND_HEADER -&gt; identifyHeaderCommand(stack.subList(1, stack.size))
+        first == COMMAND_INLINE -&gt; identifyInlineCommand(stack.subList(1, stack.size))
+        first == COMMAND_OMIT -&gt; identifyOmitCommand()
+        else -&gt; throw IllegalStateException(&quot;Unknown command! $first&quot;)
     }
-    .toList()
-    .blockingGet()</div>
+}</p>
+
 </div>
 <p class="text">After the commands are identified, we can finally apply them.</p>
 <div class="child">
     <h3>com.blaster.business.InteractorCommands::applyCommands</h3>
-    <div class="code_child">fun applyCommands(sourceRoot: File, paragraphs: List&lt;Paragraph&gt;): List&lt;Paragraph&gt; {
-    val mutableList = ArrayList(paragraphs)
-    val iterator = mutableList.listIterator()
-    while (iterator.hasNext()) {
-        val insert = iterator.next()
-        if (insert is ParagraphCommand) {
-            when (insert.type) {
-                ParagraphCommand.Type.INCLUDE -&gt; applyIncludeCommand(insert, sourceRoot)
-                ParagraphCommand.Type.OMIT -&gt; applyOmitCommand(iterator)
-                ParagraphCommand.Type.INLINE -&gt; applyInlineCommand(iterator, insert, sourceRoot)</div>
-<p class="text_child">Else do nothing</p>
-<div class="code_child">                else -&gt; { }
-            }
+    <p class="text_child">Commands application routine. It receives a source root and a list of paragraphs as a parameters. The result is a list of paragraphs modified by all of the commands in the original list.</p>
+<p class="code_child">fun applyCommands(sourceRoot: File, paragraphs: List&lt;Paragraph&gt;): List&lt;Paragraph&gt; {</p>
+<p class="text_child">Since we will do operations on the list, we want to convert it to a mutable one - the structure of the list can be changed this way</p>
+<p class="code_child">val mutableList = ArrayList(paragraphs)
+val iterator = mutableList.listIterator()</p>
+<p class="text_child">We iterate over the list until we reached the end</p>
+<p class="code_child">while (iterator.hasNext()) {
+    val paragraph = iterator.next()</p>
+<p class="text_child">If the next item in the list is a command</p>
+<p class="code_child">if (paragraph is ParagraphCommand) {
+    when (paragraph.type) {</p>
+<p class="text_child">We apply the command accordingly</p>
+<p class="code_child">ParagraphCommand.Type.INCLUDE -&gt; applyIncludeCommand(paragraph, sourceRoot)
+ParagraphCommand.Type.OMIT -&gt; applyOmitCommand(iterator)
+ParagraphCommand.Type.INLINE -&gt; applyInlineCommand(iterator, paragraph, sourceRoot)</p>
+<p class="text_child">Some commands have meaning only for printing, so we do nothing right now</p>
+<p class="code_child">            else -&gt; { }
         }
     }
-    return mutableList
-}</div>
+}</p>
+<p class="text_child">Returning the modified result</p>
+<p class="code_child">    return mutableList
+}</p>
+
 </div>
 <p class="text">As we already know, some commands will request to include the additional code to showcase the mechanics. Such a command will have a command name, command arguments, and the path of the code to be included. Here is the code, responsible for locating the snippets:</p>
 <div class="child">
     <h3>com.blaster.business.InteractorLocation::locate</h3>
-    <p class="text_child">global method:       com.blaster.platform.LemAppKt::main</p>
-<p class="text_child">member in class:     com.blaster.platform.LemApp::render</p>
-<p class="text_child">class:               com.blaster.platform.LemApp</p>
-<div class="code_child">fun locate(sourceRoot: File, path: String): Location {
-    check(PATH_REGEX.find(path)!!.value.length == path.length) { &quot;Wrong path for the location: $path&quot; }
-    val clazz = extractClass(path)
-    val file = locateFile(sourceRoot, clazz)
-    return if (path.contains(&quot;::&quot;)) {
+    <p class="text_child">This routine helps us to locate pieces of code, pointed out by path parameter. It returns a class, which represents the location of the found snippet.</p>
+<p class="code_child">fun locate(sourceRoot: File, path: String): Location {</p>
+<p class="text_child">First of all we want to assert if the path is formatted properly. This allows to highlight errors early</p>
+<p class="code_child">check(PATH_REGEX.find(path)!!.value.length == path.length) { &quot;Wrong path for the location: $path&quot; }</p>
+<p class="text_child">We start by extracting the class from path string. It simply grabs everything before &#39;:&#39;</p>
+<p class="code_child">val clazz = extractClass(path)</p>
+<p class="text_child">Next we want to retreive the actual file, containing the class. We do that by looking at the sources root and a package</p>
+<p class="code_child">val file = locateFile(sourceRoot, clazz)</p>
+<p class="text_child">Now we can choose it this is a path to a whole class or to one of its members. We can be sure that the it is a global function or property if the class name ends with &#39;Kt&#39; according to a Kotlin notation. Else it is a path to a standalone class</p>
+<p class="code_child">    return if (path.contains(&quot;::&quot;)) {
         val member = extractMember(path)
         if (clazz.endsWith(&quot;Kt&quot;)) {
             LocationGlobal(file, member)
@@ -227,35 +239,29 @@ interface LemComponent </div>
     } else {
         LocationClass(file, clazz)
     }
-}</div>
+}</p>
+
 </div>
 <p class="text">The author of the scenario can choose how to include the code. We can either include definitions of declarations of methods and classes. The difference is that sometimes you want to include the body of the method, and sometimes you want to mention it. Let us see how parsing of the requested definitions works.</p>
 <div class="child">
     <h3>com.blaster.business.InteractorParse::parseDef</h3>
-    <div class="code_child">fun parseDef(sourceRoot: File, path: String): List&lt;Paragraph&gt; {
-    val location = interactorLocation.locate(sourceRoot, path)
-    val definition = kotlinManager.extractDefinition(location)
-    val paragraphs = statementsManager.extractStatements(definition)
-    val formatted = formatParagraphs(paragraphs)
-    val withCommands = interactorCommands.identifyCommands(formatted)
-    return interactorCommands.applyCommands(sourceRoot, withCommands)
-}</div>
+    <p class="text_child">Routine for parsing of the definitions. Accepts the sources root and a path to a definition. Returns a list of paragraphs with this definition commentaries and code snippets</p>
+<p class="code_child">fun parseDef(sourceRoot: File, path: String): List&lt;Paragraph&gt; = Observable.just(path)</p>
+<p class="text_child">First thing first - we need to find the actual location of the definition - file, class, etc.</p>
+<p class="code_child">.map { interactorLocation.locate(sourceRoot, it) }</p>
+<p class="text_child">When the definition is located, we extract the code with the help of the ANTLR4</p>
+<p class="code_child">.map { kotlinManager.extractDefinition(it) }</p>
+<p class="text_child">Next step is to split this text onto the commentaries and code snippets. We also format them - removing unused lines, spaces, etc.</p>
+<p class="code_child">.map { statementsManager.extractStatements(it) }
+.map { formatParagraphs(it) }</p>
+<p class="text_child">After formatting is done, we want to find the commands among the paragraphs if any</p>
+<p class="code_child">.map { interactorCommands.identifyCommands(it) }</p>
+<p class="text_child">And finally, we apply the commands and return the result</p>
+<p class="code_child">.map { interactorCommands.applyCommands(sourceRoot, it) }
+.blockingFirst()</p>
+
 </div>
-<p class="text">Parsing of the requested declarations works very similarly.</p>
-<div class="child">
-    <h3>com.blaster.business.InteractorParse::parseDecl</h3>
-    <div class="code_child">fun parseDecl(sourceRoot: File, path: String): List&lt;Paragraph&gt; {
-    val location = interactorLocation.locate(sourceRoot, path)
-    val declarations = kotlinManager.extractDeclaration(location)
-    val paragraphs = Observable.fromIterable(declarations)
-        .flatMap { Observable.fromIterable(statementsManager.extractStatements(it)) }
-        .toList()
-        .blockingGet()
-    val formatted = formatParagraphs(paragraphs)
-    val withCommands = interactorCommands.identifyCommands(formatted)
-    return interactorCommands.applyCommands(sourceRoot, withCommands)
-}</div>
-</div>
+<p class="text">Parsing of the requested declarations works very similarly to definitions and we will omit this piece.</p>
 <p class="text">After the command is executed and the snippet of the code is included, the commentaries in the code can contain additional commands. In this case, we will recursively go back to the stage of the application of commands.</p>
 <p class="text">Finally, after all of that is done, we should have a result of the parsing stage. This result will be passed to the next step, which is the printing of the article. We will have a look at the details of the printing in the next chapter.</p>
     <h2>The Printing stage</h2>
@@ -265,51 +271,65 @@ interface LemComponent </div>
 <p class="text">Apache&#39;s FreeMarker is a template engine - a Java library to generate text output (HTML Web pages, e-mails, configuration files, source code, etc.) based on the templates and changing data. Templates are written in a FreeMarker Template Language (FTL), which is a simple specialized language. And, usually, a general-purpose programming language (like Java) is used to prepare data. Let us see how is that implemented by looking at the source code:</p>
 <div class="child">
     <h3>com.blaster.business.InteractorPrint::printParagraphs</h3>
-    <div class="code_child">private fun printParagraphs(paragraphs: List&lt;Paragraph&gt;, child: Boolean = false): String {
-    var result = &quot;&quot;
-    for (insert in paragraphs) {
-        when (insert) {
-            is ParagraphText -&gt; result += printText(insert.text, child) + &quot;\n&quot;
-            is ParagraphCode -&gt; result += printCode(insert.code, child) + &quot;\n&quot;
-            is ParagraphCommand -&gt; {
-                when (insert.type) {
-                    ParagraphCommand.Type.HEADER -&gt; result += printHeader(insert.subcommand, insert.argument) + &quot;\n&quot;
-                    ParagraphCommand.Type.INCLUDE -&gt; {
-                        when (insert.subcommand) {
-                            SUBCOMMAND_LINK -&gt; result + printLink(insert.argument, insert.argument1, insert.argument2, child) + &quot;\n&quot;
-                            SUBCOMMAND_PICTURE -&gt; result + printPicture(insert.argument, insert.argument1, insert.argument2, child) + &quot;\n&quot;
-                        }
-                    }
-                    else -&gt; throw IllegalStateException(&quot;Unhandled command!&quot;)
+    <p class="text_child">This call allows us to print the body of the article - a list of paragraphs. One thing to note is that this routine can be called recursively. The style of the output will look slightly differently. This fact is reflected by the additional parameter &#39;child&#39;. The result of this method is the HTML generated.</p>
+<p class="code_child">private fun printParagraphs(paragraphs: List&lt;Paragraph&gt;, child: Boolean = false): String {</p>
+<p class="text_child">We create the variable to hold the result and then we go through the paragraphs one by one</p>
+<p class="code_child">var result = &quot;&quot;
+for (paragraph in paragraphs) {
+    when (paragraph) {</p>
+<p class="text_child">For each type we call the appropriate routine</p>
+<p class="code_child">is ParagraphText -&gt; result += printText(paragraph.text, child) + &quot;\n&quot;
+is ParagraphCode -&gt; result += printCode(paragraph.code, child) + &quot;\n&quot;</p>
+<p class="text_child">If the paragraph is a command, we modify the result directly on place</p>
+<p class="code_child">is ParagraphCommand -&gt; {
+    when (paragraph.type) {</p>
+<p class="text_child">It can be something related to the attributes of the page</p>
+<p class="code_child">ParagraphCommand.Type.HEADER -&gt; result += printHeader(paragraph.subcommand, paragraph.argument) + &quot;\n&quot;</p>
+<p class="text_child">Or some insert - like a reference or a picture</p>
+<p class="code_child">            ParagraphCommand.Type.INCLUDE -&gt; {
+                when (paragraph.subcommand) {
+                    SUBCOMMAND_LINK -&gt; result + printLink(paragraph.argument, paragraph.argument1, paragraph.argument2, child) + &quot;\n&quot;
+                    SUBCOMMAND_PICTURE -&gt; result + printPicture(paragraph.argument, paragraph.argument1, paragraph.argument2, child) + &quot;\n&quot;
                 }
             }
-        }
-        if (insert.children.isNotEmpty()) {
-            result += printChild((insert as ParagraphCommand).argument, insert.children) + &quot;\n&quot;
+            else -&gt; throw IllegalStateException(&quot;Unhandled command!&quot;)
         }
     }
-    return result.dropLast(1)
-}</div>
+}</p>
+<p class="text_child">Some of the paragraphs can have internal children - that happens, when for example we include the code with a command. In this case we also want to render them.</p>
+<p class="code_child">    if (paragraph.children.isNotEmpty()) {
+        result += printChild((paragraph as ParagraphCommand).argument, paragraph.children) + &quot;\n&quot;
+    }
+}</p>
+<p class="text_child">The final result is returned from the call</p>
+<p class="code_child">    return result
+}</p>
+
 </div>
 <p class="text">We are printing paragraphs by delegating pieces of the tasks to the helper methods, like this one:</p>
 <div class="child">
     <h3>com.blaster.business.InteractorPrint::printText</h3>
-    <div class="code_child">private fun printText(text: String, child: Boolean): String {
-    val clz = if (child) &quot;text_child&quot; else &quot;text&quot;
-    return printingManager.renderTemplate(&quot;template_text.ftlh&quot;, hashMapOf(&quot;class&quot; to clz, &quot;text&quot; to text))
-}</div>
+    <p class="text_child">Here is how we print text paragraph</p>
+<p class="code_child">private fun printText(text: String, child: Boolean): String {</p>
+<p class="text_child">If this text is a child of another paragraph, appropriate style is selected</p>
+<p class="code_child">val clz = if (child) &quot;text_child&quot; else &quot;text&quot;</p>
+<p class="text_child">Then we select a template and pass the task to the printing manager</p>
+<p class="code_child">    return printingManager.renderTemplate(&quot;template_text.ftlh&quot;, hashMapOf(&quot;class&quot; to clz, &quot;text&quot; to text))
+}</p>
+
 </div>
 <p class="text">Each of those will handle its piece of the overall article accordingly.</p>
 <p class="text">And, finally, when we have a body of the HTML page, we can wrap it into the article. The article contains header, styles, and body declaration.</p>
 <div class="child">
     <h3>com.blaster.business.InteractorPrint::printArticle</h3>
     <p class="text_child">Parameters of this function are: the output file and a list of paragraphs to be printed</p>
-<div class="code_child">fun printArticle(output: File, paragraphs: List&lt;Paragraph&gt;) {</div>
+<p class="code_child">fun printArticle(output: File, paragraphs: List&lt;Paragraph&gt;) {</p>
 <p class="text_child">After receiving a list of paragraphs, we wrap them into an article template</p>
-<div class="code_child">val article = printingManager.renderTemplate(&quot;template_article.ftlh&quot;, hashMapOf(&quot;article&quot; to printParagraphs(paragraphs)))</div>
+<p class="code_child">val article = printingManager.renderTemplate(&quot;template_article.ftlh&quot;, hashMapOf(&quot;article&quot; to printParagraphs(paragraphs)))</p>
 <p class="text_child">The result is sent to printing manager to be put into a file</p>
-<div class="code_child">    printingManager.printArticle(output, article)
-}</div>
+<p class="code_child">    printingManager.printArticle(output, article)
+}</p>
+
 </div>
 <p class="text">At this point, we had a look at all steps required for processing the article - starting from the scenario and until the actual HTML output. Of course, we did not cover everything. The best place to find each and every detail is the source code. But I hope, at this point, most of the high-level concepts are explained and understood.</p>
     <h2>What&#39;s next?</h2>
@@ -317,5 +337,6 @@ interface LemComponent </div>
 <p class="text">Any craftsman can say that there is no tool, which works equally well for every job. The idea behind Lem is to be versatile enough to showcase some of the projects on which I am working.</p>
 <p class="text">In this article, I have shown a full pipeline of the project: from the preparation of the material to the printing stage.</p>
 <p class="text">The main target for Lem is to be a handy tool in explaining the Blaster - an offline renderer, on which I am currently working. I hope this article was interesting enough and will be glad to see you soon on the pages dedicated to the actual hobby - the Blaster engine - Poehali!</p>
+
     </body>
 </html>

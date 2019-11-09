@@ -26,30 +26,38 @@ class InteractorPrint {
         printingManager.printArticle(output, article)
     }
 
+    // This call allows us to print the body of the article - a list of paragraphs. One thing to note is that this routine can be called recursively. The style of the output will look slightly differently. This fact is reflected by the additional parameter 'child'. The result of this method is the HTML generated.
     private fun printParagraphs(paragraphs: List<Paragraph>, child: Boolean = false): String {
+        // We create the variable to hold the result and then we go through the paragraphs one by one
         var result = ""
-        for (insert in paragraphs) {
-            when (insert) {
-                is ParagraphText -> result += printText(insert.text, child) + "\n"
-                is ParagraphCode -> result += printCode(insert.code, child) + "\n"
+        for (paragraph in paragraphs) {
+            when (paragraph) {
+                // For each type we call the appropriate routine
+                is ParagraphText -> result += printText(paragraph.text, child) + "\n"
+                is ParagraphCode -> result += printCode(paragraph.code, child) + "\n"
+                // If the paragraph is a command, we modify the result directly on place
                 is ParagraphCommand -> {
-                    when (insert.type) {
-                        ParagraphCommand.Type.HEADER -> result += printHeader(insert.subcommand, insert.argument) + "\n"
+                    when (paragraph.type) {
+                        // It can be something related to the attributes of the page
+                        ParagraphCommand.Type.HEADER -> result += printHeader(paragraph.subcommand, paragraph.argument) + "\n"
+                        // Or some insert - like a reference or a picture
                         ParagraphCommand.Type.INCLUDE -> {
-                            when (insert.subcommand) {
-                                SUBCOMMAND_LINK -> result + printLink(insert.argument, insert.argument1, insert.argument2, child) + "\n"
-                                SUBCOMMAND_PICTURE -> result + printPicture(insert.argument, insert.argument1, insert.argument2, child) + "\n"
+                            when (paragraph.subcommand) {
+                                SUBCOMMAND_LINK -> result + printLink(paragraph.argument, paragraph.argument1, paragraph.argument2, child) + "\n"
+                                SUBCOMMAND_PICTURE -> result + printPicture(paragraph.argument, paragraph.argument1, paragraph.argument2, child) + "\n"
                             }
                         }
                         else -> throw IllegalStateException("Unhandled command!")
                     }
                 }
             }
-            if (insert.children.isNotEmpty()) {
-                result += printChild((insert as ParagraphCommand).argument, insert.children) + "\n"
+            // Some of the paragraphs can have internal children - that happens, when for example we include the code with a command. In this case we also want to render them.
+            if (paragraph.children.isNotEmpty()) {
+                result += printChild((paragraph as ParagraphCommand).argument, paragraph.children) + "\n"
             }
         }
-        return result.dropLast(1)
+        // The final result is returned from the call
+        return result
     }
 
     private fun printChild(path: String, children: List<Paragraph>): String {
@@ -57,8 +65,11 @@ class InteractorPrint {
             "template_children.ftlh", hashMapOf("path" to path, "children" to printParagraphs(children, true)))
     }
 
+    // Here is how we print text paragraph
     private fun printText(text: String, child: Boolean): String {
+        // If this text is a child of another paragraph, appropriate style is selected
         val clz = if (child) "text_child" else "text"
+        // Then we select a template and pass the task to the printing manager
         return printingManager.renderTemplate("template_text.ftlh", hashMapOf("class" to clz, "text" to text))
     }
 

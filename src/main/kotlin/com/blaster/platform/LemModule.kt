@@ -20,11 +20,12 @@ class LemModule {
     @Singleton
     @Provides
     @Named("TEMPLATES_FILE")
-    fun provideTemplatesFile() = File("templates")
+    fun templatesFile() = File("templates")
 
+    // This methos will provide the configuration for the FreeMarker template engine. Its only parameter is a place, where we store the templates. This parameter is fulfilled by DI as well.
     @Singleton
     @Provides
-    fun provideFreemarkerConfig(@Named("TEMPLATES_FILE") templatesFile: File): Configuration {
+    fun freemarkerConfig(@Named("TEMPLATES_FILE") templatesFile: File): Configuration {
         val cfg = Configuration(Configuration.VERSION_2_3_27)
         cfg.setDirectoryForTemplateLoading(templatesFile)
         cfg.defaultEncoding = "UTF-8"
@@ -36,32 +37,32 @@ class LemModule {
 
     @Singleton
     @Provides
-    fun lexingManager(): StatementsManager = StatementsManagerImpl()
+    fun statementsManager(): StatementsManager = StatementsManagerImpl()
 
     @Singleton
     @Provides
-    fun providePrintingManager(): PrintingManager = PrintingManagerImpl()
+    fun printingManager(): PrintingManager = PrintingManagerImpl()
 
     @Singleton
     @Provides
-    fun providesParsingManager(): KotlinManager = KotlinManagerImpl()
+    fun kotlinManager(): KotlinManager = KotlinManagerImpl()
 
+    // This method will create InteractorParse instance and inject it into the rest of the application. Its annotation tells us, that only one instance of this class will be created.
+    @Singleton
+    @Provides
+    fun interactorParse() = InteractorParse()
 
     @Singleton
     @Provides
-    fun providesLocatorUseCse() = InteractorLocation()
+    fun interactorLocation() = InteractorLocation()
 
     @Singleton
     @Provides
-    fun providesParseUseCase() = InteractorParse()
+    fun interactorPrint() = InteractorPrint()
 
     @Singleton
     @Provides
-    fun providesPrintUseCase() = InteractorPrint()
-
-    @Singleton
-    @Provides
-    fun extractorCommands() = InteractorCommands()
+    fun interactorCommands() = InteractorCommands()
 
     @Singleton
     @Provides

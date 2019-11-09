@@ -56,15 +56,15 @@ class InteractorParse {
             .blockingFirst()
 
     fun parseDecl(sourceRoot: File, path: String): List<Paragraph> = Observable.just(path)
-        .map { interactorLocation.locate(sourceRoot, it) }
-        .map { kotlinManager.extractDeclaration(it) }
-        .flatMap { Observable.fromIterable(it)
-            .flatMap { Observable.fromIterable(statementsManager.extractStatements(it)) } }
-        .toList()
-        .map { formatParagraphs(it) }
-        .map { formatParagraphs(it) }
-        .map { interactorCommands.applyCommands(sourceRoot, it) }
-        .blockingGet()
+            .map { interactorLocation.locate(sourceRoot, it) }
+            .map { kotlinManager.extractDeclaration(it) }
+            .flatMap { decls -> Observable.fromIterable(decls)
+                .flatMap { Observable.fromIterable(statementsManager.extractStatements(it)) } }
+            .toList()
+            .map { formatParagraphs(it) }
+            .map { formatParagraphs(it) }
+            .map { interactorCommands.applyCommands(sourceRoot, it) }
+            .blockingGet()
 
     private fun formatParagraphs(paragraphs: List<Paragraph>): List<Paragraph> = Observable.fromIterable(paragraphs)
         .flatMap {

@@ -177,14 +177,15 @@ check(output.parentFile.exists()) { &quot;Output folder doesn&#39;t exists!&quot
 <p class="text_child">Removing the prefix and converting a command into a stack of words</p>
 <p class="code_child">val noPrefix = command.removePrefix(COMMAND_IDENTIFIER)
 val stack = noPrefix.split(CSV_PATTERN)
-val first = stack[0]</p>
+val cmd = stack[0]
+val subcmd = stack.subList(1, stack.size)</p>
 <p class="text_child">Then identifying each command family by command name. We remove the head of the stack each time when we go to the next level. Each command family will be parsed in the similar fashion, until nothing is left on the stack</p>
 <p class="code_child">    return when {
-        first == COMMAND_INCLUDE -&gt; identifyIncludeCommand(stack.subList(1, stack.size))
-        first == COMMAND_HEADER -&gt; identifyHeaderCommand(stack.subList(1, stack.size))
-        first == COMMAND_INLINE -&gt; identifyInlineCommand(stack.subList(1, stack.size))
-        first == COMMAND_OMIT -&gt; identifyOmitCommand()
-        else -&gt; throw IllegalStateException(&quot;Unknown command! $first&quot;)
+        cmd == COMMAND_INCLUDE -&gt; identifyIncludeCommand(subcmd)
+        cmd == COMMAND_HEADER -&gt; identifyHeaderCommand(subcmd)
+        cmd == COMMAND_INLINE -&gt; identifyInlineCommand(subcmd)
+        cmd == COMMAND_OMIT -&gt; identifyOmitCommand()
+        else -&gt; throw IllegalStateException(&quot;Unknown command! $cmd&quot;)
     }
 }</p>
 

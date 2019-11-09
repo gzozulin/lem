@@ -37,52 +37,53 @@ class InteractorCommands {
         // Removing the prefix and converting a command into a stack of words
         val noPrefix = command.removePrefix(COMMAND_IDENTIFIER)
         val stack = noPrefix.split(CSV_PATTERN)
-        val first = stack[0]
+        val cmd = stack[0]
+        val subcmd = stack.subList(1, stack.size)
         // Then identifying each command family by command name. We remove the head of the stack each time when we go to the next level. Each command family will be parsed in the similar fashion, until nothing is left on the stack
         return when {
-            first == COMMAND_INCLUDE -> identifyIncludeCommand(stack.subList(1, stack.size))
-            first == COMMAND_HEADER -> identifyHeaderCommand(stack.subList(1, stack.size))
-            first == COMMAND_INLINE -> identifyInlineCommand(stack.subList(1, stack.size))
-            first == COMMAND_OMIT -> identifyOmitCommand()
-            else -> throw IllegalStateException("Unknown command! $first")
+            cmd == COMMAND_INCLUDE -> identifyIncludeCommand(subcmd)
+            cmd == COMMAND_HEADER -> identifyHeaderCommand(subcmd)
+            cmd == COMMAND_INLINE -> identifyInlineCommand(subcmd)
+            cmd == COMMAND_OMIT -> identifyOmitCommand()
+            else -> throw IllegalStateException("Unknown command! $cmd")
         }
     }
 
     private fun identifyIncludeCommand(stack: List<String>): ParagraphCommand? {
-        val first = stack[0]
+        val subcmd = stack[0]
         return when {
-            first == SUBCOMMAND_DECL -> ParagraphCommand(ParagraphCommand.Type.INCLUDE, listOf(SUBCOMMAND_DECL, stack[1]))
-            first == SUBCOMMAND_DEF -> ParagraphCommand(ParagraphCommand.Type.INCLUDE, listOf(SUBCOMMAND_DEF, stack[1]))
-            first == SUBCOMMAND_LINK -> {
+            subcmd == SUBCOMMAND_DECL -> ParagraphCommand(ParagraphCommand.Type.INCLUDE, listOf(SUBCOMMAND_DECL, stack[1]))
+            subcmd == SUBCOMMAND_DEF -> ParagraphCommand(ParagraphCommand.Type.INCLUDE, listOf(SUBCOMMAND_DEF, stack[1]))
+            subcmd == SUBCOMMAND_LINK -> {
                 check(stack.size == 4) { "Wrong amount of parameters for a link include command!" }
                 ParagraphCommand(ParagraphCommand.Type.INCLUDE, listOf(SUBCOMMAND_LINK, stack[1], stack[2], stack[3]))
             }
-            first == SUBCOMMAND_PICTURE -> {
+            subcmd == SUBCOMMAND_PICTURE -> {
                 check(stack.size == 4) { "Wrong amount of parameters for a link include command!" }
                 ParagraphCommand(
                     ParagraphCommand.Type.INCLUDE,
                     listOf(SUBCOMMAND_PICTURE, stack[1], stack[2], stack[3])
                 )
             }
-            else -> throw IllegalStateException("Unknown subcommand! $first")
+            else -> throw IllegalStateException("Unknown subcommand! $subcmd")
         }
     }
 
     private fun identifyHeaderCommand(stack: List<String>): ParagraphCommand? {
-        val first = stack[0]
+        val subcmd = stack[0]
         return when {
-            first == SUBCOMMAND_H1 -> ParagraphCommand(ParagraphCommand.Type.HEADER, listOf(SUBCOMMAND_H1, stack[1]))
-            first == SUBCOMMAND_H2 -> ParagraphCommand(ParagraphCommand.Type.HEADER, listOf(SUBCOMMAND_H2, stack[1]))
-            else -> throw IllegalStateException("Unknown subcommand! $first")
+            subcmd == SUBCOMMAND_H1 -> ParagraphCommand(ParagraphCommand.Type.HEADER, listOf(SUBCOMMAND_H1, stack[1]))
+            subcmd == SUBCOMMAND_H2 -> ParagraphCommand(ParagraphCommand.Type.HEADER, listOf(SUBCOMMAND_H2, stack[1]))
+            else -> throw IllegalStateException("Unknown subcommand! $subcmd")
         }
     }
 
     private fun identifyInlineCommand(stack: List<String>): ParagraphCommand? {
-        val first = stack[0]
+        val subcmd = stack[0]
         return when {
-            first == SUBCOMMAND_DECL -> ParagraphCommand(ParagraphCommand.Type.INLINE, listOf(SUBCOMMAND_DECL, stack[1]))
-            first == SUBCOMMAND_DEF -> ParagraphCommand(ParagraphCommand.Type.INLINE, listOf(SUBCOMMAND_DEF, stack[1]))
-            else -> throw IllegalStateException("Unknown subcommand! $first")
+            subcmd == SUBCOMMAND_DECL -> ParagraphCommand(ParagraphCommand.Type.INLINE, listOf(SUBCOMMAND_DECL, stack[1]))
+            subcmd == SUBCOMMAND_DEF -> ParagraphCommand(ParagraphCommand.Type.INLINE, listOf(SUBCOMMAND_DEF, stack[1]))
+            else -> throw IllegalStateException("Unknown subcommand! $subcmd")
         }
     }
 

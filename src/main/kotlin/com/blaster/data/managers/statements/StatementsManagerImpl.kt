@@ -8,7 +8,7 @@ import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.ParserRuleContext
 
 class StatementsManagerImpl : StatementsManager {
-    private val cacheForStatements = HashMap<String, Pair<CommonTokenStream, StatementsParser>>()
+    private val statementsCache = HashMap<String, Pair<CommonTokenStream, StatementsParser>>()
 
     override fun extractStatements(code: String): List<Paragraph> {
         val (_, parser) = provideParserForStatememts(code)
@@ -27,14 +27,14 @@ class StatementsManagerImpl : StatementsManager {
                     // todo: unfortunately, Statements grammar considers everything, not included into a comment being a part of the code, that includes newlines of the comments as well
                     result.add(ParagraphCode(statement.text.removePrefix("\n").trimEnd()))
                 }
-                else -> throw IllegalStateException("UnknownStatement!")
+                else -> throw IllegalStateException("Unknown statement!")
             }
         }
         return result
     }
 
     private fun provideParserForStatememts(key: String): Pair<CommonTokenStream, StatementsParser> {
-        var result = cacheForStatements[key]
+        var result = statementsCache[key]
         if (result == null) {
             val stream = CommonTokenStream(
                 StatementsLexer(
@@ -45,7 +45,7 @@ class StatementsManagerImpl : StatementsManager {
             )
             val parser = StatementsParser(stream)
             result = stream to parser
-            cacheForStatements[key] = result
+            statementsCache[key] = result
         }
         return result
     }

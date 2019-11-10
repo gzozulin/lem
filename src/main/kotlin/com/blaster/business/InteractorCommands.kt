@@ -28,7 +28,7 @@ class InteractorCommands {
         .toList()
         .blockingGet()
 
-    // Main commands identification routine
+    // Main commands identification routine. Will return a command if identified, or null if nothing found
     private fun identifyCommand(command: String): ParagraphCommand? {
         // We prefix all of the commands in the text with a '#' symbol. If it is not found - it is not a command
         if (!command.startsWith(COMMAND_IDENTIFIER)) {

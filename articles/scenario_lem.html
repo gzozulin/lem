@@ -163,7 +163,7 @@ fun freemarkerConfig(@Named(&quot;TEMPLATES_FILE&quot;) templatesFile: File): Co
 <p class="text">The scenario will produce a list of paragraphs and commands, which were identified. Let&#39;s see how the identification of the commands works.</p>
 <div class="child">
     <h3>com.blaster.business.InteractorCommands::identifyCommand</h3>
-    <p class="text_child">Main commands identification routine</p>
+    <p class="text_child">Main commands identification routine. Will return a command if identified, or null if nothing found</p>
 <p class="code_child">private fun identifyCommand(command: String): ParagraphCommand? {</p>
 <p class="text_child">We prefix all of the commands in the text with a &#39;#&#39; symbol. If it is not found - it is not a command</p>
 <p class="code_child">    if (!command.startsWith(COMMAND_IDENTIFIER)) {

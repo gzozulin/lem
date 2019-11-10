@@ -16,9 +16,6 @@ class StatementsManagerImpl : StatementsManager {
         val statements = locateStatements(parser)
         val result = ArrayList<Paragraph>()
         for (statement in statements) {
-            if (statement.text.isBlank()) {
-                continue // todo: parsing statements includes empty strings somehow
-            }
             when (statement) {
                 is StatementsParser.DelimitedCommentContext -> {
                     result.add(ParagraphText(statement.text.removePrefix("/*").removeSuffix("*/").trim()))

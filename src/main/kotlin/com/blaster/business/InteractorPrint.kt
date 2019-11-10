@@ -56,8 +56,8 @@ class InteractorPrint {
                 result += printChild((paragraph as ParagraphCommand).argument, paragraph.children) + "\n"
             }
         }
-        // The final result is returned from the call
-        return result
+        // The final result is returned from the call. it will always contain one unnecessary '\n' character, so we cutting that out
+        return result.dropLast(1)
     }
 
     private fun printChild(path: String, children: List<Paragraph>): String {

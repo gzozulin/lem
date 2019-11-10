@@ -3,8 +3,6 @@ package com.blaster.business
 import com.blaster.data.managers.kotlin.KotlinManager
 import com.blaster.data.managers.statements.StatementsManager
 import com.blaster.data.paragraphs.Paragraph
-import com.blaster.data.paragraphs.ParagraphCode
-import com.blaster.data.paragraphs.ParagraphText
 import com.blaster.platform.LEM_COMPONENT
 import io.reactivex.Observable
 import java.io.File
@@ -47,8 +45,8 @@ class InteractorParse {
             // When the definition is located, we extract the code with the help of the ANTLR4
             .map { kotlinManager.extractDefinition(it) }
             // Next step is to split this text onto the commentaries and code snippets. We also format them - removing unused lines, spaces, etc.
+            .map { interactorFormat.removeCommonTabulation(it) }
             .map { statementsManager.extractStatements(it) }
-            .map { formatParagraphs(it) }
             // After formatting is done, we want to find the commands among the paragraphs if any
             .map { interactorCommands.identifyCommands(it) }
             // And finally, we apply the commands and return the result
@@ -59,21 +57,9 @@ class InteractorParse {
             .map { interactorLocation.locate(sourceRoot, it) }
             .map { kotlinManager.extractDeclaration(it) }
             .flatMap { decls -> Observable.fromIterable(decls)
+                .map { interactorFormat.removeCommonTabulation(it) }
                 .flatMap { Observable.fromIterable(statementsManager.extractStatements(it)) } }
             .toList()
-            .map { formatParagraphs(it) }
-            .map { formatParagraphs(it) }
             .map { interactorCommands.applyCommands(sourceRoot, it) }
             .blockingGet()
-
-    private fun formatParagraphs(paragraphs: List<Paragraph>): List<Paragraph> = Observable.fromIterable(paragraphs)
-        .flatMap {
-            when(it) {
-                is ParagraphCode -> Observable.just(interactorFormat.formatCode(it.code))
-                is ParagraphText -> Observable.fromIterable(interactorFormat.textToParagraphs(it.text))
-                else -> throw IllegalStateException("Unknown type of paragraph!")
-            }
-        }
-        .toList()
-        .blockingGet()
 }

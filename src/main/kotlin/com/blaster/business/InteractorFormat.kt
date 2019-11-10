@@ -1,6 +1,5 @@
 package com.blaster.business
 
-import com.blaster.data.paragraphs.ParagraphCode
 import com.blaster.data.paragraphs.ParagraphText
 import io.reactivex.Observable
 
@@ -13,12 +12,11 @@ class InteractorFormat {
         .toList()
         .blockingGet()
 
-    fun formatCode(code: String): ParagraphCode = Observable.just(code)
+    fun removeCommonTabulation(code: String): String = Observable.just(code)
         .map { textToLines(it) }
         .map { removeEmpty(it) }
         .map { trimCommonSpaces(it) }
         .map { linesToText(it) }
-        .map { ParagraphCode(it) }
         .blockingFirst()
 
     private fun textToLines(string: String): List<String> {

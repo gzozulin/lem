@@ -24,7 +24,8 @@ class StatementsManagerImpl : StatementsManager {
                     result.add(ParagraphText(statement.text.removePrefix("//").trim()))
                 }
                 is StatementsParser.CodeContext -> {
-                    result.add(ParagraphCode(statement.text))
+                    // todo: unfortunately, Statements grammar considers everything, not included into a comment being a part of the code, that includes newlines of the comments as well
+                    result.add(ParagraphCode(statement.text.removePrefix("\n").trimEnd()))
                 }
                 else -> throw IllegalStateException("UnknownStatement!")
             }

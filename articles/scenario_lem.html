@@ -78,8 +78,7 @@
 <div class="child">
     <h3>com.blaster.platform.LemModule::interactorParse</h3>
     <p class="text_child">This method will create InteractorParse instance and inject it into the rest of the application. Its annotation tells us, that only one instance of this class will be created.</p>
-<p class="code_child">
-@Singleton
+<p class="code_child">@Singleton
 @Provides
 fun interactorParse() = InteractorParse()</p>
 </div>
@@ -87,8 +86,7 @@ fun interactorParse() = InteractorParse()</p>
 <div class="child">
     <h3>com.blaster.platform.LemModule::freemarkerConfig</h3>
     <p class="text_child">This methos will provide the configuration for the FreeMarker template engine. Its only parameter is a place, where we store the templates. This parameter is fulfilled by DI as well.</p>
-<p class="code_child">
-@Singleton
+<p class="code_child">@Singleton
 @Provides
 fun freemarkerConfig(@Named(&quot;TEMPLATES_FILE&quot;) templatesFile: File): Configuration {
     val cfg = Configuration(Configuration.VERSION_2_3_27)
@@ -104,8 +102,7 @@ fun freemarkerConfig(@Named(&quot;TEMPLATES_FILE&quot;) templatesFile: File): Co
 <div class="child">
     <h3>com.blaster.platform.LemComponent::inject</h3>
     <p class="text_child">This call will allow us to inject classes declared in LemModule into the InteractorCommands</p>
-<p class="code_child">
-fun inject(interactorCommands: InteractorCommands)</p>
+<p class="code_child">fun inject(interactorCommands: InteractorCommands)</p>
 </div>
 <p class="text">In the next chapter we will discuss a general overview of the application pipeline.</p>
     <h2>The pipeline overview</h2>
@@ -115,33 +112,24 @@ fun inject(interactorCommands: InteractorCommands)</p>
 <div class="child">
     <h3>com.blaster.platform.LemAppKt::main</h3>
     <p class="text_child">This is an application main entry point. The only parameter is an array of command line arguments</p>
-<p class="code_child">
-fun main(args: Array&lt;String&gt;) {
-    </p>
+<p class="code_child">fun main(args: Array&lt;String&gt;) {</p>
 <p class="text_child">We will create the application class first</p>
-<p class="code_child">
-    val lemApp = LemApp()
-    </p>
+<p class="code_child">    val lemApp = LemApp()</p>
 <p class="text_child">If we do not have any arguments - we will fall back to the default values</p>
-<p class="code_child">
-    if (args.isEmpty()) {
+<p class="code_child">    if (args.isEmpty()) {
         println(&quot;No args, falling back to the defaults!&quot;)
         return lemApp.render(File(&quot;src/main/kotlin&quot;), File(&quot;scenarios/scenario_lem.txt&quot;), File(&quot;articles/scenario_lem.html&quot;))
-    }
-    </p>
+    }</p>
 <p class="text_child">After that we will extract the necessary settings one by one while checking the actual values in the process</p>
-<p class="code_child">
-    check(args.size == 3) { &quot;Wrong number of parameters!&quot; }
+<p class="code_child">    check(args.size == 3) { &quot;Wrong number of parameters!&quot; }
     val sourceRoot = File(args[0])
     check(sourceRoot.exists()) { &quot;Sources rout doesn&#39;t exists!&quot; }
     val scenarioFile = File(args[1])
     check(scenarioFile.exists()) { &quot;Scenario file doest&#39;t exists!&quot; }
     val output = File(args[2])
-    check(output.parentFile.exists()) { &quot;Output folder doesn&#39;t exists!&quot; }
-    </p>
+    check(output.parentFile.exists()) { &quot;Output folder doesn&#39;t exists!&quot; }</p>
 <p class="text_child">When everything is extracted - we can proceed to rendering of the task</p>
-<p class="code_child">
-    lemApp.render(sourceRoot, scenarioFile, output)
+<p class="code_child">    lemApp.render(sourceRoot, scenarioFile, output)
 }</p>
 </div>
 <p class="text">After the main classes are created, and the parameters are consumed, we can move to the Scenario Stage.</p>
@@ -163,45 +151,31 @@ fun main(args: Array&lt;String&gt;) {
 <div class="child">
     <h3>com.blaster.business.InteractorParse::parseScenario</h3>
     <p class="text_child">This call will convert a scenario file into a list of paragraphs. The parameters are self explanatory.</p>
-<p class="code_child">
-fun parseScenario(sourceRoot: File, scenario: File): List&lt;Paragraph&gt; = Observable.just(scenario)
-        </p>
+<p class="code_child">fun parseScenario(sourceRoot: File, scenario: File): List&lt;Paragraph&gt; = Observable.just(scenario)</p>
 <p class="text_child">First operation of this method is to convert text in the scenario file into a distinct paragraphs. Paragraphs are separated by the new lines.</p>
-<p class="code_child">
-        .map { interactorFormat.textToParagraphs(scenario.readText()) }
-        </p>
+<p class="code_child">        .map { interactorFormat.textToParagraphs(scenario.readText()) }</p>
 <p class="text_child">The next operation is to identify commands in those paragraphs if any</p>
-<p class="code_child">
-        .map { interactorCommands.identifyCommands(it) }
-        </p>
+<p class="code_child">        .map { interactorCommands.identifyCommands(it) }</p>
 <p class="text_child">And finally, if we found any commands - we will apply them to the current result</p>
-<p class="code_child">
-        .map { interactorCommands.applyCommands(sourceRoot, it) }
+<p class="code_child">        .map { interactorCommands.applyCommands(sourceRoot, it) }
         .blockingFirst()</p>
 </div>
 <p class="text">The scenario will produce a list of paragraphs and commands, which were identified. Let&#39;s see how the identification of the commands works.</p>
 <div class="child">
     <h3>com.blaster.business.InteractorCommands::identifyCommand</h3>
     <p class="text_child">Main commands identification routine</p>
-<p class="code_child">
-private fun identifyCommand(command: String): ParagraphCommand? {
-    </p>
+<p class="code_child">private fun identifyCommand(command: String): ParagraphCommand? {</p>
 <p class="text_child">We prefix all of the commands in the text with a &#39;#&#39; symbol. If it is not found - it is not a command</p>
-<p class="code_child">
-    if (!command.startsWith(COMMAND_IDENTIFIER)) {
+<p class="code_child">    if (!command.startsWith(COMMAND_IDENTIFIER)) {
         return null
-    }
-    </p>
+    }</p>
 <p class="text_child">Removing the prefix and converting a command into a stack of words</p>
-<p class="code_child">
-    val noPrefix = command.removePrefix(COMMAND_IDENTIFIER)
+<p class="code_child">    val noPrefix = command.removePrefix(COMMAND_IDENTIFIER)
     val stack = noPrefix.split(CSV_PATTERN)
     val cmd = stack[0]
-    val subcmd = stack.subList(1, stack.size)
-    </p>
+    val subcmd = stack.subList(1, stack.size)</p>
 <p class="text_child">Then identifying each command family by command name. We remove the head of the stack each time when we go to the next level. Each command family will be parsed in the similar fashion, until nothing is left on the stack</p>
-<p class="code_child">
-    return when {
+<p class="code_child">    return when {
         cmd == COMMAND_INCLUDE -&gt; identifyIncludeCommand(subcmd)
         cmd == COMMAND_HEADER -&gt; identifyHeaderCommand(subcmd)
         cmd == COMMAND_INLINE -&gt; identifyInlineCommand(subcmd)
@@ -214,64 +188,42 @@ private fun identifyCommand(command: String): ParagraphCommand? {
 <div class="child">
     <h3>com.blaster.business.InteractorCommands::applyCommands</h3>
     <p class="text_child">Commands application routine. It receives a source root and a list of paragraphs as a parameters. The result is a list of paragraphs modified by all of the commands in the original list.</p>
-<p class="code_child">
-fun applyCommands(sourceRoot: File, paragraphs: List&lt;Paragraph&gt;): List&lt;Paragraph&gt; {
-    </p>
+<p class="code_child">fun applyCommands(sourceRoot: File, paragraphs: List&lt;Paragraph&gt;): List&lt;Paragraph&gt; {</p>
 <p class="text_child">Since we will do operations on the list, we want to convert it to a mutable one - the structure of the list can be changed this way</p>
-<p class="code_child">
-    val mutableList = ArrayList(paragraphs)
-    val iterator = mutableList.listIterator()
-    </p>
+<p class="code_child">    val mutableList = ArrayList(paragraphs)
+    val iterator = mutableList.listIterator()</p>
 <p class="text_child">We iterate over the list until we reached the end</p>
-<p class="code_child">
-    while (iterator.hasNext()) {
-        val paragraph = iterator.next()
-        </p>
+<p class="code_child">    while (iterator.hasNext()) {
+        val paragraph = iterator.next()</p>
 <p class="text_child">If the next item in the list is a command</p>
-<p class="code_child">
-        if (paragraph is ParagraphCommand) {
-            when (paragraph.type) {
-                </p>
+<p class="code_child">        if (paragraph is ParagraphCommand) {
+            when (paragraph.type) {</p>
 <p class="text_child">We apply the command accordingly</p>
-<p class="code_child">
-                ParagraphCommand.Type.INCLUDE -&gt; applyIncludeCommand(paragraph, sourceRoot)
+<p class="code_child">                ParagraphCommand.Type.INCLUDE -&gt; applyIncludeCommand(paragraph, sourceRoot)
                 ParagraphCommand.Type.OMIT -&gt; applyOmitCommand(iterator)
-                ParagraphCommand.Type.INLINE -&gt; applyInlineCommand(iterator, paragraph, sourceRoot)
-                </p>
+                ParagraphCommand.Type.INLINE -&gt; applyInlineCommand(iterator, paragraph, sourceRoot)</p>
 <p class="text_child">Some commands have meaning only for printing, so we do nothing right now</p>
-<p class="code_child">
-                else -&gt; { }
+<p class="code_child">                else -&gt; { }
             }
         }
-    }
-    </p>
+    }</p>
 <p class="text_child">Returning the modified result</p>
-<p class="code_child">
-    return mutableList
+<p class="code_child">    return mutableList
 }</p>
 </div>
 <p class="text">As we already know, some commands will request to include the additional code to showcase the mechanics. Such a command will have a command name, command arguments, and the path of the code to be included. Here is the code, responsible for locating the snippets:</p>
 <div class="child">
     <h3>com.blaster.business.InteractorLocation::locate</h3>
     <p class="text_child">This routine helps us to locate pieces of code, pointed out by path parameter. It returns a class, which represents the location of the found snippet.</p>
-<p class="code_child">
-fun locate(sourceRoot: File, path: String): Location {
-    </p>
+<p class="code_child">fun locate(sourceRoot: File, path: String): Location {</p>
 <p class="text_child">First of all we want to assert if the path is formatted properly. This allows to highlight errors early</p>
-<p class="code_child">
-    check(PATH_REGEX.find(path)!!.value.length == path.length) { &quot;Wrong path for the location: $path&quot; }
-    </p>
+<p class="code_child">    check(PATH_REGEX.find(path)!!.value.length == path.length) { &quot;Wrong path for the location: $path&quot; }</p>
 <p class="text_child">We start by extracting the class from path string. It simply grabs everything before &#39;:&#39;</p>
-<p class="code_child">
-    val clazz = extractClass(path)
-    </p>
+<p class="code_child">    val clazz = extractClass(path)</p>
 <p class="text_child">Next we want to retreive the actual file, containing the class. We do that by looking at the sources root and a package</p>
-<p class="code_child">
-    val file = locateFile(sourceRoot, clazz)
-    </p>
+<p class="code_child">    val file = locateFile(sourceRoot, clazz)</p>
 <p class="text_child">Now we can choose it this is a path to a whole class or to one of its members. We can be sure that the it is a global function or property if the class name ends with &#39;Kt&#39; according to a Kotlin notation. Else it is a path to a standalone class</p>
-<p class="code_child">
-    return if (path.contains(&quot;::&quot;)) {
+<p class="code_child">    return if (path.contains(&quot;::&quot;)) {
         val member = extractMember(path)
         if (clazz.endsWith(&quot;Kt&quot;)) {
             LocationGlobal(file, member)
@@ -287,29 +239,18 @@ fun locate(sourceRoot: File, path: String): Location {
 <div class="child">
     <h3>com.blaster.business.InteractorParse::parseDef</h3>
     <p class="text_child">Routine for parsing of the definitions. Accepts the sources root and a path to a definition. Returns a list of paragraphs with this definition commentaries and code snippets</p>
-<p class="code_child">
-fun parseDef(sourceRoot: File, path: String): List&lt;Paragraph&gt; = Observable.just(path)
-        </p>
+<p class="code_child">fun parseDef(sourceRoot: File, path: String): List&lt;Paragraph&gt; = Observable.just(path)</p>
 <p class="text_child">First thing first - we need to find the actual location of the definition - file, class, etc.</p>
-<p class="code_child">
-        .map { interactorLocation.locate(sourceRoot, it) }
-        </p>
+<p class="code_child">        .map { interactorLocation.locate(sourceRoot, it) }</p>
 <p class="text_child">When the definition is located, we extract the code with the help of the ANTLR4</p>
-<p class="code_child">
-        .map { kotlinManager.extractDefinition(it) }
-        </p>
+<p class="code_child">        .map { kotlinManager.extractDefinition(it) }</p>
 <p class="text_child">Next step is to split this text onto the commentaries and code snippets. We also format them - removing unused lines, spaces, etc.</p>
-<p class="code_child">
-        .map { interactorFormat.removeCommonTabulation(it) }
-        .map { statementsManager.extractStatements(it) }
-        </p>
+<p class="code_child">        .map { interactorFormat.removeCommonTabulation(it) }
+        .map { statementsManager.extractStatements(it) }</p>
 <p class="text_child">After formatting is done, we want to find the commands among the paragraphs if any</p>
-<p class="code_child">
-        .map { interactorCommands.identifyCommands(it) }
-        </p>
+<p class="code_child">        .map { interactorCommands.identifyCommands(it) }</p>
 <p class="text_child">And finally, we apply the commands and return the result</p>
-<p class="code_child">
-        .map { interactorCommands.applyCommands(sourceRoot, it) }
+<p class="code_child">        .map { interactorCommands.applyCommands(sourceRoot, it) }
         .blockingFirst()</p>
 </div>
 <p class="text">Parsing of the requested declarations works very similarly to definitions and we will omit this piece.</p>
@@ -323,32 +264,21 @@ fun parseDef(sourceRoot: File, path: String): List&lt;Paragraph&gt; = Observable
 <div class="child">
     <h3>com.blaster.business.InteractorPrint::printParagraphs</h3>
     <p class="text_child">This call allows us to print the body of the article - a list of paragraphs. One thing to note is that this routine can be called recursively. The style of the output will look slightly differently. This fact is reflected by the additional parameter &#39;child&#39;. The result of this method is the HTML generated.</p>
-<p class="code_child">
-private fun printParagraphs(paragraphs: List&lt;Paragraph&gt;, child: Boolean = false): String {
-    </p>
+<p class="code_child">private fun printParagraphs(paragraphs: List&lt;Paragraph&gt;, child: Boolean = false): String {</p>
 <p class="text_child">We create the variable to hold the result and then we go through the paragraphs one by one</p>
-<p class="code_child">
-    var result = &quot;&quot;
+<p class="code_child">    var result = &quot;&quot;
     for (paragraph in paragraphs) {
-        when (paragraph) {
-            </p>
+        when (paragraph) {</p>
 <p class="text_child">For each type we call the appropriate routine</p>
-<p class="code_child">
-            is ParagraphText -&gt; result += printText(paragraph.text, child) + &quot;\n&quot;
-            is ParagraphCode -&gt; result += printCode(paragraph.code, child) + &quot;\n&quot;
-            </p>
+<p class="code_child">            is ParagraphText -&gt; result += printText(paragraph.text, child) + &quot;\n&quot;
+            is ParagraphCode -&gt; result += printCode(paragraph.code, child) + &quot;\n&quot;</p>
 <p class="text_child">If the paragraph is a command, we modify the result directly on place</p>
-<p class="code_child">
-            is ParagraphCommand -&gt; {
-                when (paragraph.type) {
-                    </p>
+<p class="code_child">            is ParagraphCommand -&gt; {
+                when (paragraph.type) {</p>
 <p class="text_child">It can be something related to the attributes of the page</p>
-<p class="code_child">
-                    ParagraphCommand.Type.HEADER -&gt; result += printHeader(paragraph.subcommand, paragraph.argument) + &quot;\n&quot;
-                    </p>
+<p class="code_child">                    ParagraphCommand.Type.HEADER -&gt; result += printHeader(paragraph.subcommand, paragraph.argument) + &quot;\n&quot;</p>
 <p class="text_child">Or some insert - like a reference or a picture</p>
-<p class="code_child">
-                    ParagraphCommand.Type.INCLUDE -&gt; {
+<p class="code_child">                    ParagraphCommand.Type.INCLUDE -&gt; {
                         when (paragraph.subcommand) {
                             SUBCOMMAND_LINK -&gt; result + printLink(paragraph.argument, paragraph.argument1, paragraph.argument2, child) + &quot;\n&quot;
                             SUBCOMMAND_PICTURE -&gt; result + printPicture(paragraph.argument, paragraph.argument1, paragraph.argument2, child) + &quot;\n&quot;
@@ -357,34 +287,25 @@ private fun printParagraphs(paragraphs: List&lt;Paragraph&gt;, child: Boolean = 
                     else -&gt; throw IllegalStateException(&quot;Unhandled command!&quot;)
                 }
             }
-        }
-        </p>
+        }</p>
 <p class="text_child">Some of the paragraphs can have internal children - that happens, when for example we include the code with a command. In this case we also want to render them.</p>
-<p class="code_child">
-        if (paragraph.children.isNotEmpty()) {
+<p class="code_child">        if (paragraph.children.isNotEmpty()) {
             result += printChild((paragraph as ParagraphCommand).argument, paragraph.children) + &quot;\n&quot;
         }
-    }
-    </p>
+    }</p>
 <p class="text_child">The final result is returned from the call. it will always contain one unnecessary &#39;\n&#39; character, so we cutting that out</p>
-<p class="code_child">
-    return result.dropLast(1)
+<p class="code_child">    return result.dropLast(1)
 }</p>
 </div>
 <p class="text">We are printing paragraphs by delegating pieces of the tasks to the helper methods, like this one:</p>
 <div class="child">
     <h3>com.blaster.business.InteractorPrint::printText</h3>
     <p class="text_child">Here is how we print text paragraph</p>
-<p class="code_child">
-private fun printText(text: String, child: Boolean): String {
-    </p>
+<p class="code_child">private fun printText(text: String, child: Boolean): String {</p>
 <p class="text_child">If this text is a child of another paragraph, appropriate style is selected</p>
-<p class="code_child">
-    val clz = if (child) &quot;text_child&quot; else &quot;text&quot;
-    </p>
+<p class="code_child">    val clz = if (child) &quot;text_child&quot; else &quot;text&quot;</p>
 <p class="text_child">Then we select a template and pass the task to the printing manager</p>
-<p class="code_child">
-    return printingManager.renderTemplate(&quot;template_text.ftlh&quot;, hashMapOf(&quot;class&quot; to clz, &quot;text&quot; to text))
+<p class="code_child">    return printingManager.renderTemplate(&quot;template_text.ftlh&quot;, hashMapOf(&quot;class&quot; to clz, &quot;text&quot; to text))
 }</p>
 </div>
 <p class="text">Each of those will handle its piece of the overall article accordingly.</p>
@@ -392,16 +313,11 @@ private fun printText(text: String, child: Boolean): String {
 <div class="child">
     <h3>com.blaster.business.InteractorPrint::printArticle</h3>
     <p class="text_child">Parameters of this function are: the output file and a list of paragraphs to be printed</p>
-<p class="code_child">
-fun printArticle(output: File, paragraphs: List&lt;Paragraph&gt;) {
-    </p>
+<p class="code_child">fun printArticle(output: File, paragraphs: List&lt;Paragraph&gt;) {</p>
 <p class="text_child">After receiving a list of paragraphs, we wrap them into an article template</p>
-<p class="code_child">
-    val article = printingManager.renderTemplate(&quot;template_article.ftlh&quot;, hashMapOf(&quot;article&quot; to printParagraphs(paragraphs)))
-    </p>
+<p class="code_child">    val article = printingManager.renderTemplate(&quot;template_article.ftlh&quot;, hashMapOf(&quot;article&quot; to printParagraphs(paragraphs)))</p>
 <p class="text_child">The result is sent to printing manager to be put into a file</p>
-<p class="code_child">
-    printingManager.printArticle(output, article)
+<p class="code_child">    printingManager.printArticle(output, article)
 }</p>
 </div>
 <p class="text">At this point, we had a look at all steps required for processing the article - starting from the scenario and until the actual HTML output. Of course, we did not cover everything. The best place to find each and every detail is the source code. But I hope, at this point, most of the high-level concepts are explained and understood.</p>

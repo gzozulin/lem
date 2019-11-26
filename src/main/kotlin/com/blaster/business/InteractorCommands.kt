@@ -25,7 +25,6 @@ class InteractorCommands {
                 it
             }
         }
-        .toList()
 
     // Main commands identification routine. Will return a command if identified, or null if nothing found
     private fun identifyCommand(command: String): ParagraphCommand? {

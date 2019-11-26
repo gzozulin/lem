@@ -55,10 +55,10 @@ class InteractorParse {
     fun parseDecl(sourceRoot: File, path: String): List<Paragraph> {
         val location = interactorLocation.locate(sourceRoot, path)
         val declarations = kotlinManager.extractDeclaration(location)
-        return declarations.flatMap { declarations }
-            .map { interactorFormat.removeCommonTabulation(it) }
-            .map { statementsManager.extractStatements(it) }
-            .flatMap { interactorCommands.applyCommands(sourceRoot, it) }
-            .toList()
+        val withoutTabulation = mutableListOf<String>()
+        declarations.forEach { withoutTabulation.add(interactorFormat.removeCommonTabulation(it)) }
+        val statements = mutableListOf<Paragraph>()
+        declarations.forEach { statements.addAll(statementsManager.extractStatements(it)) }
+        return interactorCommands.applyCommands(sourceRoot, statements)
     }
 }

@@ -7,7 +7,7 @@ import com.blaster.business.LocationMember
 import com.blaster.data.managers.kotlin.visitors.ClassDeclVisitor
 import com.blaster.data.managers.kotlin.visitors.GlobalDeclVisitor
 import com.blaster.data.managers.kotlin.visitors.MemberDeclVisitor
-import io.reactivex.Observable
+
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.ParserRuleContext
@@ -37,10 +37,7 @@ class KotlinManagerImpl : KotlinManager {
             is LocationClass -> locateClassDecls(parser, location)
             else -> throw UnsupportedOperationException()
         }
-        return Observable.fromIterable(declarations)
-            .map { extractDeclaration(tokenStream, it) }
-            .toList()
-            .blockingGet()
+        return declarations.map { extractDeclaration(tokenStream, it) }
     }
 
     private fun extractDefinition(tokenStream: CommonTokenStream, memberDef: ParserRuleContext): String {

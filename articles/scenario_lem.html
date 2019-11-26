@@ -151,14 +151,14 @@ fun freemarkerConfig(@Named(&quot;TEMPLATES_FILE&quot;) templatesFile: File): Co
 <div class="child">
     <h3>com.blaster.business.InteractorParse::parseScenario</h3>
     <p class="text_child">This call will convert a scenario file into a list of paragraphs. The parameters are self explanatory.</p>
-<p class="code_child">fun parseScenario(sourceRoot: File, scenario: File): List&lt;Paragraph&gt; = Observable.just(scenario)</p>
-<p class="text_child">First operation of this method is to convert text in the scenario file into a distinct paragraphs. Paragraphs are separated by the new lines.</p>
-<p class="code_child">        .map { interactorFormat.textToParagraphs(scenario.readText()) }</p>
+<p class="code_child">fun parseScenario(sourceRoot: File, scenario: File): List&lt;Paragraph&gt; {</p>
+<p class="text_child">First operation of this method is to convert text in the scenario file into a distinct paragraphs. Paragraphs are separated by the new lines</p>
+<p class="code_child">    val paragraphs = interactorFormat.textToParagraphs(scenario.readText())</p>
 <p class="text_child">The next operation is to identify commands in those paragraphs if any</p>
-<p class="code_child">        .map { interactorCommands.identifyCommands(it) }</p>
+<p class="code_child">    val withCommands = interactorCommands.identifyCommands(paragraphs)</p>
 <p class="text_child">And finally, if we found any commands - we will apply them to the current result</p>
-<p class="code_child">        .map { interactorCommands.applyCommands(sourceRoot, it) }
-        .blockingFirst()</p>
+<p class="code_child">    return interactorCommands.applyCommands(sourceRoot, withCommands)
+}</p>
 </div>
 <p class="text">The scenario will produce a list of paragraphs and commands, which were identified. Let&#39;s see how the identification of the commands works.</p>
 <div class="child">
@@ -239,19 +239,19 @@ fun freemarkerConfig(@Named(&quot;TEMPLATES_FILE&quot;) templatesFile: File): Co
 <div class="child">
     <h3>com.blaster.business.InteractorParse::parseDef</h3>
     <p class="text_child">Routine for parsing of the definitions. Accepts the sources root and a path to a definition. Returns a list of paragraphs with this definition commentaries and code snippets</p>
-<p class="code_child">fun parseDef(sourceRoot: File, path: String): List&lt;Paragraph&gt; = Observable.just(path)</p>
+<p class="code_child">fun parseDef(sourceRoot: File, path: String): List&lt;Paragraph&gt; {</p>
 <p class="text_child">First thing first - we need to find the actual location of the definition - file, class, etc.</p>
-<p class="code_child">        .map { interactorLocation.locate(sourceRoot, it) }</p>
+<p class="code_child">    val location = interactorLocation.locate(sourceRoot, path)</p>
 <p class="text_child">When the definition is located, we extract the code with the help of the ANTLR4</p>
-<p class="code_child">        .map { kotlinManager.extractDefinition(it) }</p>
+<p class="code_child">    val definition = kotlinManager.extractDefinition(location)</p>
 <p class="text_child">Next step is to split this text onto the commentaries and code snippets. We also format them - removing unused lines, spaces, etc.</p>
-<p class="code_child">        .map { interactorFormat.removeCommonTabulation(it) }
-        .map { statementsManager.extractStatements(it) }</p>
+<p class="code_child">    val withoutTabulation = interactorFormat.removeCommonTabulation(definition)
+    val statements = statementsManager.extractStatements(withoutTabulation)</p>
 <p class="text_child">After formatting is done, we want to find the commands among the paragraphs if any</p>
-<p class="code_child">        .map { interactorCommands.identifyCommands(it) }</p>
+<p class="code_child">    val withCommands = interactorCommands.identifyCommands(statements)</p>
 <p class="text_child">And finally, we apply the commands and return the result</p>
-<p class="code_child">        .map { interactorCommands.applyCommands(sourceRoot, it) }
-        .blockingFirst()</p>
+<p class="code_child">    return interactorCommands.applyCommands(sourceRoot, withCommands)
+}</p>
 </div>
 <p class="text">Parsing of the requested declarations works very similarly to definitions and we will omit this piece.</p>
 <p class="text">After the command is executed and the snippet of the code is included, the commentaries in the code can contain additional commands. In this case, we will recursively go back to the stage of the application of commands.</p>

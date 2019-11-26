@@ -3,7 +3,7 @@ package com.blaster.business
 import com.blaster.data.paragraphs.*
 import com.blaster.platform.LEM_COMPONENT
 import dagger.Lazy
-import io.reactivex.Observable
+
 import java.io.File
 import javax.inject.Inject
 
@@ -17,7 +17,7 @@ class InteractorCommands {
         LEM_COMPONENT.inject(this)
     }
 
-    fun identifyCommands(paragraphs: List<Paragraph>): List<Paragraph> = Observable.fromIterable(paragraphs)
+    fun identifyCommands(paragraphs: List<Paragraph>): List<Paragraph> = paragraphs
         .map {
             if (it is ParagraphText) {
                 identifyCommand(it.text) ?: it
@@ -26,7 +26,6 @@ class InteractorCommands {
             }
         }
         .toList()
-        .blockingGet()
 
     // Main commands identification routine. Will return a command if identified, or null if nothing found
     private fun identifyCommand(command: String): ParagraphCommand? {

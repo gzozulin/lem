@@ -14,7 +14,7 @@ class StatementsManagerImpl : StatementsManager {
         val (_, parser) = provideParserForStatememts(code)
         parser.reset()
         val statements = locateStatements(parser)
-        val result = ArrayList<Paragraph>()
+        val result = mutableListOf<Paragraph>()
         for (statement in statements) {
             when (statement) {
                 is StatementsParser.DelimitedCommentContext -> {

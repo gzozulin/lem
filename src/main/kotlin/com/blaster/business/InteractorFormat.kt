@@ -1,5 +1,6 @@
 package com.blaster.business
 
+import com.blaster.data.paragraphs.Paragraph
 import com.blaster.data.paragraphs.ParagraphText
 
 private val LINE_REGEX = "[\r*\n]+".toRegex()
@@ -13,6 +14,10 @@ class InteractorFormat {
         val noEmpty = removeEmpty(lines)
         val noCommonSpace = trimCommonSpaces(noEmpty)
         return linesToText(noCommonSpace)
+    }
+
+    fun identifySpans(paragraphs: List<Paragraph>): List<Paragraph> {
+        return paragraphs
     }
 
     private fun textToLines(string: String): List<String> {

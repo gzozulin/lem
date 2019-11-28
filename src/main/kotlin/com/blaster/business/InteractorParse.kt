@@ -21,6 +21,9 @@ class InteractorParse {
     lateinit var interactorFormat: InteractorFormat
 
     @Inject
+    lateinit var interactorStructs: InteractorStructs
+
+    @Inject
     lateinit var kotlinManager: KotlinManager
 
     init {
@@ -33,8 +36,12 @@ class InteractorParse {
         val paragraphs = interactorFormat.textToParagraphs(scenario.readText())
         // The next operation is to identify commands in those paragraphs if any
         val withCommands = interactorCommands.identifyCommands(paragraphs)
-        // And finally, if we found any commands - we will apply them to the current result
-        return interactorCommands.applyCommands(sourceRoot, withCommands)
+        // If we found any commands - we will apply them to the current result
+        val commandsApplied = interactorCommands.applyCommands(sourceRoot, withCommands)
+        // We also want to identify possible structures inside of the paragraphs - lists, tables and etc.
+        val withStructs = interactorStructs.identifyStructs(commandsApplied)
+        // After the structs are identified, we can apply text formatting
+        return interactorFormat.identifySpans(withStructs)
     }
 
     // Routine for parsing of the definitions. Accepts the sources root and a path to a definition. Returns a list of paragraphs with this definition commentaries and code snippets
@@ -49,7 +56,11 @@ class InteractorParse {
         // After formatting is done, we want to find the commands among the paragraphs if any
         val withCommands = interactorCommands.identifyCommands(statements)
         // And finally, we apply the commands and return the result
-        return interactorCommands.applyCommands(sourceRoot, withCommands)
+        val commandsApplied = interactorCommands.applyCommands(sourceRoot, withCommands)
+        // We also want to identify possible structures inside of the paragraphs - lists, tables and etc.
+        val withStructs = interactorStructs.identifyStructs(commandsApplied)
+        // After the structs are identified, we can apply text formatting
+        return interactorFormat.identifySpans(withStructs)
     }
 
     fun parseDecl(sourceRoot: File, path: String): List<Paragraph> {
@@ -59,6 +70,8 @@ class InteractorParse {
         declarations.forEach { withoutTabulation.add(interactorFormat.removeCommonTabulation(it)) }
         val statements = mutableListOf<Paragraph>()
         declarations.forEach { statements.addAll(statementsManager.extractStatements(it)) }
-        return interactorCommands.applyCommands(sourceRoot, statements)
+        val commandsApplied = interactorCommands.applyCommands(sourceRoot, statements)
+        val withStructs = interactorStructs.identifyStructs(commandsApplied)
+        return interactorFormat.identifySpans(withStructs)
     }
 }

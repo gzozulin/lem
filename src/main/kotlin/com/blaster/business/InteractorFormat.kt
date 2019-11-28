@@ -1,11 +1,9 @@
 package com.blaster.business
 
-import com.blaster.data.paragraphs.Paragraph
-import com.blaster.data.paragraphs.ParagraphText
-import com.blaster.data.paragraphs.StructListItem
-import com.blaster.data.paragraphs.StructText
+import com.blaster.data.paragraphs.*
 
 private val LINE_REGEX = "[\r*\n]+".toRegex()
+private val SPAN_REGEX = "'([^']+)'".toRegex()
 
 class InteractorFormat {
     fun textToParagraphs(text: String): List<ParagraphText> = text.split(LINE_REGEX)
@@ -25,8 +23,8 @@ class InteractorFormat {
             if (paragraph is ParagraphText) {
                 for (struct in paragraph.children) {
                     when (struct) {
-                        is StructText -> struct.children.addAll(identifySpansInText(struct))
-                        is StructListItem -> struct.children.addAll(identifySpansInListItem(struct))
+                        is StructText -> struct.children.addAll(identifySpansInText(struct.text))
+                        is StructListItem -> struct.children.addAll(identifySpansInText(struct.item))
                         else -> TODO()
                     }
                 }
@@ -35,12 +33,24 @@ class InteractorFormat {
         return paragraphs
     }
 
-    private fun identifySpansInText(struct: StructText): List<Paragraph> {
-        return struct.children
-    }
-
-    private fun identifySpansInListItem(struct: StructListItem): List<Paragraph> {
-        return struct.children
+    private fun identifySpansInText(text: String): List<Paragraph> {
+        val result = mutableListOf<Paragraph>()
+        var remainder = text
+        var match = SPAN_REGEX.find(remainder)
+        while (match != null) {
+            val whole = match.groups[0]
+            val value = match.groups[1]
+            val normal = remainder.substring(0, whole!!.range.first)
+            val bold = value!!.value
+            result.add(SpanText(normal, SpanText.Style.NORMAL))
+            result.add(SpanText(bold, SpanText.Style.BOLD))
+            remainder = remainder.substring(whole.range.last + 1, remainder.length)
+            match = SPAN_REGEX.find(remainder)
+        }
+        if (remainder.isNotEmpty()) {
+            result.add(SpanText(remainder, SpanText.Style.NORMAL))
+        }
+        return result
     }
 
     private fun textToLines(string: String): List<String> {

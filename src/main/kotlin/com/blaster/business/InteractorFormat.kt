@@ -2,6 +2,8 @@ package com.blaster.business
 
 import com.blaster.data.paragraphs.Paragraph
 import com.blaster.data.paragraphs.ParagraphText
+import com.blaster.data.paragraphs.StructListItem
+import com.blaster.data.paragraphs.StructText
 
 private val LINE_REGEX = "[\r*\n]+".toRegex()
 
@@ -17,7 +19,28 @@ class InteractorFormat {
     }
 
     fun identifySpans(paragraphs: List<Paragraph>): List<Paragraph> {
+        val result = mutableListOf<Paragraph>()
+        for (paragraph in paragraphs) {
+            result.add(paragraph)
+            if (paragraph is ParagraphText) {
+                for (struct in paragraph.children) {
+                    when (struct) {
+                        is StructText -> struct.children.addAll(identifySpansInText(struct))
+                        is StructListItem -> struct.children.addAll(identifySpansInListItem(struct))
+                        else -> TODO()
+                    }
+                }
+            }
+        }
         return paragraphs
+    }
+
+    private fun identifySpansInText(struct: StructText): List<Paragraph> {
+        return struct.children
+    }
+
+    private fun identifySpansInListItem(struct: StructListItem): List<Paragraph> {
+        return struct.children
     }
 
     private fun textToLines(string: String): List<String> {

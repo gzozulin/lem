@@ -40,6 +40,9 @@
 
                 .picture {}
                 .picture_child {}
+
+                .list_item {}
+                .list_item_child {}
     </style>
     <head>
         <title>Welcome!</title>

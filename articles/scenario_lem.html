@@ -40,6 +40,9 @@
 
                 .picture {}
                 .picture_child {}
+
+                .list_item {}
+                .list_item_child {}
     </style>
     <head>
         <title>Welcome!</title>
@@ -49,47 +52,47 @@
 
     <h2>Why? What?</h2>
 
-<p class="text">Many of us have a hobby or an art or a craft of some sort. But how to showcase it to the like-minded audience? There are many ways out there: you can write an article, you can create a video on YouTube, you can maintain a page on Wikipedia. You can even create your podcast series. Each of those approaches has its advantages and disadvantages. Some are a bit more entertaining, and the others are easier to produce. In my opinion, my craft - the art of programming - requires a unique approach.</p>
-<p class="text">Just for a kick, let us have a list here:</p>
-<p class="text">~ &#39;item 1&#39;</p>
-<p class="text">~ &#39;item 2</p>
-<p class="text">~ item 3</p>
-<p class="text">I saw many videos about programming on YouTube. Their main disadvantage is the fact that it is quite hard to follow them. Imagine if you want to recreate or learn some specific details from the video. You will have to pause all the time, and you cannot copy the code snippets from the video. And sometimes, the details of the algorithms or complex mechanics are not explained deep enough due to the specifics of the medium.</p>
-<p class="text">Articles have disadvantages as well - especially the old ones. The codebase has a tendency to develop over time: bugs are fixed, ideas getting mature. If you ever read the technical articles about ancient and established products, you probably noticed what I am talking about - when the code and the text diverge significantly.</p>
-<p class="text">One of the approaches I liked was a so-called literate programming first time introduced by Donald Knuth. In this case, source code behaves like an open book. The author explains the codebase in proper order and with an in-depth explanation, available on the spot. I want to develop a tool that allows defining a codebase in a particular manner. Imagine, if you have an article, which can be compiled as a part of the codebase. This approach allows the code and the text to always be in sync - even if the project is being modified over time.</p>
-<p class="text">One more influence is the example of the C programming language. When you port a C compiler on a different hardware platform, C becomes a self-compiling assembler. You start with porting a basic functionality, then more advanced features of the language can be added on top of it while utilizing the basics. This article is something along those lines. Over time, more features will be added to the tool, and the material will be updated. This article is an example and a first use case for this tool.</p>
-<p class="text">I decided to call this tool Lem in the memory of one of my favorite authors - Stanislav Lem. He was a Polish writer of science fiction, philosophy and satire, and a trained physician. His books were a source of great inspiration during my childhood and early youth. If you have never read those - make yourself a favor.</p>
-<p class="text">Let&#39;s now start discussing the internal construction of the tool. We will dive deep into the application by explaining the foundations - the architecture of the application.</p>
+<p class="text"><p class="text">Many of us have a hobby or an art or a craft of some sort. But how to showcase it to the like-minded audience? There are many ways out there: you can write an article, you can create a video on YouTube, you can maintain a page on Wikipedia. You can even create your podcast series. Each of those approaches has its advantages and disadvantages. Some are a bit more entertaining, and the others are easier to produce. In my opinion, my craft - the art of programming - requires a unique approach.</p></p>
+<p class="text"><p class="text">Just for a kick, let us have a list here:</p></p>
+<p class="text"><ul class="list_item"><li>'item 1'</li></ul></p>
+<p class="text"><ul class="list_item"><li>'item 2</li></ul></p>
+<p class="text"><ul class="list_item"><li>item 3</li></ul></p>
+<p class="text"><p class="text">I saw many videos about programming on YouTube. Their main disadvantage is the fact that it is quite hard to follow them. Imagine if you want to recreate or learn some specific details from the video. You will have to pause all the time, and you cannot copy the code snippets from the video. And sometimes, the details of the algorithms or complex mechanics are not explained deep enough due to the specifics of the medium.</p></p>
+<p class="text"><p class="text">Articles have disadvantages as well - especially the old ones. The codebase has a tendency to develop over time: bugs are fixed, ideas getting mature. If you ever read the technical articles about ancient and established products, you probably noticed what I am talking about - when the code and the text diverge significantly.</p></p>
+<p class="text"><p class="text">One of the approaches I liked was a so-called literate programming first time introduced by Donald Knuth. In this case, source code behaves like an open book. The author explains the codebase in proper order and with an in-depth explanation, available on the spot. I want to develop a tool that allows defining a codebase in a particular manner. Imagine, if you have an article, which can be compiled as a part of the codebase. This approach allows the code and the text to always be in sync - even if the project is being modified over time.</p></p>
+<p class="text"><p class="text">One more influence is the example of the C programming language. When you port a C compiler on a different hardware platform, C becomes a self-compiling assembler. You start with porting a basic functionality, then more advanced features of the language can be added on top of it while utilizing the basics. This article is something along those lines. Over time, more features will be added to the tool, and the material will be updated. This article is an example and a first use case for this tool.</p></p>
+<p class="text"><p class="text">I decided to call this tool Lem in the memory of one of my favorite authors - Stanislav Lem. He was a Polish writer of science fiction, philosophy and satire, and a trained physician. His books were a source of great inspiration during my childhood and early youth. If you have never read those - make yourself a favor.</p></p>
+<p class="text"><p class="text">Let's now start discussing the internal construction of the tool. We will dive deep into the application by explaining the foundations - the architecture of the application.</p></p>
     <h2>The CLEAN architecture of the app</h2>
 
-<p class="text">Every application should have some meaningful structure behind it. This structure, commonly known as the application architecture, is the primary reference while reading and understanding the code. The common fallacy behind the application architectures is to exist just for the sake of existing. A good sign of it is when the design is too restrictive and rigid when it is hard to add use cases, which were not evident during the designing stage. To avoid this common pitfall, I am usually trying to use something as flexible as possible. The most important part of the design is to do not restrict yourself. As we all know, premature optimization is the root of all evil.</p>
-<p class="text">That is why I often employ a so-called CLEAN design. This approach was created and formalized by &quot;Uncle&quot; Bob Martin based on several other architectural designs. I like the flexibility and fundamental ideas behind this design.</p>
-<p class="text">The main point behind the CLEAN design is the principle of Separation of Concerns. From Wikipedia: Separation of Concerns is a design principle for separating a computer program into distinct sections so that each section addresses a separate concern. This approach allows you to represent your application as a sort of layered pie, where each layer serves to its purpose.</p>
-<p class="text">The main layers are Presentational Layer, Business Logic Layer, and Data Access Layer. If done from the beginning, the application can be dissected into three distinct aspects without too much hassle. That gives the ability to work abstractly and independently, brings enormous benefits during the testing stage.</p>
-<p class="text">Presentational Layer contains all of the logic for interacting with the platform on which your application is running. It can be something as straightforward as a Web or a mobile device, but also it can be something a bit more obscured, like a CLI style application.</p>
-<p class="text">Business Layer contains all of the mechanics of the application. Theoretically, it should be simple to take your Business layer and move it to the other platform like a drop-in replacement. This layer is also subdivided into specific use cases.</p>
-<p class="text">Data Access Layer, as the name suggests, is mostly an abstraction over the actual entities on which you operate during the application lifecycle.</p>
-<p class="text">I am not following the design too strictly to allow myself some slack. In my opinion, every tool can be adjusted for a job.</p>
-<p class="text">In the code of the application, each layer is represented by its package. &quot;platform&quot; for the Presentational layer, &quot;business&quot; is for Business Layer, and &quot;data&quot; is for Data Access Layer. Each package is further divided according to its own needs. For example, the Business Business Layer package contains Interactors. Each Interactor represents a set of Use Cases with similar responsibilities grouped. Data Layer is represented by Entities and Managers to access those entities. And since we aren&#39;t creating any UI, the Platform Layer is straightforward - the application class represents it.</p>
-<p class="text">In the next chapter, we will talk about additional auxiliary facilities, which serve as a typical boilerplate for the rest of the code.</p>
+<p class="text"><p class="text">Every application should have some meaningful structure behind it. This structure, commonly known as the application architecture, is the primary reference while reading and understanding the code. The common fallacy behind the application architectures is to exist just for the sake of existing. A good sign of it is when the design is too restrictive and rigid when it is hard to add use cases, which were not evident during the designing stage. To avoid this common pitfall, I am usually trying to use something as flexible as possible. The most important part of the design is to do not restrict yourself. As we all know, premature optimization is the root of all evil.</p></p>
+<p class="text"><p class="text">That is why I often employ a so-called CLEAN design. This approach was created and formalized by "Uncle" Bob Martin based on several other architectural designs. I like the flexibility and fundamental ideas behind this design.</p></p>
+<p class="text"><p class="text">The main point behind the CLEAN design is the principle of Separation of Concerns. From Wikipedia: Separation of Concerns is a design principle for separating a computer program into distinct sections so that each section addresses a separate concern. This approach allows you to represent your application as a sort of layered pie, where each layer serves to its purpose.</p></p>
+<p class="text"><p class="text">The main layers are Presentational Layer, Business Logic Layer, and Data Access Layer. If done from the beginning, the application can be dissected into three distinct aspects without too much hassle. That gives the ability to work abstractly and independently, brings enormous benefits during the testing stage.</p></p>
+<p class="text"><p class="text">Presentational Layer contains all of the logic for interacting with the platform on which your application is running. It can be something as straightforward as a Web or a mobile device, but also it can be something a bit more obscured, like a CLI style application.</p></p>
+<p class="text"><p class="text">Business Layer contains all of the mechanics of the application. Theoretically, it should be simple to take your Business layer and move it to the other platform like a drop-in replacement. This layer is also subdivided into specific use cases.</p></p>
+<p class="text"><p class="text">Data Access Layer, as the name suggests, is mostly an abstraction over the actual entities on which you operate during the application lifecycle.</p></p>
+<p class="text"><p class="text">I am not following the design too strictly to allow myself some slack. In my opinion, every tool can be adjusted for a job.</p></p>
+<p class="text"><p class="text">In the code of the application, each layer is represented by its package. "platform" for the Presentational layer, "business" is for Business Layer, and "data" is for Data Access Layer. Each package is further divided according to its own needs. For example, the Business Business Layer package contains Interactors. Each Interactor represents a set of Use Cases with similar responsibilities grouped. Data Layer is represented by Entities and Managers to access those entities. And since we aren't creating any UI, the Platform Layer is straightforward - the application class represents it.</p></p>
+<p class="text"><p class="text">In the next chapter, we will talk about additional auxiliary facilities, which serve as a typical boilerplate for the rest of the code.</p></p>
     <h2>Dependencies boilerplate</h2>
 
-<p class="text">The key to managing the complexity of a growing project is the modularization. Modularization is a division of a system or a product into physically and functionally distinct units to allow removal and replacement. Those units have to reference each other somehow. And also we would like to allow ourselves some control and flexibility over those references. Wouldn&#39;t it be cool to be able to just remove and replace parts of the system without interrupting others?</p>
-<p class="text">All of that is possible with a Dependency Injection system. In software engineering, Dependency Injection is a technique, whereby one object supplies the dependencies of another object. With such system you control the creation, the destruction and a lifecycle of every component. For example you can decide if you will have only one instance of the component and therefore it will be marked as a singleton, or it will be created every time when it is required.</p>
-<p class="text">One more advantage of a good Dependency Injection framework is that it allows you to significantly reduce the amount of boilerplate code. Instead of dragging each dependency through the chain of constructors, you can simply inject a field through the DI on the creation stage.</p>
-<p class="text">This particular project uses Google&#39;s Dagger 2 to facilitate DI. One of the primary advantages of Dagger 2 over most other DI frameworks is that its strictly generated implementation - no reflexion. It means that the boilerplate code, needed for the injection, is generated during the compile time, rather being constructed during runtime through the reflexion mechanisms. That is a performance boost, of course.</p>
-<p class="text">First of all, in order to employ Dagger 2 for our needs, we have to specify out dependencies. This happens in a so-called Dagger 2 module. Those are application defined classes, which provides all of the necessary information about how to create and manage your application units. You simply need to provide an instance of the class and annotate it accordingly. Here is an example:</p>
+<p class="text"><p class="text">The key to managing the complexity of a growing project is the modularization. Modularization is a division of a system or a product into physically and functionally distinct units to allow removal and replacement. Those units have to reference each other somehow. And also we would like to allow ourselves some control and flexibility over those references. Wouldn't it be cool to be able to just remove and replace parts of the system without interrupting others?</p></p>
+<p class="text"><p class="text">All of that is possible with a Dependency Injection system. In software engineering, Dependency Injection is a technique, whereby one object supplies the dependencies of another object. With such system you control the creation, the destruction and a lifecycle of every component. For example you can decide if you will have only one instance of the component and therefore it will be marked as a singleton, or it will be created every time when it is required.</p></p>
+<p class="text"><p class="text">One more advantage of a good Dependency Injection framework is that it allows you to significantly reduce the amount of boilerplate code. Instead of dragging each dependency through the chain of constructors, you can simply inject a field through the DI on the creation stage.</p></p>
+<p class="text"><p class="text">This particular project uses Google's Dagger 2 to facilitate DI. One of the primary advantages of Dagger 2 over most other DI frameworks is that its strictly generated implementation - no reflexion. It means that the boilerplate code, needed for the injection, is generated during the compile time, rather being constructed during runtime through the reflexion mechanisms. That is a performance boost, of course.</p></p>
+<p class="text"><p class="text">First of all, in order to employ Dagger 2 for our needs, we have to specify out dependencies. This happens in a so-called Dagger 2 module. Those are application defined classes, which provides all of the necessary information about how to create and manage your application units. You simply need to provide an instance of the class and annotate it accordingly. Here is an example:</p></p>
 <div class="child">
     <h3>com.blaster.platform.LemModule::interactorParse</h3>
-    <p class="text_child">This method will create &#39;InteractorParse&#39; instance and inject it into the &#39;rest of the application&#39;. Its annotation tells us, that only one instance of this class will be created.</p>
+    <p class="text_child"><p class="text_child">This method will create 'InteractorParse' instance and inject it into the 'rest of the application'. Its annotation tells us, that only one instance of this class will be created.</p></p>
 <p class="code_child">@Singleton
 @Provides
 fun interactorParse() = InteractorParse()</p>
 </div>
-<p class="text">With DI framework we also can provide unique files and settings:</p>
+<p class="text"><p class="text">With DI framework we also can provide unique files and settings:</p></p>
 <div class="child">
     <h3>com.blaster.platform.LemModule::freemarkerConfig</h3>
-    <p class="text_child">This methos will provide the configuration for the FreeMarker template engine. Its only parameter is a place, where we store the templates. This parameter is fulfilled by DI as well.</p>
+    <p class="text_child"><p class="text_child">This methos will provide the configuration for the FreeMarker template engine. Its only parameter is a place, where we store the templates. This parameter is fulfilled by DI as well.</p></p>
 <p class="code_child">@Singleton
 @Provides
 fun freemarkerConfig(@Named(&quot;TEMPLATES_FILE&quot;) templatesFile: File): Configuration {
@@ -102,29 +105,29 @@ fun freemarkerConfig(@Named(&quot;TEMPLATES_FILE&quot;) templatesFile: File): Co
     return cfg
 }</p>
 </div>
-<p class="text">The next task is to clarify the rules on how to resolve the actual dependencies. For example we can restrict a certain set of dependencies to be available only for the specified classes. Those rules can be defined in the Dagger 2 component. It is an interface, which specifies what can be injected where. After Dagger 2 will finish code generation, we will receive an implementation of this interface. The example can be a following call:</p>
+<p class="text"><p class="text">The next task is to clarify the rules on how to resolve the actual dependencies. For example we can restrict a certain set of dependencies to be available only for the specified classes. Those rules can be defined in the Dagger 2 component. It is an interface, which specifies what can be injected where. After Dagger 2 will finish code generation, we will receive an implementation of this interface. The example can be a following call:</p></p>
 <div class="child">
     <h3>com.blaster.platform.LemComponent::inject</h3>
-    <p class="text_child">This call will allow us to inject classes declared in LemModule into the InteractorCommands</p>
+    <p class="text_child"><p class="text_child">This call will allow us to inject classes declared in LemModule into the InteractorCommands</p></p>
 <p class="code_child">fun inject(interactorCommands: InteractorCommands)</p>
 </div>
-<p class="text">In the next chapter we will discuss a general overview of the application pipeline.</p>
+<p class="text"><p class="text">In the next chapter we will discuss a general overview of the application pipeline.</p></p>
     <h2>The pipeline overview</h2>
 
-<p class="text">Let us start by briefly defining what we want to achieve with this application. My original idea was to have a tool that allows you to process the code into a readable article. Since this processing can be done every time the code is updated, we can maintain parity between the codebase and the material. The process can be dissected into distinct stages. In this chapter, we will overview those stages and define a goal for each of those.</p>
-<p class="text">The application starts its lifecycle, similarly to most of the JVM-based applications, with the main entry point. The main task at this stage is to handle the parameters and parse the properties of the following operation.</p>
+<p class="text"><p class="text">Let us start by briefly defining what we want to achieve with this application. My original idea was to have a tool that allows you to process the code into a readable article. Since this processing can be done every time the code is updated, we can maintain parity between the codebase and the material. The process can be dissected into distinct stages. In this chapter, we will overview those stages and define a goal for each of those.</p></p>
+<p class="text"><p class="text">The application starts its lifecycle, similarly to most of the JVM-based applications, with the main entry point. The main task at this stage is to handle the parameters and parse the properties of the following operation.</p></p>
 <div class="child">
     <h3>com.blaster.platform.LemAppKt::main</h3>
-    <p class="text_child">This is an application main entry point. The only parameter is an array of command line arguments</p>
+    <p class="text_child"><p class="text_child">This is an application main entry point. The only parameter is an array of command line arguments</p></p>
 <p class="code_child">fun main(args: Array&lt;String&gt;) {</p>
-<p class="text_child">We will create the application class first</p>
+<p class="text_child"><p class="text_child">We will create the application class first</p></p>
 <p class="code_child">    val lemApp = LemApp()</p>
-<p class="text_child">If we do not have any arguments - we will fall back to the default values</p>
+<p class="text_child"><p class="text_child">If we do not have any arguments - we will fall back to the default values</p></p>
 <p class="code_child">    if (args.isEmpty()) {
         println(&quot;No args, falling back to the defaults!&quot;)
         return lemApp.render(File(&quot;src/main/kotlin&quot;), File(&quot;scenarios/scenario_lem.txt&quot;), File(&quot;articles/scenario_lem.html&quot;))
     }</p>
-<p class="text_child">After that we will extract the necessary settings one by one while checking the actual values in the process</p>
+<p class="text_child"><p class="text_child">After that we will extract the necessary settings one by one while checking the actual values in the process</p></p>
 <p class="code_child">    check(args.size == 3) { &quot;Wrong number of parameters!&quot; }
     val sourceRoot = File(args[0])
     check(sourceRoot.exists()) { &quot;Sources rout doesn&#39;t exists!&quot; }
@@ -132,57 +135,57 @@ fun freemarkerConfig(@Named(&quot;TEMPLATES_FILE&quot;) templatesFile: File): Co
     check(scenarioFile.exists()) { &quot;Scenario file doest&#39;t exists!&quot; }
     val output = File(args[2])
     check(output.parentFile.exists()) { &quot;Output folder doesn&#39;t exists!&quot; }</p>
-<p class="text_child">When everything is extracted - we can proceed to rendering of the task</p>
+<p class="text_child"><p class="text_child">When everything is extracted - we can proceed to rendering of the task</p></p>
 <p class="code_child">    lemApp.render(sourceRoot, scenarioFile, output)
 }</p>
 </div>
-<p class="text">After the main classes are created, and the parameters are consumed, we can move to the Scenario Stage.</p>
-<p class="text">When I am writing the articles, I usually start by outlining the table of contents. Then I follow up by adding a little bit of text for every point in the draft. In our application, this blueprint is represented by the article scenario. A scenario is a template, which sets the stage for the rest of the article. The scenario file contains text paragraphs and commands definitions to be executed. Scenario Stage starts by parsing the scenario file, and as a result, we receive a list of sections and commands which were found.</p>
-<p class="text">When we have a list of paragraphs and first extracted commands on hands, we can move to the next stage, which is Commands Stage. Commands stage takes the current result and applies the first commands to it. Commands can be something as simple as adding a header or changing a font, or it can be something more complicated - for example, something which will modify the structure of the article or include snippets of code to it.</p>
-<p class="text">In most of the cases, as a result of some commands execution, some code will be queued to be parsed. That is how we keep a permanent link between an article and a codebase. As a result of the parsing of the code, we will receive snippets and comments. It is possible to have additional commands in those comments. Those commands will follow the same procedure: after being extracted from the comments, they will be applied to a current result. You can immediately notice the recursive nature of the process.</p>
-<p class="text">Those steps can repeat many times. When finally, all of the commands are extracted and applied, and we have a list final list of paragraphs, we can move on to the next stage.</p>
-<p class="text">The final stage in the lifecycle of our application is the Printing Stage. At this stage, we take the list of paragraphs from the previous steps and convert them into an HTML page with the help of templates.</p>
-<p class="text">Each paragraph goes through its own type of template, which will apply different properties of the text and rendering - and will end up in the final HTML representation of the article.</p>
-<p class="text">So, to summarize, we start with the scenario for the article. We parse this scenario and extract the paragraphs of text and commands from it. Then we apply those commands to the current result. Some of those commands will require to parse the additional pieces of code. We will proceed by parsing the code into code snippets and comments. Comments can contain commands, as well. Extracted commands will be recursively applied to the body of the article. And finally, we will print the result all together with the help of the HTML templates.</p>
-<p class="text">In the next chapter, we will have a closer look at how things are parsed.</p>
+<p class="text"><p class="text">After the main classes are created, and the parameters are consumed, we can move to the Scenario Stage.</p></p>
+<p class="text"><p class="text">When I am writing the articles, I usually start by outlining the table of contents. Then I follow up by adding a little bit of text for every point in the draft. In our application, this blueprint is represented by the article scenario. A scenario is a template, which sets the stage for the rest of the article. The scenario file contains text paragraphs and commands definitions to be executed. Scenario Stage starts by parsing the scenario file, and as a result, we receive a list of sections and commands which were found.</p></p>
+<p class="text"><p class="text">When we have a list of paragraphs and first extracted commands on hands, we can move to the next stage, which is Commands Stage. Commands stage takes the current result and applies the first commands to it. Commands can be something as simple as adding a header or changing a font, or it can be something more complicated - for example, something which will modify the structure of the article or include snippets of code to it.</p></p>
+<p class="text"><p class="text">In most of the cases, as a result of some commands execution, some code will be queued to be parsed. That is how we keep a permanent link between an article and a codebase. As a result of the parsing of the code, we will receive snippets and comments. It is possible to have additional commands in those comments. Those commands will follow the same procedure: after being extracted from the comments, they will be applied to a current result. You can immediately notice the recursive nature of the process.</p></p>
+<p class="text"><p class="text">Those steps can repeat many times. When finally, all of the commands are extracted and applied, and we have a list final list of paragraphs, we can move on to the next stage.</p></p>
+<p class="text"><p class="text">The final stage in the lifecycle of our application is the Printing Stage. At this stage, we take the list of paragraphs from the previous steps and convert them into an HTML page with the help of templates.</p></p>
+<p class="text"><p class="text">Each paragraph goes through its own type of template, which will apply different properties of the text and rendering - and will end up in the final HTML representation of the article.</p></p>
+<p class="text"><p class="text">So, to summarize, we start with the scenario for the article. We parse this scenario and extract the paragraphs of text and commands from it. Then we apply those commands to the current result. Some of those commands will require to parse the additional pieces of code. We will proceed by parsing the code into code snippets and comments. Comments can contain commands, as well. Extracted commands will be recursively applied to the body of the article. And finally, we will print the result all together with the help of the HTML templates.</p></p>
+<p class="text"><p class="text">In the next chapter, we will have a closer look at how things are parsed.</p></p>
     <h2>The Parsing Stage</h2>
 
-<p class="text">In this chapter, we will see the details of the parsing of the scenario. Parsing of a modern programming language is an incredibly complex task. And this task is far outside of the reach of this article. If you need to parse multiple languages and formats, the complexity of this task can easily outweigh the gain from the project.</p>
-<p class="text">To avoid unnecessary complexity and to facilitate parsing, we will be using a tool called ANTLR4. What is especially good about this tool is that it comes with already available grammar for most of the modern languages. Those grammars are contributed and supported by people who are highly proficient with the languages in question.</p>
-<p class="text">We will employ two grammar files for our task at hand. One is for Kotlin language, and another is our custom grammar, which allows us to separate the code from the comments. If we would like to add the support for languages, other than Kotlin in the future, we always can do this by expanding the pool of available grammar.</p>
-<p class="text">I will not discuss the creation of the grammars and how to use ANTLR4 because it is outside of the scope of this article. For simplicity, we can think about it as if some tool will convert the provided language constructs into the classes, available for consumption in the language of our choice - in our case - Kotlin.</p>
-<p class="text">Let us start with a first step - parsing of the scenario file, passed from the input arguments.</p>
+<p class="text"><p class="text">In this chapter, we will see the details of the parsing of the scenario. Parsing of a modern programming language is an incredibly complex task. And this task is far outside of the reach of this article. If you need to parse multiple languages and formats, the complexity of this task can easily outweigh the gain from the project.</p></p>
+<p class="text"><p class="text">To avoid unnecessary complexity and to facilitate parsing, we will be using a tool called ANTLR4. What is especially good about this tool is that it comes with already available grammar for most of the modern languages. Those grammars are contributed and supported by people who are highly proficient with the languages in question.</p></p>
+<p class="text"><p class="text">We will employ two grammar files for our task at hand. One is for Kotlin language, and another is our custom grammar, which allows us to separate the code from the comments. If we would like to add the support for languages, other than Kotlin in the future, we always can do this by expanding the pool of available grammar.</p></p>
+<p class="text"><p class="text">I will not discuss the creation of the grammars and how to use ANTLR4 because it is outside of the scope of this article. For simplicity, we can think about it as if some tool will convert the provided language constructs into the classes, available for consumption in the language of our choice - in our case - Kotlin.</p></p>
+<p class="text"><p class="text">Let us start with a first step - parsing of the scenario file, passed from the input arguments.</p></p>
 <div class="child">
     <h3>com.blaster.business.InteractorParse::parseScenario</h3>
-    <p class="text_child">This call will convert a scenario file into a list of paragraphs. The parameters are self explanatory.</p>
+    <p class="text_child"><p class="text_child">This call will convert a scenario file into a list of paragraphs. The parameters are self explanatory.</p></p>
 <p class="code_child">fun parseScenario(sourceRoot: File, scenario: File): List&lt;Paragraph&gt; {</p>
-<p class="text_child">First operation of this method is to convert text in the scenario file into a distinct paragraphs. Paragraphs are separated by the new lines</p>
+<p class="text_child"><p class="text_child">First operation of this method is to convert text in the scenario file into a distinct paragraphs. Paragraphs are separated by the new lines</p></p>
 <p class="code_child">    val paragraphs = interactorFormat.textToParagraphs(scenario.readText())</p>
-<p class="text_child">The next operation is to identify commands in those paragraphs if any</p>
+<p class="text_child"><p class="text_child">The next operation is to identify commands in those paragraphs if any</p></p>
 <p class="code_child">    val withCommands = interactorCommands.identifyCommands(paragraphs)</p>
-<p class="text_child">If we found any commands - we will apply them to the current result</p>
+<p class="text_child"><p class="text_child">If we found any commands - we will apply them to the current result</p></p>
 <p class="code_child">    val commandsApplied = interactorCommands.applyCommands(sourceRoot, withCommands)</p>
-<p class="text_child">We also want to identify possible structures inside of the paragraphs - lists, tables and etc.</p>
+<p class="text_child"><p class="text_child">We also want to identify possible structures inside of the paragraphs - lists, tables and etc.</p></p>
 <p class="code_child">    val withStructs = interactorStructs.identifyStructs(commandsApplied)</p>
-<p class="text_child">After the structs are identified, we can apply text formatting</p>
+<p class="text_child"><p class="text_child">After the structs are identified, we can apply text formatting</p></p>
 <p class="code_child">    return interactorFormat.identifySpans(withStructs)
 }</p>
 </div>
-<p class="text">The scenario will produce a list of paragraphs and commands, which were identified. Let&#39;s see how the identification of the commands works.</p>
+<p class="text"><p class="text">The scenario will produce a list of paragraphs and commands, which were identified. Let's see how the identification of the commands works.</p></p>
 <div class="child">
     <h3>com.blaster.business.InteractorCommands::identifyCommand</h3>
-    <p class="text_child">Main commands identification routine. Will return a command if identified, or null if nothing found</p>
+    <p class="text_child"><p class="text_child">Main commands identification routine. Will return a command if identified, or null if nothing found</p></p>
 <p class="code_child">private fun identifyCommand(command: String): ParagraphCommand? {</p>
-<p class="text_child">We prefix all of the commands in the text with a &#39;#&#39; symbol. If it is not found - it is not a command</p>
+<p class="text_child"><p class="text_child">We prefix all of the commands in the text with a '#' symbol. If it is not found - it is not a command</p></p>
 <p class="code_child">    if (!command.startsWith(COMMAND_IDENTIFIER)) {
         return null
     }</p>
-<p class="text_child">Removing the prefix and converting a command into a stack of words</p>
+<p class="text_child"><p class="text_child">Removing the prefix and converting a command into a stack of words</p></p>
 <p class="code_child">    val noPrefix = command.removePrefix(COMMAND_IDENTIFIER)
     val stack = noPrefix.split(CSV_PATTERN)
     val cmd = stack[0]
     val subcmd = stack.subList(1, stack.size)</p>
-<p class="text_child">Then identifying each command family by command name. We remove the head of the stack each time when we go to the next level. Each command family will be parsed in the similar fashion, until nothing is left on the stack</p>
+<p class="text_child"><p class="text_child">Then identifying each command family by command name. We remove the head of the stack each time when we go to the next level. Each command family will be parsed in the similar fashion, until nothing is left on the stack</p></p>
 <p class="code_child">    return when {
         cmd == COMMAND_INCLUDE -&gt; identifyIncludeCommand(subcmd)
         cmd == COMMAND_HEADER -&gt; identifyHeaderCommand(subcmd)
@@ -192,45 +195,45 @@ fun freemarkerConfig(@Named(&quot;TEMPLATES_FILE&quot;) templatesFile: File): Co
     }
 }</p>
 </div>
-<p class="text">After the commands are identified, we can finally apply them.</p>
+<p class="text"><p class="text">After the commands are identified, we can finally apply them.</p></p>
 <div class="child">
     <h3>com.blaster.business.InteractorCommands::applyCommands</h3>
-    <p class="text_child">Commands application routine. It receives a source root and a list of paragraphs as a parameters. The result is a list of paragraphs modified by all of the commands in the original list.</p>
+    <p class="text_child"><p class="text_child">Commands application routine. It receives a source root and a list of paragraphs as a parameters. The result is a list of paragraphs modified by all of the commands in the original list.</p></p>
 <p class="code_child">fun applyCommands(sourceRoot: File, paragraphs: List&lt;Paragraph&gt;): List&lt;Paragraph&gt; {</p>
-<p class="text_child">Since we will do operations on the list, we want to convert it to a mutable one - the structure of the list can be changed this way</p>
+<p class="text_child"><p class="text_child">Since we will do operations on the list, we want to convert it to a mutable one - the structure of the list can be changed this way</p></p>
 <p class="code_child">    val mutableList = ArrayList(paragraphs)
     val iterator = mutableList.listIterator()</p>
-<p class="text_child">We iterate over the list until we reached the end</p>
+<p class="text_child"><p class="text_child">We iterate over the list until we reached the end</p></p>
 <p class="code_child">    while (iterator.hasNext()) {
         val paragraph = iterator.next()</p>
-<p class="text_child">If the next item in the list is a command</p>
+<p class="text_child"><p class="text_child">If the next item in the list is a command</p></p>
 <p class="code_child">        if (paragraph is ParagraphCommand) {
             when (paragraph.type) {</p>
-<p class="text_child">We apply the command accordingly</p>
+<p class="text_child"><p class="text_child">We apply the command accordingly</p></p>
 <p class="code_child">                ParagraphCommand.Type.INCLUDE -&gt; applyIncludeCommand(paragraph, sourceRoot)
                 ParagraphCommand.Type.OMIT -&gt; applyOmitCommand(iterator)
                 ParagraphCommand.Type.INLINE -&gt; applyInlineCommand(iterator, paragraph, sourceRoot)</p>
-<p class="text_child">Some commands have meaning only for printing, so we do nothing right now</p>
+<p class="text_child"><p class="text_child">Some commands have meaning only for printing, so we do nothing right now</p></p>
 <p class="code_child">                else -&gt; { }
             }
         }
     }</p>
-<p class="text_child">Returning the modified result</p>
+<p class="text_child"><p class="text_child">Returning the modified result</p></p>
 <p class="code_child">    return mutableList
 }</p>
 </div>
-<p class="text">As we already know, some commands will request to include the additional code to showcase the mechanics. Such a command will have a command name, command arguments, and the path of the code to be included. Here is the code, responsible for locating the snippets:</p>
+<p class="text"><p class="text">As we already know, some commands will request to include the additional code to showcase the mechanics. Such a command will have a command name, command arguments, and the path of the code to be included. Here is the code, responsible for locating the snippets:</p></p>
 <div class="child">
     <h3>com.blaster.business.InteractorLocation::locate</h3>
-    <p class="text_child">This routine helps us to locate pieces of code, pointed out by path parameter. It returns a class, which represents the location of the found snippet.</p>
+    <p class="text_child"><p class="text_child">This routine helps us to locate pieces of code, pointed out by path parameter. It returns a class, which represents the location of the found snippet.</p></p>
 <p class="code_child">fun locate(sourceRoot: File, path: String): Location {</p>
-<p class="text_child">First of all we want to assert if the path is formatted properly. This allows to highlight errors early</p>
+<p class="text_child"><p class="text_child">First of all we want to assert if the path is formatted properly. This allows to highlight errors early</p></p>
 <p class="code_child">    check(PATH_REGEX.find(path)!!.value.length == path.length) { &quot;Wrong path for the location: $path&quot; }</p>
-<p class="text_child">We start by extracting the class from path string. It simply grabs everything before &#39;:&#39;</p>
+<p class="text_child"><p class="text_child">We start by extracting the class from path string. It simply grabs everything before ':'</p></p>
 <p class="code_child">    val clazz = extractClass(path)</p>
-<p class="text_child">Next we want to retreive the actual file, containing the class. We do that by looking at the sources root and a package</p>
+<p class="text_child"><p class="text_child">Next we want to retreive the actual file, containing the class. We do that by looking at the sources root and a package</p></p>
 <p class="code_child">    val file = locateFile(sourceRoot, clazz)</p>
-<p class="text_child">Now we can choose it this is a path to a whole class or to one of its members. We can be sure that the it is a global function or property if the class name ends with &#39;Kt&#39; according to a Kotlin notation. Else it is a path to a standalone class</p>
+<p class="text_child"><p class="text_child">Now we can choose it this is a path to a whole class or to one of its members. We can be sure that the it is a global function or property if the class name ends with 'Kt' according to a Kotlin notation. Else it is a path to a standalone class</p></p>
 <p class="code_child">    return if (path.contains(&quot;::&quot;)) {
         val member = extractMember(path)
         if (clazz.endsWith(&quot;Kt&quot;)) {
@@ -243,83 +246,83 @@ fun freemarkerConfig(@Named(&quot;TEMPLATES_FILE&quot;) templatesFile: File): Co
     }
 }</p>
 </div>
-<p class="text">The author of the scenario can choose how to include the code. We can either include definitions of declarations of methods and classes. The difference is that sometimes you want to include the body of the method, and sometimes you want to mention it. Let us see how parsing of the requested definitions works.</p>
+<p class="text"><p class="text">The author of the scenario can choose how to include the code. We can either include definitions of declarations of methods and classes. The difference is that sometimes you want to include the body of the method, and sometimes you want to mention it. Let us see how parsing of the requested definitions works.</p></p>
 <div class="child">
     <h3>com.blaster.business.InteractorParse::parseDef</h3>
-    <p class="text_child">Routine for parsing of the definitions. Accepts the sources root and a path to a definition. Returns a list of paragraphs with this definition commentaries and code snippets</p>
+    <p class="text_child"><p class="text_child">Routine for parsing of the definitions. Accepts the sources root and a path to a definition. Returns a list of paragraphs with this definition commentaries and code snippets</p></p>
 <p class="code_child">fun parseDef(sourceRoot: File, path: String): List&lt;Paragraph&gt; {</p>
-<p class="text_child">First thing first - we need to find the actual location of the definition - file, class, etc.</p>
+<p class="text_child"><p class="text_child">First thing first - we need to find the actual location of the definition - file, class, etc.</p></p>
 <p class="code_child">    val location = interactorLocation.locate(sourceRoot, path)</p>
-<p class="text_child">When the definition is located, we extract the code with the help of the ANTLR4</p>
+<p class="text_child"><p class="text_child">When the definition is located, we extract the code with the help of the ANTLR4</p></p>
 <p class="code_child">    val definition = kotlinManager.extractDefinition(location)</p>
-<p class="text_child">Next step is to split this text onto the commentaries and code snippets. We also format them - removing unused lines, spaces, etc.</p>
+<p class="text_child"><p class="text_child">Next step is to split this text onto the commentaries and code snippets. We also format them - removing unused lines, spaces, etc.</p></p>
 <p class="code_child">    val withoutTabulation = interactorFormat.removeCommonTabulation(definition)
     val statements = statementsManager.extractStatements(withoutTabulation)</p>
-<p class="text_child">After formatting is done, we want to find the commands among the paragraphs if any</p>
+<p class="text_child"><p class="text_child">After formatting is done, we want to find the commands among the paragraphs if any</p></p>
 <p class="code_child">    val withCommands = interactorCommands.identifyCommands(statements)</p>
-<p class="text_child">And finally, we apply the commands and return the result</p>
+<p class="text_child"><p class="text_child">And finally, we apply the commands and return the result</p></p>
 <p class="code_child">    val commandsApplied = interactorCommands.applyCommands(sourceRoot, withCommands)</p>
-<p class="text_child">We also want to identify possible structures inside of the paragraphs - lists, tables and etc.</p>
+<p class="text_child"><p class="text_child">We also want to identify possible structures inside of the paragraphs - lists, tables and etc.</p></p>
 <p class="code_child">    val withStructs = interactorStructs.identifyStructs(commandsApplied)</p>
-<p class="text_child">After the structs are identified, we can apply text formatting</p>
+<p class="text_child"><p class="text_child">After the structs are identified, we can apply text formatting</p></p>
 <p class="code_child">    return interactorFormat.identifySpans(withStructs)
 }</p>
 </div>
-<p class="text">Parsing of the requested declarations works very similarly to definitions and we will omit this piece.</p>
-<p class="text">After the command is executed and the snippet of the code is included, the commentaries in the code can contain additional commands. In this case, we will recursively go back to the stage of the application of commands.</p>
-<p class="text">Finally, after all of that is done, we should have a result of the parsing stage. This result will be passed to the next step, which is the printing of the article. We will have a look at the details of the printing in the next chapter.</p>
+<p class="text"><p class="text">Parsing of the requested declarations works very similarly to definitions and we will omit this piece.</p></p>
+<p class="text"><p class="text">After the command is executed and the snippet of the code is included, the commentaries in the code can contain additional commands. In this case, we will recursively go back to the stage of the application of commands.</p></p>
+<p class="text"><p class="text">Finally, after all of that is done, we should have a result of the parsing stage. This result will be passed to the next step, which is the printing of the article. We will have a look at the details of the printing in the next chapter.</p></p>
     <h2>The Printing stage</h2>
 
-<p class="text">The target destination of our article is an HTML file. We want to create those by parsing the codebase and executing steps required by the commands.</p>
-<p class="text">But how to render the actual HTML? Without a proper tool, that can be a very challenging task. For our purposes, we will use a library called FreeMarker.</p>
-<p class="text">Apache&#39;s FreeMarker is a template engine - a Java library to generate text output (HTML Web pages, e-mails, configuration files, source code, etc.) based on the templates and changing data. Templates are written in a FreeMarker Template Language (FTL), which is a simple specialized language. And, usually, a general-purpose programming language (like Java) is used to prepare data. Let us see how is that implemented by looking at the source code:</p>
+<p class="text"><p class="text">The target destination of our article is an HTML file. We want to create those by parsing the codebase and executing steps required by the commands.</p></p>
+<p class="text"><p class="text">But how to render the actual HTML? Without a proper tool, that can be a very challenging task. For our purposes, we will use a library called FreeMarker.</p></p>
+<p class="text"><p class="text">Apache's FreeMarker is a template engine - a Java library to generate text output (HTML Web pages, e-mails, configuration files, source code, etc.) based on the templates and changing data. Templates are written in a FreeMarker Template Language (FTL), which is a simple specialized language. And, usually, a general-purpose programming language (like Java) is used to prepare data. Let us see how is that implemented by looking at the source code:</p></p>
 <div class="child">
     <h3>com.blaster.business.InteractorPrint::printParagraphs</h3>
-    <p class="text_child">This call allows us to print the body of the article - a list of paragraphs. One thing to note is that this routine can be called recursively. The style of the output will look slightly differently. This fact is reflected by the additional parameter &#39;child&#39;. The result of this method is the HTML generated.</p>
+    <p class="text_child"><p class="text_child">This call allows us to print the body of the article - a list of paragraphs. One thing to note is that this routine can be called recursively. The style of the output will look slightly differently. This fact is reflected by the additional parameter 'child'. The result of this method is the HTML generated.</p></p>
 <p class="code_child">private fun printParagraphs(paragraphs: List&lt;Paragraph&gt;, child: Boolean = false): String {</p>
-<p class="text_child">We create the variable to hold the result and then we go through the paragraphs one by one</p>
+<p class="text_child"><p class="text_child">We create the variable to hold the result and then we go through the paragraphs one by one</p></p>
 <p class="code_child">    var result = &quot;&quot;
     for (paragraph in paragraphs) {
         result += when (paragraph) {</p>
-<p class="text_child">For each type we call the appropriate routine</p>
+<p class="text_child"><p class="text_child">For each type we call the appropriate routine</p></p>
 <p class="code_child">            is ParagraphText -&gt; renderParagraphText(paragraph, child)
             is ParagraphCode -&gt; renderParagraphCode(paragraph, child)
             is ParagraphCommand -&gt; renderParagraphCommand(paragraph, child)
             else -&gt; TODO()
         }
     }</p>
-<p class="text_child">The final result is returned from the call. It will always contain one unnecessary &#39;\n&#39; character, so we&#39;re cutting that out</p>
+<p class="text_child"><p class="text_child">The final result is returned from the call. It will always contain one unnecessary '\n' character, so we're cutting that out</p></p>
 <p class="code_child">    return result.dropLast(1)
 }</p>
 </div>
-<p class="text">We are printing paragraphs by delegating pieces of the tasks to the helper methods, like this one:</p>
+<p class="text"><p class="text">We are printing paragraphs by delegating pieces of the tasks to the helper methods, like this one:</p></p>
 <div class="child">
     <h3>com.blaster.business.InteractorPrint::printTemplateText</h3>
-    <p class="text_child">Here is how we print text paragraph</p>
+    <p class="text_child"><p class="text_child">Here is how we print text paragraph</p></p>
 <p class="code_child">private fun printTemplateText(text: String, child: Boolean): String {</p>
-<p class="text_child">If this text is a child of another paragraph, appropriate style is selected</p>
+<p class="text_child"><p class="text_child">If this text is a child of another paragraph, appropriate style is selected</p></p>
 <p class="code_child">    val clz = if (child) &quot;text_child&quot; else &quot;text&quot;</p>
-<p class="text_child">Then we select a template and pass the task to the printing manager</p>
+<p class="text_child"><p class="text_child">Then we select a template and pass the task to the printing manager</p></p>
 <p class="code_child">    return printingManager.renderTemplate(&quot;template_text.ftlh&quot;, hashMapOf(&quot;class&quot; to clz, &quot;text&quot; to text))
 }</p>
 </div>
-<p class="text">Each of those will handle its piece of the overall article accordingly.</p>
-<p class="text">And, finally, when we have a body of the HTML page, we can wrap it into the article. The article contains header, styles, and body declaration.</p>
+<p class="text"><p class="text">Each of those will handle its piece of the overall article accordingly.</p></p>
+<p class="text"><p class="text">And, finally, when we have a body of the HTML page, we can wrap it into the article. The article contains header, styles, and body declaration.</p></p>
 <div class="child">
     <h3>com.blaster.business.InteractorPrint::printArticle</h3>
-    <p class="text_child">Parameters of this function are: the output file and a list of paragraphs to be printed</p>
+    <p class="text_child"><p class="text_child">Parameters of this function are: the output file and a list of paragraphs to be printed</p></p>
 <p class="code_child">fun printArticle(output: File, paragraphs: List&lt;Paragraph&gt;) {</p>
-<p class="text_child">After receiving a list of paragraphs, we wrap them into an article template</p>
+<p class="text_child"><p class="text_child">After receiving a list of paragraphs, we wrap them into an article template</p></p>
 <p class="code_child">    val article = printingManager.renderTemplate(&quot;template_article.ftlh&quot;, hashMapOf(&quot;article&quot; to printParagraphs(paragraphs)))</p>
-<p class="text_child">The result is sent to printing manager to be put into a file</p>
+<p class="text_child"><p class="text_child">The result is sent to printing manager to be put into a file</p></p>
 <p class="code_child">    printingManager.printArticle(output, article)
 }</p>
 </div>
-<p class="text">At this point, we had a look at all steps required for processing the article - starting from the scenario and until the actual HTML output. Of course, we did not cover everything. The best place to find each and every detail is the source code. But I hope, at this point, most of the high-level concepts are explained and understood.</p>
+<p class="text"><p class="text">At this point, we had a look at all steps required for processing the article - starting from the scenario and until the actual HTML output. Of course, we did not cover everything. The best place to find each and every detail is the source code. But I hope, at this point, most of the high-level concepts are explained and understood.</p></p>
     <h2>What&#39;s next?</h2>
 
-<p class="text">Any craftsman can say that there is no tool, which works equally well for every job. The idea behind Lem is to be versatile enough to showcase some of the projects on which I am working.</p>
-<p class="text">In this article, I have shown a full pipeline of the project: from the preparation of the material to the printing stage.</p>
-<p class="text">The main target for Lem is to be a handy tool in explaining the Blaster - an offline renderer, on which I am currently working. I hope this article was interesting enough and will be glad to see you soon on the pages dedicated to the actual hobby - the Blaster engine - Poehali!</p>
+<p class="text"><p class="text">Any craftsman can say that there is no tool, which works equally well for every job. The idea behind Lem is to be versatile enough to showcase some of the projects on which I am working.</p></p>
+<p class="text"><p class="text">In this article, I have shown a full pipeline of the project: from the preparation of the material to the printing stage.</p></p>
+<p class="text"><p class="text">The main target for Lem is to be a handy tool in explaining the Blaster - an offline renderer, on which I am currently working. I hope this article was interesting enough and will be glad to see you soon on the pages dedicated to the actual hobby - the Blaster engine - Poehali!</p></p>
     </body>
 </html>

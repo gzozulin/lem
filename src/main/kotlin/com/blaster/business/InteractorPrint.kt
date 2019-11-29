@@ -43,7 +43,14 @@ class InteractorPrint {
     }
 
     private fun renderParagraphText(paragraph: ParagraphText, child: Boolean): String {
-        return printTemplateText(paragraph.text, child) + "\n"
+        var text = ""
+        for (ch in paragraph.children) {
+            text += when (ch) {
+                is StructListItem -> printTemplateListItem(ch.item, child)
+                else -> printTemplateText(paragraph.text, child)
+            }
+        }
+        return printTemplateText(text, child) + "\n"
     }
 
     private fun renderParagraphCode(paragraph: ParagraphCode, child: Boolean): String {
@@ -102,5 +109,10 @@ class InteractorPrint {
         val clz = if (child) "picture_child" else "picture"
         return printingManager.renderTemplate(
             "template_picture.ftlh", hashMapOf("class" to clz, "label" to label, "descr" to descr, "link" to link))
+    }
+
+    private fun printTemplateListItem(item: String, child: Boolean): String {
+        val clz = if (child) "list_item_child" else "list_item"
+        return printingManager.renderTemplate("template_list_item.ftlh", hashMapOf("class" to clz, "item" to item))
     }
 }

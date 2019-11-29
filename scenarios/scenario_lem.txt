@@ -123,7 +123,7 @@ Apache's FreeMarker is a template engine - a Java library to generate text outpu
 #include; def; com.blaster.business.InteractorPrint::printParagraphs
 
 We are printing paragraphs by delegating pieces of the tasks to the helper methods, like this one:
-#include; def; com.blaster.business.InteractorPrint::printText
+#include; def; com.blaster.business.InteractorPrint::printTemplateText
 Each of those will handle its piece of the overall article accordingly.
 
 And, finally, when we have a body of the HTML page, we can wrap it into the article. The article contains header, styles, and body declaration.

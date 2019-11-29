@@ -33,12 +33,12 @@ class InteractorPrint {
             result += when (paragraph) {
                 // For each type we call the appropriate routine
                 is ParagraphText -> renderParagraphText(paragraph, child)
-                is ParagraphCode ->renderParagraphCode(paragraph, child)
+                is ParagraphCode -> renderParagraphCode(paragraph, child)
                 is ParagraphCommand -> renderParagraphCommand(paragraph, child)
                 else -> TODO()
             }
         }
-        // The final result is returned from the call. it will always contain one unnecessary '\n' character, so we cutting that out
+        // The final result is returned from the call. It will always contain one unnecessary '\n' character, so we're cutting that out
         return result.dropLast(1)
     }
 

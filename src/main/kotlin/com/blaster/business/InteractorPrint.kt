@@ -2,6 +2,7 @@ package com.blaster.business
 
 import com.blaster.data.paragraphs.*
 import com.blaster.data.managers.printing.PrintingManager
+import com.blaster.data.paragraphs.SpanText.Style
 import com.blaster.platform.LEM_COMPONENT
 import java.io.File
 import javax.inject.Inject
@@ -43,14 +44,15 @@ class InteractorPrint {
     }
 
     private fun renderParagraphText(paragraph: ParagraphText, child: Boolean): String {
-        var text = ""
+        var result = ""
         for (ch in paragraph.children) {
-            text += when (ch) {
-                is StructListItem -> printTemplateListItem(ch.item, child)
-                else -> printTemplateText(paragraph.text, child)
+            result += when (ch) {
+                is StructListItem -> printTemplateListItem(renderTextSpans(ch.children), child)
+                is StructText -> printTemplateParagraph(renderTextSpans(ch.children), child)
+                else -> TODO()
             }
         }
-        return printTemplateText(text, child) + "\n"
+        return result + "\n"
     }
 
     private fun renderParagraphCode(paragraph: ParagraphCode, child: Boolean): String {
@@ -77,17 +79,25 @@ class InteractorPrint {
         return result
     }
 
+    private fun renderTextSpans(spans: List<Paragraph>): String {
+        var result = ""
+        for (span in spans) {
+            result += printTemplateSpan(span as SpanText)
+        }
+        return result
+    }
+
     private fun printTemplateChild(path: String, children: List<Paragraph>): String {
         return printingManager.renderTemplate(
             "template_children.ftlh", hashMapOf("path" to path, "children" to printParagraphs(children, true)))
     }
 
-    // Here is how we print text paragraph
-    private fun printTemplateText(text: String, child: Boolean): String {
-        // If this text is a child of another paragraph, appropriate style is selected
+    // Here is how we print paragraph
+    private fun printTemplateParagraph(paragraph: String, child: Boolean): String {
+        // If this paragraph is a child of another paragraph, appropriate style is selected
         val clz = if (child) "text_child" else "text"
         // Then we select a template and pass the task to the printing manager
-        return printingManager.renderTemplate("template_text.ftlh", hashMapOf("class" to clz, "text" to text))
+        return printingManager.renderTemplate("template_paragraph.ftlh", hashMapOf("class" to clz, "paragraph" to paragraph))
     }
 
     private fun printTemplateCode(code: String, child: Boolean): String {
@@ -114,5 +124,12 @@ class InteractorPrint {
     private fun printTemplateListItem(item: String, child: Boolean): String {
         val clz = if (child) "list_item_child" else "list_item"
         return printingManager.renderTemplate("template_list_item.ftlh", hashMapOf("class" to clz, "item" to item))
+    }
+
+    private fun printTemplateSpan(span: SpanText): String {
+        return when {
+            span.style == Style.BOLD -> printingManager.renderTemplate("template_span_bold.ftlh", hashMapOf("span" to span.text))
+            else -> span.text
+        }
     }
 }

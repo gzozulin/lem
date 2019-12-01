@@ -4,7 +4,7 @@
 Many of us have a hobby or an art or a craft of some sort. But how to showcase it to the like-minded audience? There are many ways out there: you can write an article, you can create a video on YouTube, you can maintain a page on Wikipedia. You can even create your podcast series. Each of those approaches has its advantages and disadvantages. Some are a bit more entertaining, and the others are easier to produce. In my opinion, my craft - the art of programming - requires a unique approach.
 
 Just for a kick, let us have a list here:
-~ 'item 1'
+~ 'item 1' and then the rest of the text
 ~ 'item 2
 ~ item 3
 
@@ -123,7 +123,7 @@ Apache's FreeMarker is a template engine - a Java library to generate text outpu
 #include; def; com.blaster.business.InteractorPrint::printParagraphs
 
 We are printing paragraphs by delegating pieces of the tasks to the helper methods, like this one:
-#include; def; com.blaster.business.InteractorPrint::printTemplateText
+#include; def; com.blaster.business.InteractorPrint::printTemplateParagraph
 Each of those will handle its piece of the overall article accordingly.
 
 And, finally, when we have a body of the HTML page, we can wrap it into the article. The article contains header, styles, and body declaration.

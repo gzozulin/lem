@@ -1,0 +1,1 @@
+<p class="${class}">${paragraph?no_esc}</p>

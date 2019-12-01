@@ -1,1 +1,0 @@
-<p class="${class}">${text?no_esc}</p>

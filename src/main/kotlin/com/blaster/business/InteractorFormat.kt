@@ -3,7 +3,7 @@ package com.blaster.business
 import com.blaster.data.paragraphs.*
 
 private val LINE_REGEX = "[\r*\n]+".toRegex()
-private val SPAN_REGEX = "'([^']+)'".toRegex()
+private val BOLD_REGEX = "'([^']+)'".toRegex()
 
 class InteractorFormat {
     fun textToParagraphs(text: String): List<ParagraphText> = text.split(LINE_REGEX)
@@ -23,8 +23,8 @@ class InteractorFormat {
             if (paragraph is ParagraphText) {
                 for (struct in paragraph.children) {
                     when (struct) {
-                        is StructText -> struct.children.addAll(identifySpansInText(struct.text))
-                        is StructListItem -> struct.children.addAll(identifySpansInText(struct.item))
+                        is StructText -> struct.children.addAll(identifyBoldSpansInText(struct.text))
+                        is StructListItem -> struct.children.addAll(identifyBoldSpansInText(struct.item))
                         else -> TODO()
                     }
                 }
@@ -33,10 +33,10 @@ class InteractorFormat {
         return paragraphs
     }
 
-    private fun identifySpansInText(text: String): List<Paragraph> {
+    private fun identifyBoldSpansInText(text: String): List<Paragraph> {
         val result = mutableListOf<Paragraph>()
         var remainder = text
-        var match = SPAN_REGEX.find(remainder)
+        var match = BOLD_REGEX.find(remainder)
         while (match != null) {
             val whole = match.groups[0]
             val value = match.groups[1]
@@ -45,7 +45,7 @@ class InteractorFormat {
             result.add(SpanText(normal, SpanText.Style.NORMAL))
             result.add(SpanText(bold, SpanText.Style.BOLD))
             remainder = remainder.substring(whole.range.last + 1, remainder.length)
-            match = SPAN_REGEX.find(remainder)
+            match = BOLD_REGEX.find(remainder)
         }
         if (remainder.isNotEmpty()) {
             result.add(SpanText(remainder, SpanText.Style.NORMAL))

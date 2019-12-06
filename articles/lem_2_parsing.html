@@ -1,0 +1,172 @@
+<html>
+    <style>
+        .code,.child {
+                    border-radius: 3px;
+                    display: block;
+                    max-width: 100%;
+                    overflow: auto;
+                    color: #666;
+                    page-break-inside: avoid;
+                    font: normal 15px/1.6 monospace;
+                    padding: 1em 1.5em;
+                    margin: 1.6em 0;
+                    word-wrap: break-word;
+                }
+
+                .child {
+                    border-radius: 3px;
+                    background: #F1ECEC;
+                    box-shadow: -5px 5px 10px rgba(0,0,0,0.3);
+                }
+
+                .code {
+                    white-space: pre-wrap;
+                    background: #EBFCE3;
+                }
+
+                .code_child {
+                    border-radius: 3px;
+                    white-space: pre-wrap;
+                    background: #EBFCE3;
+                    padding: 1em 1.5em;
+                    margin: 1.6em 0;
+                }
+
+                .text {}
+                .text_child {}
+
+                .link {}
+                .link_child {}
+
+                .picture {}
+                .picture_child {}
+
+                .list_item {}
+                .list_item_child {}
+    </style>
+    <body>
+            <h2>The Parsing Stage</h2>
+
+<p class="text">In this chapter, we will see the details of the parsing of the scenario. Parsing of a modern programming language is an incredibly complex task. And this task is far outside of the reach of this article. If you need to parse multiple languages and formats, the complexity of this task can easily outweigh the gain from the project.</p>
+<p class="text">To avoid unnecessary complexity and to facilitate parsing, we will be using a tool called ANTLR4. What is especially good about this tool is that it comes with already available grammar for most of the modern languages. Those grammars are contributed and supported by people who are highly proficient with the languages in question.</p>
+<p class="text">We will employ two grammar files for our task at hand. One is for Kotlin language, and another is our custom grammar, which allows us to separate the code from the comments. If we would like to add the support for languages, other than Kotlin in the future, we always can do this by expanding the pool of available grammar.</p>
+<p class="text">I will not discuss the creation of the grammars and how to use ANTLR4 because it is outside of the scope of this article. For simplicity, we can think about it as if some tool will convert the provided language constructs into the classes, available for consumption in the language of our choice - in our case - Kotlin.</p>
+<p class="text">Let us start with a first step - parsing of the scenario file, passed from the input arguments.</p>
+<div class="child">
+    <h3>com.blaster.business.InteractorParse::parseScenario</h3>
+    <p class="text_child">This call will convert a scenario file into a list of paragraphs. The parameters are self explanatory.</p>
+<p class="code_child">fun parseScenario(sourceRoot: File, scenario: File): List&lt;Paragraph&gt; {</p>
+<p class="text_child">First operation of this method is to convert text in the scenario file into a distinct paragraphs. Paragraphs are separated by the new lines</p>
+<p class="code_child">    val paragraphs = interactorFormat.textToParagraphs(scenario.readText())</p>
+<p class="text_child">The next operation is to identify commands in those paragraphs if any</p>
+<p class="code_child">    val withCommands = interactorCommands.identifyCommands(paragraphs)</p>
+<p class="text_child">If we found any commands - we will apply them to the current result</p>
+<p class="code_child">    val commandsApplied = interactorCommands.applyCommands(sourceRoot, withCommands)</p>
+<p class="text_child">We also want to identify possible structures inside of the paragraphs - lists, tables and etc.</p>
+<p class="code_child">    val withStructs = interactorStructs.identifyStructs(commandsApplied)</p>
+<p class="text_child">After the structs are identified, we can apply text formatting</p>
+<p class="code_child">    return interactorFormat.identifySpans(withStructs)
+}</p>
+</div>
+<p class="text">The scenario will produce a list of paragraphs and commands, which were identified. Let's see how the identification of the commands works.</p>
+<div class="child">
+    <h3>com.blaster.business.InteractorCommands::identifyCommand</h3>
+    <p class="text_child">Main commands identification routine. Will return a command if identified, or null if nothing found</p>
+<p class="code_child">private fun identifyCommand(command: String): ParagraphCommand? {</p>
+<p class="text_child">We prefix all of the commands in the text with a <span style="font-weight:bold">#</span> symbol. If it is not found - it is not a command</p>
+<p class="code_child">    if (!command.startsWith(COMMAND_IDENTIFIER)) {
+        return null
+    }</p>
+<p class="text_child">Removing the prefix and converting a command into a stack of words</p>
+<p class="code_child">    val noPrefix = command.removePrefix(COMMAND_IDENTIFIER)
+    val stack = noPrefix.split(CSV_PATTERN)
+    val cmd = stack[0]
+    val subcmd = stack.subList(1, stack.size)</p>
+<p class="text_child">Then identifying each command family by command name. We remove the head of the stack each time when we go to the next level. Each command family will be parsed in the similar fashion, until nothing is left on the stack</p>
+<p class="code_child">    return when {
+        cmd == COMMAND_INCLUDE -&gt; identifyIncludeCommand(subcmd)
+        cmd == COMMAND_HEADER -&gt; identifyHeaderCommand(subcmd)
+        cmd == COMMAND_INLINE -&gt; identifyInlineCommand(subcmd)
+        cmd == COMMAND_OMIT -&gt; identifyOmitCommand()
+        else -&gt; throw IllegalStateException(&quot;Unknown command! $cmd&quot;)
+    }
+}</p>
+</div>
+<p class="text">After the commands are identified, we can finally apply them.</p>
+<div class="child">
+    <h3>com.blaster.business.InteractorCommands::applyCommands</h3>
+    <p class="text_child">Commands application routine. It receives a source root and a list of paragraphs as a parameters. The result is a list of paragraphs modified by all of the commands in the original list.</p>
+<p class="code_child">fun applyCommands(sourceRoot: File, paragraphs: List&lt;Paragraph&gt;): List&lt;Paragraph&gt; {</p>
+<p class="text_child">Since we will do operations on the list, we want to convert it to a mutable one - the structure of the list can be changed this way</p>
+<p class="code_child">    val mutableList = ArrayList(paragraphs)
+    val iterator = mutableList.listIterator()</p>
+<p class="text_child">We iterate over the list until we reached the end</p>
+<p class="code_child">    while (iterator.hasNext()) {
+        val paragraph = iterator.next()</p>
+<p class="text_child">If the next item in the list is a command</p>
+<p class="code_child">        if (paragraph is ParagraphCommand) {
+            when (paragraph.type) {</p>
+<p class="text_child">We apply the command accordingly</p>
+<p class="code_child">                ParagraphCommand.Type.INCLUDE -&gt; applyIncludeCommand(paragraph, sourceRoot)
+                ParagraphCommand.Type.OMIT -&gt; applyOmitCommand(iterator)
+                ParagraphCommand.Type.INLINE -&gt; applyInlineCommand(iterator, paragraph, sourceRoot)</p>
+<p class="text_child">Some commands have meaning only for printing, so we do nothing right now</p>
+<p class="code_child">                else -&gt; { }
+            }
+        }
+    }</p>
+<p class="text_child">Returning the modified result</p>
+<p class="code_child">    return mutableList
+}</p>
+</div>
+<p class="text">As we already know, some commands will request to include the additional code to showcase the mechanics. Such a command will have a command name, command arguments, and the path of the code to be included. Here is the code, responsible for locating the snippets:</p>
+<div class="child">
+    <h3>com.blaster.business.InteractorLocation::locate</h3>
+    <p class="text_child">This routine helps us to locate pieces of code, pointed out by path parameter. It returns a class, which represents the location of the found snippet.</p>
+<p class="code_child">fun locate(sourceRoot: File, path: String): Location {</p>
+<p class="text_child">First of all we want to assert if the path is formatted properly. This allows to highlight errors early</p>
+<p class="code_child">    check(PATH_REGEX.find(path)!!.value.length == path.length) { &quot;Wrong path for the location: $path&quot; }</p>
+<p class="text_child">We start by extracting the class from path string. It simply grabs everything before <span style="font-weight:bold">:</span></p>
+<p class="code_child">    val clazz = extractClass(path)</p>
+<p class="text_child">Next we want to retreive the actual file, containing the class. We do that by looking at the sources root and a package</p>
+<p class="code_child">    val file = locateFile(sourceRoot, clazz)</p>
+<p class="text_child">Now we can choose it this is a path to a whole class or to one of its members. We can be sure that the it is a global function or property if the class name ends with <span style="font-weight:bold">Kt</span> according to a Kotlin notation. Else it is a path to a standalone class</p>
+<p class="code_child">    return if (path.contains(&quot;::&quot;)) {
+        val member = extractMember(path)
+        if (clazz.endsWith(&quot;Kt&quot;)) {
+            LocationGlobal(file, member)
+        } else {
+            LocationMember(file, clazz, member)
+        }
+    } else {
+        LocationClass(file, clazz)
+    }
+}</p>
+</div>
+<p class="text">The author of the scenario can choose how to include the code. We can either include definitions of declarations of methods and classes. The difference is that sometimes you want to include the body of the method, and sometimes you want to mention it. Let us see how parsing of the requested definitions works.</p>
+<div class="child">
+    <h3>com.blaster.business.InteractorParse::parseDef</h3>
+    <p class="text_child">Routine for parsing of the definitions. Accepts the sources root and a path to a definition. Returns a list of paragraphs with this definition commentaries and code snippets</p>
+<p class="code_child">fun parseDef(sourceRoot: File, path: String): List&lt;Paragraph&gt; {</p>
+<p class="text_child">First thing first - we need to find the actual location of the definition - file, class, etc.</p>
+<p class="code_child">    val location = interactorLocation.locate(sourceRoot, path)</p>
+<p class="text_child">When the definition is located, we extract the code with the help of the ANTLR4</p>
+<p class="code_child">    val definition = kotlinManager.extractDefinition(location)</p>
+<p class="text_child">Next step is to split this text onto the commentaries and code snippets. We also format them - removing unused lines, spaces, etc.</p>
+<p class="code_child">    val withoutTabulation = interactorFormat.removeCommonTabulation(definition)
+    val statements = statementsManager.extractStatements(withoutTabulation)</p>
+<p class="text_child">After formatting is done, we want to find the commands among the paragraphs if any</p>
+<p class="code_child">    val withCommands = interactorCommands.identifyCommands(statements)</p>
+<p class="text_child">And finally, we apply the commands and return the result</p>
+<p class="code_child">    val commandsApplied = interactorCommands.applyCommands(sourceRoot, withCommands)</p>
+<p class="text_child">We also want to identify possible structures inside of the paragraphs - lists, tables and etc.</p>
+<p class="code_child">    val withStructs = interactorStructs.identifyStructs(commandsApplied)</p>
+<p class="text_child">After the structs are identified, we can apply text formatting</p>
+<p class="code_child">    return interactorFormat.identifySpans(withStructs)
+}</p>
+</div>
+<p class="text">Parsing of the requested declarations works very similarly to definitions and we will omit this piece.</p>
+<p class="text">After the command is executed and the snippet of the code is included, the commentaries in the code can contain additional commands. In this case, we will recursively go back to the stage of the application of commands.</p>
+<p class="text">Finally, after all of that is done, we should have a result of the parsing stage. This result will be passed to the next step, which is the printing of the article. We will have a look at the details of the printing in the next chapter.</p>
+    </body>
+</html>

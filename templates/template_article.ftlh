@@ -44,9 +44,6 @@
                 .list_item {}
                 .list_item_child {}
     </style>
-    <head>
-        <title>Welcome!</title>
-    </head>
     <body>
         ${article?no_esc}
     </body>

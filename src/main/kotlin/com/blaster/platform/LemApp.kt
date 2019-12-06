@@ -29,7 +29,10 @@ fun main(args: Array<String>) {
     // If we do not have any arguments - we will fall back to the default values
     if (args.isEmpty()) {
         println("No args, falling back to the defaults!")
-        return lemApp.render(File("src/main/kotlin"), File("scenarios/scenario_lem.txt"), File("articles/scenario_lem.html"))
+        File("scenarios").list()!!.forEach {
+            lemApp.render(File("src/main/kotlin"), File("scenarios", it), File("articles", "$it.html"))
+        }
+        return
     }
     // After that we will extract the necessary settings one by one while checking the actual values in the process
     check(args.size == 3) { "Wrong number of parameters!" }

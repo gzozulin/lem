@@ -1,0 +1,102 @@
+<html>
+    <style>
+        .code,.child {
+                    border-radius: 3px;
+                    display: block;
+                    max-width: 100%;
+                    overflow: auto;
+                    color: #666;
+                    page-break-inside: avoid;
+                    font: normal 15px/1.6 monospace;
+                    padding: 1em 1.5em;
+                    margin: 1.6em 0;
+                    word-wrap: break-word;
+                }
+
+                .child {
+                    border-radius: 3px;
+                    background: #F1ECEC;
+                    box-shadow: -5px 5px 10px rgba(0,0,0,0.3);
+                }
+
+                .code {
+                    white-space: pre-wrap;
+                    background: #EBFCE3;
+                }
+
+                .code_child {
+                    border-radius: 3px;
+                    white-space: pre-wrap;
+                    background: #EBFCE3;
+                    padding: 1em 1.5em;
+                    margin: 1.6em 0;
+                }
+
+                .text {}
+                .text_child {}
+
+                .link {}
+                .link_child {}
+
+                .picture {}
+                .picture_child {}
+
+                .list_item {}
+                .list_item_child {}
+    </style>
+    <body>
+            <h2>The Printing stage</h2>
+
+<p class="text">The target destination of our article is an HTML file. We want to create those by parsing the codebase and executing steps required by the commands.</p>
+<p class="text">But how to render the actual HTML? Without a proper tool, that can be a very challenging task. For our purposes, we will use a library called FreeMarker.</p>
+<p class="text">Apache's FreeMarker is a template engine - a Java library to generate text output (HTML Web pages, e-mails, configuration files, source code, etc.) based on the templates and changing data. Templates are written in a FreeMarker Template Language (FTL), which is a simple specialized language. And, usually, a general-purpose programming language (like Java) is used to prepare data. Let us see how is that implemented by looking at the source code:</p>
+<div class="child">
+    <h3>com.blaster.business.InteractorPrint::printParagraphs</h3>
+    <p class="text_child">This call allows us to print the body of the article - a list of paragraphs. One thing to note is that this routine can be called recursively. The style of the output will look slightly differently. This fact is reflected by the additional parameter <span style="font-weight:bold">child</span>. The result of this method is the HTML generated.</p>
+<p class="code_child">private fun printParagraphs(paragraphs: List&lt;Paragraph&gt;, child: Boolean = false): String {</p>
+<p class="text_child">We create the variable to hold the result and then we go through the paragraphs one by one</p>
+<p class="code_child">    var result = &quot;&quot;
+    for (paragraph in paragraphs) {
+        result += when (paragraph) {</p>
+<p class="text_child">For each type we call the appropriate routine</p>
+<p class="code_child">            is ParagraphText -&gt; renderParagraphText(paragraph, child)
+            is ParagraphCode -&gt; renderParagraphCode(paragraph, child)
+            is ParagraphCommand -&gt; renderParagraphCommand(paragraph, child)
+            else -&gt; TODO()
+        }
+    }</p>
+<p class="text_child">The final result is returned from the call. It will always contain one unnecessary <span style="font-weight:bold">\n</span> character, so we're cutting that out</p>
+<p class="code_child">    return result.dropLast(1)
+}</p>
+</div>
+<p class="text">We are printing paragraphs by delegating pieces of the tasks to the helper methods, like this one:</p>
+<div class="child">
+    <h3>com.blaster.business.InteractorPrint::printTemplateParagraph</h3>
+    <p class="text_child">Here is how we print paragraph</p>
+<p class="code_child">private fun printTemplateParagraph(paragraph: String, child: Boolean): String {</p>
+<p class="text_child">If this paragraph is a child of another paragraph, appropriate style is selected</p>
+<p class="code_child">    val clz = if (child) &quot;text_child&quot; else &quot;text&quot;</p>
+<p class="text_child">Then we select a template and pass the task to the printing manager</p>
+<p class="code_child">    return printingManager.renderTemplate(&quot;template_paragraph.ftlh&quot;, hashMapOf(&quot;class&quot; to clz, &quot;paragraph&quot; to paragraph))
+}</p>
+</div>
+<p class="text">Each of those will handle its piece of the overall article accordingly.</p>
+<p class="text">And, finally, when we have a body of the HTML page, we can wrap it into the article. The article contains header, styles, and body declaration.</p>
+<div class="child">
+    <h3>com.blaster.business.InteractorPrint::printArticle</h3>
+    <p class="text_child">Parameters of this function are: the output file and a list of paragraphs to be printed</p>
+<p class="code_child">fun printArticle(output: File, paragraphs: List&lt;Paragraph&gt;) {</p>
+<p class="text_child">After receiving a list of paragraphs, we wrap them into an article template</p>
+<p class="code_child">    val article = printingManager.renderTemplate(&quot;template_article.ftlh&quot;, hashMapOf(&quot;article&quot; to printParagraphs(paragraphs)))</p>
+<p class="text_child">The result is sent to printing manager to be put into a file</p>
+<p class="code_child">    printingManager.printArticle(output, article)
+}</p>
+</div>
+<p class="text">At this point, we had a look at all steps required for processing the article - starting from the scenario and until the actual HTML output. Of course, we did not cover everything. The best place to find each and every detail is the source code. But I hope, at this point, most of the high-level concepts are explained and understood.</p>
+    <h2>What&#39;s next?</h2>
+
+<p class="text">Any craftsman can say that there is no tool, which works equally well for every job. The idea behind Lem is to be versatile enough to showcase some of the projects on which I am working.</p>
+<p class="text">In this article, I have shown a full pipeline of the project: from the preparation of the material to the printing stage.</p>
+<p class="text">The main target for Lem is to be a handy tool in explaining the Blaster - an offline renderer, on which I am currently working. I hope this article was interesting enough and will be glad to see you soon on the pages dedicated to the actual hobby - the Blaster engine - Poehali!</p>
+    </body>
+</html>

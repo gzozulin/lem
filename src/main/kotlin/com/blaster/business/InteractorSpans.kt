@@ -5,7 +5,6 @@ import com.blaster.data.paragraphs.*
 private val BOLD_REGEX = "'([^']+)'".toRegex()
 
 class InteractorSpans {
-    // TODO: make it recursive
     fun identifySpans(nodes: List<Node>): List<Node> {
         val result = mutableListOf<Node>()
         for (paragraph in nodes) {
@@ -13,13 +12,12 @@ class InteractorSpans {
             if (paragraph is NodeText) {
                 for (struct in paragraph.children) {
                     when (struct) {
-                        is StructText -> struct.children.addAll(identifyBoldSpansInText(struct.text))
+                        is StructText -> identifyBoldSpansInText(struct)
                         is StructListItem -> {
                             for (child in struct.children) {
                                 when (child) {
-                                    is StructText -> {
-                                        child.children.addAll(identifyBoldSpansInText(child.text))
-                                    }
+                                    is StructText -> identifyBoldSpansInText(child)
+                                    is StructLink -> {} // nothing
                                     else -> TODO()
                                 }
                             }
@@ -33,15 +31,13 @@ class InteractorSpans {
         return nodes
     }
 
-    private fun identifyBoldSpansInText(text: String): List<Node> {
-        val result = mutableListOf<Node>()
-        identifySpansInText(text, BOLD_REGEX) { span: String, isInside: Boolean ->
-            if (isInside) {
-                result.add(SpanText(span, SpanText.Style.BOLD))
+    private fun identifyBoldSpansInText(structText: StructText) {
+        identifySpansInText(structText.text, BOLD_REGEX) { span: String, isInside: Boolean ->
+            structText.children.add(if (isInside) {
+                SpanText(span, SpanText.Style.BOLD)
             } else {
-                result.add(SpanText(span, SpanText.Style.NORMAL))
-            }
+                SpanText(span, SpanText.Style.NORMAL)
+            })
         }
-        return result
     }
 }

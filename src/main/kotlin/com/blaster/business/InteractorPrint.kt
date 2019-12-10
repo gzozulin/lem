@@ -30,12 +30,12 @@ class InteractorPrint {
     private fun printParagraphs(nodes: List<Node>, child: Boolean = false): String {
         // We create the variable to hold the result and then we go through the nodes one by one
         var result = ""
-        for (paragraph in nodes) {
-            result += when (paragraph) {
+        for (node in nodes) {
+            result += when (node) {
                 // For each type we call the appropriate routine
-                is NodeText -> renderParagraphText(paragraph, child)
-                is NodeCode -> renderParagraphCode(paragraph, child)
-                is NodeCommand -> renderParagraphCommand(paragraph, child)
+                is NodeText -> renderNodeText(node, child)
+                is NodeCode -> renderNodeCode(node, child)
+                is NodeCommand -> renderNodeCommand(node, child)
                 else -> TODO()
             }
         }
@@ -43,23 +43,36 @@ class InteractorPrint {
         return result.dropLast(1)
     }
 
-    private fun renderParagraphText(paragraph: NodeText, child: Boolean): String {
+    private fun renderNodeText(node: NodeText, child: Boolean): String {
         var result = ""
-        for (ch in paragraph.children) {
+        for (ch in node.children) {
             result += when (ch) {
-                is StructListItem -> printTemplateListItem(renderTextSpans(ch.children), child)
-                is StructText -> printTemplateParagraph(renderTextSpans(ch.children), child)
+                is StructListItem -> renderListItem(ch, child)
+                is StructLink -> printTemplateLink(ch.text, ch.link, child)
+                is StructText -> renderTextSpans(ch.children)
                 else -> TODO()
             }
         }
-        return result + "\n"
+        return printTemplateParagraph(result + "\n", child)
     }
 
-    private fun renderParagraphCode(paragraph: NodeCode, child: Boolean): String {
+    private fun renderListItem(listItem: StructListItem, child: Boolean): String {
+        var result = ""
+        for (ch in listItem.children) {
+            result += when (ch) {
+                is StructLink -> printTemplateLink(ch.text, ch.link, child)
+                is StructText -> renderTextSpans(ch.children)
+                else -> TODO()
+            }
+        }
+        return printTemplateListItem(result + "\n", child)
+    }
+
+    private fun renderNodeCode(paragraph: NodeCode, child: Boolean): String {
         return printTemplateCode(paragraph.code, child) + "\n"
     }
 
-    private fun renderParagraphCommand(paragraph: NodeCommand, child: Boolean): String {
+    private fun renderNodeCommand(paragraph: NodeCommand, child: Boolean): String {
         var result = ""
         when (paragraph.type) {
             // It can be something related to the attributes of the page
@@ -67,8 +80,8 @@ class InteractorPrint {
             // Or some insert - like a reference or a picture
             NodeCommand.Type.INCLUDE -> {
                 when (paragraph.subcommand) {
-                    SUBCOMMAND_LINK -> result + printTemplateLink(paragraph.argument, paragraph.argument1, paragraph.argument2, child) + "\n"
                     SUBCOMMAND_PICTURE -> result + printTemplatePicture(paragraph.argument, paragraph.argument1, paragraph.argument2, child) + "\n"
+                    else -> {} // nothing
                 }
             }
             else -> TODO()
@@ -82,7 +95,7 @@ class InteractorPrint {
     private fun renderTextSpans(spans: List<Node>): String {
         var result = ""
         for (span in spans) {
-            result += printTemplateSpan(span as SpanText) // TODO: here will be an option to render links?
+            result += printTemplateSpan(span as SpanText)
         }
         return result
     }
@@ -109,10 +122,10 @@ class InteractorPrint {
         return printingManager.renderTemplate("template_header.ftlh", hashMapOf("type" to type, "header" to text))
     }
 
-    private fun printTemplateLink(label: String, descr: String, link: String, child: Boolean): String {
+    private fun printTemplateLink(label: String, link: String, child: Boolean): String {
         val clz = if (child) "link_child" else "link"
         return printingManager.renderTemplate(
-            "template_link.ftlh", hashMapOf("class" to clz, "label" to label, "descr" to descr, "link" to link))
+            "template_link.ftlh", hashMapOf("class" to clz, "label" to label, "link" to link))
     }
 
     private fun printTemplatePicture(label: String, descr: String, link: String, child: Boolean): String {

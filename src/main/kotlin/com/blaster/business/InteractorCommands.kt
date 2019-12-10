@@ -50,10 +50,6 @@ class InteractorCommands {
         return when {
             subcmd == SUBCOMMAND_DECL -> NodeCommand(NodeCommand.Type.INCLUDE, listOf(SUBCOMMAND_DECL, stack[1]))
             subcmd == SUBCOMMAND_DEF -> NodeCommand(NodeCommand.Type.INCLUDE, listOf(SUBCOMMAND_DEF, stack[1]))
-            subcmd == SUBCOMMAND_LINK -> {
-                check(stack.size == 4) { "Wrong amount of parameters for a link include command!" }
-                NodeCommand(NodeCommand.Type.INCLUDE, listOf(SUBCOMMAND_LINK, stack[1], stack[2], stack[3]))
-            }
             subcmd == SUBCOMMAND_PICTURE -> {
                 check(stack.size == 4) { "Wrong amount of parameters for a link include command!" }
                 NodeCommand(

@@ -22,7 +22,7 @@ class LemModule {
     @Named("TEMPLATES_FILE")
     fun templatesFile() = File("templates")
 
-    // This methos will provide the configuration for the FreeMarker template engine. Its only parameter is a place, where we store the templates. This parameter is fulfilled by DI as well.
+    // This methods will provide the configuration for the FreeMarker template engine. Its only parameter is a place, where we store the templates. This parameter is fulfilled by DI as well.
     @Singleton
     @Provides
     fun freemarkerConfig(@Named("TEMPLATES_FILE") templatesFile: File): Configuration {
@@ -47,7 +47,7 @@ class LemModule {
     @Provides
     fun kotlinManager(): KotlinManager = KotlinManagerImpl()
 
-    // This method will create 'InteractorParse' instance [text; link] and inject it into the 'rest of the application'. Its annotation tells us, that only one instance of this class will be created.
+    // This method will create 'InteractorParse' instance [text; https://docs.samsungknox.com/dev/common/knox-version-mapping.htm] and inject it into the 'rest of the application'. Its annotation tells us, that only one instance of this class will be created.
     @Singleton
     @Provides
     fun interactorParse() = InteractorParse()

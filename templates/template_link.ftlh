@@ -1,4 +1,1 @@
-<div class="${class}">
-    <a href="${link}">${label}</a>
-    <p>${descr}</p>
-</div>
+<a class="${class}" href="${link}" target="_blank">${label}</a>

@@ -9,7 +9,6 @@ const val COMMAND_INLINE        = "inline"
 
 const val SUBCOMMAND_DECL       = "decl"
 const val SUBCOMMAND_DEF        = "def"
-const val SUBCOMMAND_LINK       = "link"
 const val SUBCOMMAND_PICTURE    = "picture"
 const val SUBCOMMAND_H1         = "h1"
 const val SUBCOMMAND_H2         = "h2"

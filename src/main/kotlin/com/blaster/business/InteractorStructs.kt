@@ -6,7 +6,6 @@ private val LIST_ITEM_REGEX = "~\\s*(.+)\$".toRegex()
 private val LINK_REGEX = "\\[([^\\[]+)\\]".toRegex()
 
 class InteractorStructs {
-
     fun identifyStructs(nodes: List<Node>): List<Node> {
         val result = mutableListOf<Node>()
         for (paragraph in nodes) {
@@ -32,11 +31,11 @@ class InteractorStructs {
     private fun identifyLinks(text: String): List<Node> {
         val result = mutableListOf<Node>()
         identifySpansInText(text, LINK_REGEX) { span: String, isInside: Boolean ->
-            if (isInside) {
-                result.add(parseLink(span))
+            result.add(if (isInside) {
+                parseLink(span)
             } else {
-                result.add(StructText(span))
-            }
+                StructText(span)
+            })
         }
         return result
     }

@@ -1,8 +1,8 @@
 package com.blaster.business
 
-import com.blaster.data.paragraphs.*
+import com.blaster.data.nodes.*
 import com.blaster.data.managers.printing.PrintingManager
-import com.blaster.data.paragraphs.SpanText.Style
+import com.blaster.data.nodes.SpanText.Style
 import com.blaster.platform.LEM_COMPONENT
 import java.io.File
 import javax.inject.Inject

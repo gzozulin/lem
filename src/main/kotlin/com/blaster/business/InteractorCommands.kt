@@ -1,6 +1,6 @@
 package com.blaster.business
 
-import com.blaster.data.paragraphs.*
+import com.blaster.data.nodes.*
 import com.blaster.platform.LEM_COMPONENT
 import dagger.Lazy
 

@@ -1,4 +1,4 @@
-package com.blaster.data.paragraphs
+package com.blaster.data.nodes
 
 const val COMMAND_IDENTIFIER    = "#"
 

@@ -1,8 +1,8 @@
 package com.blaster.data.managers.statements
 
-import com.blaster.data.paragraphs.Node
-import com.blaster.data.paragraphs.NodeCode
-import com.blaster.data.paragraphs.NodeText
+import com.blaster.data.nodes.Node
+import com.blaster.data.nodes.NodeCode
+import com.blaster.data.nodes.NodeText
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.ParserRuleContext

@@ -1,6 +1,6 @@
 package com.blaster.business
 
-import com.blaster.data.paragraphs.*
+import com.blaster.data.nodes.*
 
 private val LIST_ITEM_REGEX = "~\\s*(.+)\$".toRegex()
 private val LINK_REGEX = "\\[([^\\[]+)\\]".toRegex()

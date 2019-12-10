@@ -39,8 +39,8 @@ class InteractorPrint {
                 else -> TODO()
             }
         }
-        // The final result is returned from the call. It will always contain one unnecessary '\n' character, so we're cutting that out
-        return result.dropLast(1)
+        // The final result is returned from the call
+        return result
     }
 
     private fun renderNodeText(node: NodeText, child: Boolean): String {
@@ -76,15 +76,11 @@ class InteractorPrint {
         var result = ""
         when (paragraph.type) {
             // It can be something related to the attributes of the page
-            NodeCommand.Type.HEADER -> result += printTemplateHeader(paragraph.subcommand, paragraph.argument) + "\n"
-            // Or some insert - like a reference or a picture
-            NodeCommand.Type.INCLUDE -> {
-                when (paragraph.subcommand) {
-                    SUBCOMMAND_PICTURE -> result + printTemplatePicture(paragraph.argument, paragraph.argument1, paragraph.argument2, child) + "\n"
-                    else -> {} // nothing
-                }
-            }
-            else -> TODO()
+            NodeCommand.Type.HEADER -> result +=printTemplateHeader(paragraph.subcommand, paragraph.argument) + "\n"
+            // Or a picture insert
+            NodeCommand.Type.PICTURE -> result += printTemplatePicture(paragraph.subcommand, paragraph.argument, child) + "\n"
+            // Else just continue
+            else -> {}
         }
         if (paragraph.children.isNotEmpty()) {
             result += printTemplateChild(paragraph.argument, paragraph.children) + "\n"
@@ -128,10 +124,10 @@ class InteractorPrint {
             "template_link.ftlh", hashMapOf("class" to clz, "label" to label, "link" to link))
     }
 
-    private fun printTemplatePicture(label: String, descr: String, link: String, child: Boolean): String {
+    private fun printTemplatePicture(label: String, link: String, child: Boolean): String {
         val clz = if (child) "picture_child" else "picture"
         return printingManager.renderTemplate(
-            "template_picture.ftlh", hashMapOf("class" to clz, "label" to label, "descr" to descr, "link" to link))
+            "template_picture.ftlh", hashMapOf("class" to clz, "label" to label, "link" to link))
     }
 
     private fun printTemplateListItem(item: String, child: Boolean): String {

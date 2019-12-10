@@ -55,7 +55,8 @@
 </li></ul>
 </p><p class="text"><ul class="list_item"><li>Tres
 </li></ul>
-</p><p class="text">I saw many videos about programming on YouTube. Their main disadvantage is the fact that it is quite hard to follow them. Imagine if you want to recreate or learn some specific details from the video. You will have to pause all the time, and you cannot copy the code snippets from the video. And sometimes, the details of the algorithms or complex mechanics are not explained deep enough due to the specifics of the medium.
+</p><img class="picture" src="https://media.cntraveler.com/photos/5b05bec47f70e97cf7c0dea9/4:3/w_480,c_limit/FJ1XDN.jpg" alt="Cool town" align="middle">
+<p class="text">I saw many videos about programming on YouTube. Their main disadvantage is the fact that it is quite hard to follow them. Imagine if you want to recreate or learn some specific details from the video. You will have to pause all the time, and you cannot copy the code snippets from the video. And sometimes, the details of the algorithms or complex mechanics are not explained deep enough due to the specifics of the medium.
 </p><p class="text">Articles have disadvantages as well - especially the old ones. The codebase has a tendency to develop over time: bugs are fixed, ideas getting mature. If you ever read the technical articles about ancient and established products, you probably noticed what I am talking about - when the code and the text diverge significantly.
 </p><p class="text">One of the approaches I liked was a so-called literate programming first time introduced by Donald Knuth. In this case, source code behaves like an open book. The author explains the codebase in proper order and with an in-depth explanation, available on the spot. I want to develop a tool that allows defining a codebase in a particular manner. Imagine, if you have an article, which can be compiled as a part of the codebase. This approach allows the code and the text to always be in sync - even if the project is being modified over time.
 </p><p class="text">One more influence is the example of the C programming language. When you port a C compiler on a different hardware platform, C becomes a self-compiling assembler. You start with porting a basic functionality, then more advanced features of the language can be added on top of it while utilizing the basics. This article is something along those lines. Over time, more features will be added to the tool, and the material will be updated. This article is an example and a first use case for this tool.
@@ -86,6 +87,7 @@
 </p><p class="code_child">@Singleton
 @Provides
 fun interactorParse() = InteractorParse()</p>
+
 </div>
 <p class="text">With DI framework we also can provide unique files and settings:
 </p><div class="child">
@@ -102,12 +104,14 @@ fun freemarkerConfig(@Named(&quot;TEMPLATES_FILE&quot;) templatesFile: File): Co
     cfg.wrapUncheckedExceptions = true
     return cfg
 }</p>
+
 </div>
 <p class="text">The next task is to clarify the rules on how to resolve the actual dependencies. For example we can restrict a certain set of dependencies to be available only for the specified classes. Those rules can be defined in the Dagger 2 component. It is an interface, which specifies what can be injected where. After Dagger 2 will finish code generation, we will receive an implementation of this interface. The example can be a following call:
 </p><div class="child">
     <h3>com.blaster.platform.LemComponent::inject</h3>
     <p class="text_child">This call will allow us to inject classes declared in LemModule into the InteractorCommands
 </p><p class="code_child">fun inject(interactorCommands: InteractorCommands)</p>
+
 </div>
 <p class="text">In the next chapter we will discuss a general overview of the application pipeline.
 </p>    <h2>The pipeline overview</h2>
@@ -139,6 +143,7 @@ fun freemarkerConfig(@Named(&quot;TEMPLATES_FILE&quot;) templatesFile: File): Co
 <p class="text_child">When everything is extracted - we can proceed to rendering of the task
 </p><p class="code_child">    lemApp.render(sourceRoot, scenarioFile, output)
 }</p>
+
 </div>
 <p class="text">After the main classes are created, and the parameters are consumed, we can move to the Scenario Stage.
 </p><p class="text">When I am writing the articles, I usually start by outlining the table of contents. Then I follow up by adding a little bit of text for every point in the draft. In our application, this blueprint is represented by the article scenario. A scenario is a template, which sets the stage for the rest of the article. The scenario file contains text nodes and commands definitions to be executed. Scenario Stage starts by parsing the scenario file, and as a result, we receive a list of sections and commands which were found.
@@ -149,6 +154,6 @@ fun freemarkerConfig(@Named(&quot;TEMPLATES_FILE&quot;) templatesFile: File): Co
 </p><p class="text">Each paragraph goes through its own type of template, which will apply different properties of the text and rendering - and will end up in the final HTML representation of the article.
 </p><p class="text">So, to summarize, we start with the scenario for the article. We parse this scenario and extract the nodes of text and commands from it. Then we apply those commands to the current result. Some of those commands will require to parse the additional pieces of code. We will proceed by parsing the code into code snippets and comments. Comments can contain commands, as well. Extracted commands will be recursively applied to the body of the article. And finally, we will print the result all together with the help of the HTML templates.
 </p><p class="text">In the next chapter, we will have a closer look at how things are parsed.
-</p
+</p>
     </body>
 </html>

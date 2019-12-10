@@ -65,9 +65,10 @@
             else -&gt; TODO()
         }
     }</p>
-<p class="text_child">The final result is returned from the call. It will always contain one unnecessary <span style="font-weight:bold">\n</span> character, so we're cutting that out
-</p><p class="code_child">    return result.dropLast(1)
+<p class="text_child">The final result is returned from the call
+</p><p class="code_child">    return result
 }</p>
+
 </div>
 <p class="text">We are printing nodes by delegating pieces of the tasks to the helper methods, like this one:
 </p><div class="child">
@@ -79,6 +80,7 @@
 <p class="text_child">Then we select a template and pass the task to the printing manager
 </p><p class="code_child">    return printingManager.renderTemplate(&quot;template_paragraph.ftlh&quot;, hashMapOf(&quot;class&quot; to clz, &quot;paragraph&quot; to paragraph))
 }</p>
+
 </div>
 <p class="text">Each of those will handle its piece of the overall article accordingly.
 </p><p class="text">And, finally, when we have a body of the HTML page, we can wrap it into the article. The article contains header, styles, and body declaration.
@@ -91,6 +93,7 @@
 <p class="text_child">The result is sent to printing manager to be put into a file
 </p><p class="code_child">    printingManager.printArticle(output, article)
 }</p>
+
 </div>
 <p class="text">At this point, we had a look at all steps required for processing the article - starting from the scenario and until the actual HTML output. Of course, we did not cover everything. The best place to find each and every detail is the source code. But I hope, at this point, most of the high-level concepts are explained and understood.
 </p>    <h2>What&#39;s next?</h2>
@@ -98,6 +101,6 @@
 <p class="text">Any craftsman can say that there is no tool, which works equally well for every job. The idea behind Lem is to be versatile enough to showcase some of the projects on which I am working.
 </p><p class="text">In this article, I have shown a full pipeline of the project: from the preparation of the material to the printing stage.
 </p><p class="text">The main target for Lem is to be a handy tool in explaining the Blaster - an offline renderer, on which I am currently working. I hope this article was interesting enough and will be glad to see you soon on the pages dedicated to the actual hobby - the Blaster engine - Poehali!
-</p
+</p>
     </body>
 </html>

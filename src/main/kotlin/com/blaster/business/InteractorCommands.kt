@@ -39,9 +39,10 @@ class InteractorCommands {
         return when {
             cmd == COMMAND_INCLUDE -> identifyIncludeCommand(subcmd)
             cmd == COMMAND_HEADER -> identifyHeaderCommand(subcmd)
+            cmd == COMMAND_PICTURE -> identifyPictureCommand(subcmd)
             cmd == COMMAND_INLINE -> identifyInlineCommand(subcmd)
             cmd == COMMAND_OMIT -> identifyOmitCommand()
-            else -> throw IllegalStateException("Unknown command! $cmd")
+            else -> TODO()
         }
     }
 
@@ -50,14 +51,7 @@ class InteractorCommands {
         return when {
             subcmd == SUBCOMMAND_DECL -> NodeCommand(NodeCommand.Type.INCLUDE, listOf(SUBCOMMAND_DECL, stack[1]))
             subcmd == SUBCOMMAND_DEF -> NodeCommand(NodeCommand.Type.INCLUDE, listOf(SUBCOMMAND_DEF, stack[1]))
-            subcmd == SUBCOMMAND_PICTURE -> {
-                check(stack.size == 4) { "Wrong amount of parameters for a link include command!" }
-                NodeCommand(
-                    NodeCommand.Type.INCLUDE,
-                    listOf(SUBCOMMAND_PICTURE, stack[1], stack[2], stack[3])
-                )
-            }
-            else -> throw IllegalStateException("Unknown subcommand! $subcmd")
+            else -> TODO()
         }
     }
 
@@ -66,8 +60,13 @@ class InteractorCommands {
         return when {
             subcmd == SUBCOMMAND_H1 -> NodeCommand(NodeCommand.Type.HEADER, listOf(SUBCOMMAND_H1, stack[1]))
             subcmd == SUBCOMMAND_H2 -> NodeCommand(NodeCommand.Type.HEADER, listOf(SUBCOMMAND_H2, stack[1]))
-            else -> throw IllegalStateException("Unknown subcommand! $subcmd")
+            else -> TODO()
         }
+    }
+
+    private fun identifyPictureCommand(subcmd: List<String>): NodeCommand? {
+        check(subcmd.size == 2) { "Wrong amount of parameters for a picture command!" }
+        return NodeCommand(NodeCommand.Type.PICTURE, listOf(subcmd[0], subcmd[1]))
     }
 
     private fun identifyInlineCommand(stack: List<String>): NodeCommand? {
@@ -75,7 +74,7 @@ class InteractorCommands {
         return when {
             subcmd == SUBCOMMAND_DECL -> NodeCommand(NodeCommand.Type.INLINE, listOf(SUBCOMMAND_DECL, stack[1]))
             subcmd == SUBCOMMAND_DEF -> NodeCommand(NodeCommand.Type.INLINE, listOf(SUBCOMMAND_DEF, stack[1]))
-            else -> throw IllegalStateException("Unknown subcommand! $subcmd")
+            else -> TODO()
         }
     }
 
@@ -99,7 +98,7 @@ class InteractorCommands {
                     NodeCommand.Type.OMIT -> applyOmitCommand(iterator)
                     NodeCommand.Type.INLINE -> applyInlineCommand(iterator, paragraph, sourceRoot)
                     // Some commands have meaning only for printing, so we do nothing right now
-                    else -> { }
+                    else -> {}
                 }
             }
         }

@@ -7,6 +7,8 @@ Here is a cool list:
 ~ Dos
 ~ Tres
 
+#picture; Cool town; https://media.cntraveler.com/photos/5b05bec47f70e97cf7c0dea9/4:3/w_480,c_limit/FJ1XDN.jpg
+
 I saw many videos about programming on YouTube. Their main disadvantage is the fact that it is quite hard to follow them. Imagine if you want to recreate or learn some specific details from the video. You will have to pause all the time, and you cannot copy the code snippets from the video. And sometimes, the details of the algorithms or complex mechanics are not explained deep enough due to the specifics of the medium.
 
 Articles have disadvantages as well - especially the old ones. The codebase has a tendency to develop over time: bugs are fixed, ideas getting mature. If you ever read the technical articles about ancient and established products, you probably noticed what I am talking about - when the code and the text diverge significantly.

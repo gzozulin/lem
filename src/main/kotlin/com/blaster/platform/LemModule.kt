@@ -75,8 +75,4 @@ class LemModule {
     @Singleton
     @Provides
     fun interactorSpans() = InteractorSpans()
-
-    @Singleton
-    @Provides
-    fun interactorCsv() = InteractorCsv()
 }

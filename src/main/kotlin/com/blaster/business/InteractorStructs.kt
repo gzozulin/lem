@@ -1,19 +1,11 @@
 package com.blaster.business
 
 import com.blaster.data.paragraphs.*
-import com.blaster.platform.LEM_COMPONENT
-import javax.inject.Inject
 
 private val LIST_ITEM_REGEX = "~\\s*(.+)\$".toRegex()
 private val LINK_REGEX = "\\[([^\\[]+)\\]".toRegex()
 
 class InteractorStructs {
-    @Inject
-    lateinit var interactorCsv: InteractorCsv
-
-    init {
-        LEM_COMPONENT.inject(this)
-    }
 
     fun identifyStructs(nodes: List<Node>): List<Node> {
         val result = mutableListOf<Node>()
@@ -50,7 +42,7 @@ class InteractorStructs {
     }
 
     private fun parseLink(link: String): StructLink {
-        val split = interactorCsv.splitCsv(link)
+        val split = splitCsv(link)
         check(split.size == 2) { "Unknown parameters for a link: $link" }
         return StructLink(split[0], split[1])
     }

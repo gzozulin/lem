@@ -1,30 +1,57 @@
 package com.blaster.business
 
-import com.blaster.data.paragraphs.Paragraph
-import com.blaster.data.paragraphs.ParagraphText
-import com.blaster.data.paragraphs.StructListItem
-import com.blaster.data.paragraphs.StructText
+import com.blaster.data.paragraphs.*
+import com.blaster.platform.LEM_COMPONENT
+import javax.inject.Inject
 
 private val LIST_ITEM_REGEX = "~\\s*(.+)\$".toRegex()
+private val LINK_REGEX = "\\[([^\\[]+)\\]".toRegex()
 
 class InteractorStructs {
-    fun identifyStructs(paragraphs: List<Paragraph>): List<Paragraph> {
-        val result = mutableListOf<Paragraph>()
-        for (paragraph in paragraphs) {
+    @Inject
+    lateinit var interactorCsv: InteractorCsv
+
+    init {
+        LEM_COMPONENT.inject(this)
+    }
+
+    fun identifyStructs(nodes: List<Node>): List<Node> {
+        val result = mutableListOf<Node>()
+        for (paragraph in nodes) {
             result.add(paragraph)
-            if (paragraph is ParagraphText) {
-                paragraph.children.add(identifyStructsInText(paragraph))
+            if (paragraph is NodeText) {
+                paragraph.children.addAll(identifyListItems(paragraph))
             }
         }
         return result
     }
 
-    private fun identifyStructsInText(paragraph: ParagraphText): Paragraph {
+    private fun identifyListItems(paragraph: NodeText): List<Node> {
         val match = LIST_ITEM_REGEX.find(paragraph.text)
         return if (match != null) {
-            StructListItem(match.groups[1]!!.value)
+            val li = StructListItem()
+            li.children.addAll(identifyLinks(match.groups[1]!!.value))
+            listOf(li)
         } else {
-            StructText(paragraph.text)
+            identifyLinks(paragraph.text)
         }
+    }
+
+    private fun identifyLinks(text: String): List<Node> {
+        val result = mutableListOf<Node>()
+        identifySpansInText(text, LINK_REGEX) { span: String, isInside: Boolean ->
+            if (isInside) {
+                result.add(parseLink(span))
+            } else {
+                result.add(StructText(span))
+            }
+        }
+        return result
+    }
+
+    private fun parseLink(link: String): StructLink {
+        val split = interactorCsv.splitCsv(link)
+        check(split.size == 2) { "Unknown parameters for a link: $link" }
+        return StructLink(split[0], split[1])
     }
 }

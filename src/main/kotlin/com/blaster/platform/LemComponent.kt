@@ -13,6 +13,7 @@ interface LemComponent {
     fun inject(interactorPrint: InteractorPrint)
     fun inject(printingManagerImpl: PrintingManagerImpl)
     fun inject(interactorLocation: InteractorLocation)
+    fun inject(interactorStructs: InteractorStructs)
 
     // This call will allow us to inject classes declared in LemModule into the InteractorCommands
     fun inject(interactorCommands: InteractorCommands)

@@ -6,7 +6,7 @@ But how to render the actual HTML? Without a proper tool, that can be a very cha
 Apache's FreeMarker is a template engine - a Java library to generate text output (HTML Web pages, e-mails, configuration files, source code, etc.) based on the templates and changing data. Templates are written in a FreeMarker Template Language (FTL), which is a simple specialized language. And, usually, a general-purpose programming language (like Java) is used to prepare data. Let us see how is that implemented by looking at the source code:
 #include; def; com.blaster.business.InteractorPrint::printParagraphs
 
-We are printing paragraphs by delegating pieces of the tasks to the helper methods, like this one:
+We are printing nodes by delegating pieces of the tasks to the helper methods, like this one:
 #include; def; com.blaster.business.InteractorPrint::printTemplateParagraph
 Each of those will handle its piece of the overall article accordingly.
 

@@ -1,3 +1,3 @@
 package com.blaster.data.paragraphs
 
-data class StructLink(val link: String) : Paragraph()
+data class StructLink(val text: String, val link: String) : Node()

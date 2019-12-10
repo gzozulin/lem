@@ -14,7 +14,7 @@ const val SUBCOMMAND_PICTURE    = "picture"
 const val SUBCOMMAND_H1         = "h1"
 const val SUBCOMMAND_H2         = "h2"
 
-data class ParagraphCommand(val type: Type, val arguments: List<String>) : Paragraph() {
+data class NodeCommand(val type: Type, val arguments: List<String>) : Node() {
     enum class Type { INCLUDE, OMIT, HEADER, INLINE }
 
     val subcommand: String

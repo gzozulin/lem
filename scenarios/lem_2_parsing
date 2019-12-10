@@ -10,7 +10,7 @@ I will not discuss the creation of the grammars and how to use ANTLR4 because it
 Let us start with a first step - parsing of the scenario file, passed from the input arguments.
 #include; def; com.blaster.business.InteractorParse::parseScenario
 
-The scenario will produce a list of paragraphs and commands, which were identified. Let's see how the identification of the commands works.
+The scenario will produce a list of nodes and commands, which were identified. Let's see how the identification of the commands works.
 #include; def; com.blaster.business.InteractorCommands::identifyCommand
 
 After the commands are identified, we can finally apply them.

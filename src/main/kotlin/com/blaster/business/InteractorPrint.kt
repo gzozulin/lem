@@ -18,24 +18,24 @@ class InteractorPrint {
         LEM_COMPONENT.inject(this)
     }
 
-    // Parameters of this function are: the output file and a list of paragraphs to be printed
-    fun printArticle(output: File, paragraphs: List<Paragraph>) {
-        // After receiving a list of paragraphs, we wrap them into an article template
-        val article = printingManager.renderTemplate("template_article.ftlh", hashMapOf("article" to printParagraphs(paragraphs)))
+    // Parameters of this function are: the output file and a list of nodes to be printed
+    fun printArticle(output: File, nodes: List<Node>) {
+        // After receiving a list of nodes, we wrap them into an article template
+        val article = printingManager.renderTemplate("template_article.ftlh", hashMapOf("article" to printParagraphs(nodes)))
         // The result is sent to printing manager to be put into a file
         printingManager.printArticle(output, article)
     }
 
-    // This call allows us to print the body of the article - a list of paragraphs. One thing to note is that this routine can be called recursively. The style of the output will look slightly differently. This fact is reflected by the additional parameter 'child'. The result of this method is the HTML generated.
-    private fun printParagraphs(paragraphs: List<Paragraph>, child: Boolean = false): String {
-        // We create the variable to hold the result and then we go through the paragraphs one by one
+    // This call allows us to print the body of the article - a list of nodes. One thing to note is that this routine can be called recursively. The style of the output will look slightly differently. This fact is reflected by the additional parameter 'child'. The result of this method is the HTML generated.
+    private fun printParagraphs(nodes: List<Node>, child: Boolean = false): String {
+        // We create the variable to hold the result and then we go through the nodes one by one
         var result = ""
-        for (paragraph in paragraphs) {
+        for (paragraph in nodes) {
             result += when (paragraph) {
                 // For each type we call the appropriate routine
-                is ParagraphText -> renderParagraphText(paragraph, child)
-                is ParagraphCode -> renderParagraphCode(paragraph, child)
-                is ParagraphCommand -> renderParagraphCommand(paragraph, child)
+                is NodeText -> renderParagraphText(paragraph, child)
+                is NodeCode -> renderParagraphCode(paragraph, child)
+                is NodeCommand -> renderParagraphCommand(paragraph, child)
                 else -> TODO()
             }
         }
@@ -43,7 +43,7 @@ class InteractorPrint {
         return result.dropLast(1)
     }
 
-    private fun renderParagraphText(paragraph: ParagraphText, child: Boolean): String {
+    private fun renderParagraphText(paragraph: NodeText, child: Boolean): String {
         var result = ""
         for (ch in paragraph.children) {
             result += when (ch) {
@@ -55,17 +55,17 @@ class InteractorPrint {
         return result + "\n"
     }
 
-    private fun renderParagraphCode(paragraph: ParagraphCode, child: Boolean): String {
+    private fun renderParagraphCode(paragraph: NodeCode, child: Boolean): String {
         return printTemplateCode(paragraph.code, child) + "\n"
     }
 
-    private fun renderParagraphCommand(paragraph: ParagraphCommand, child: Boolean): String {
+    private fun renderParagraphCommand(paragraph: NodeCommand, child: Boolean): String {
         var result = ""
         when (paragraph.type) {
             // It can be something related to the attributes of the page
-            ParagraphCommand.Type.HEADER -> result += printTemplateHeader(paragraph.subcommand, paragraph.argument) + "\n"
+            NodeCommand.Type.HEADER -> result += printTemplateHeader(paragraph.subcommand, paragraph.argument) + "\n"
             // Or some insert - like a reference or a picture
-            ParagraphCommand.Type.INCLUDE -> {
+            NodeCommand.Type.INCLUDE -> {
                 when (paragraph.subcommand) {
                     SUBCOMMAND_LINK -> result + printTemplateLink(paragraph.argument, paragraph.argument1, paragraph.argument2, child) + "\n"
                     SUBCOMMAND_PICTURE -> result + printTemplatePicture(paragraph.argument, paragraph.argument1, paragraph.argument2, child) + "\n"
@@ -79,15 +79,15 @@ class InteractorPrint {
         return result
     }
 
-    private fun renderTextSpans(spans: List<Paragraph>): String {
+    private fun renderTextSpans(spans: List<Node>): String {
         var result = ""
         for (span in spans) {
-            result += printTemplateSpan(span as SpanText)
+            result += printTemplateSpan(span as SpanText) // TODO: here will be an option to render links?
         }
         return result
     }
 
-    private fun printTemplateChild(path: String, children: List<Paragraph>): String {
+    private fun printTemplateChild(path: String, children: List<Node>): String {
         return printingManager.renderTemplate(
             "template_children.ftlh", hashMapOf("path" to path, "children" to printParagraphs(children, true)))
     }

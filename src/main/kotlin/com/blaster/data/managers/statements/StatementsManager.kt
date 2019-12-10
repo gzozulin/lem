@@ -1,7 +1,7 @@
 package com.blaster.data.managers.statements
 
-import com.blaster.data.paragraphs.Paragraph
+import com.blaster.data.paragraphs.Node
 
 interface StatementsManager {
-    fun extractStatements(code: String): List<Paragraph>
+    fun extractStatements(code: String): List<Node>
 }

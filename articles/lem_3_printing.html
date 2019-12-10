@@ -52,11 +52,11 @@
 <p class="text">Apache's FreeMarker is a template engine - a Java library to generate text output (HTML Web pages, e-mails, configuration files, source code, etc.) based on the templates and changing data. Templates are written in a FreeMarker Template Language (FTL), which is a simple specialized language. And, usually, a general-purpose programming language (like Java) is used to prepare data. Let us see how is that implemented by looking at the source code:</p>
 <div class="child">
     <h3>com.blaster.business.InteractorPrint::printParagraphs</h3>
-    <p class="text_child">This call allows us to print the body of the article - a list of paragraphs. One thing to note is that this routine can be called recursively. The style of the output will look slightly differently. This fact is reflected by the additional parameter <span style="font-weight:bold">child</span>. The result of this method is the HTML generated.</p>
-<p class="code_child">private fun printParagraphs(paragraphs: List&lt;Paragraph&gt;, child: Boolean = false): String {</p>
-<p class="text_child">We create the variable to hold the result and then we go through the paragraphs one by one</p>
+    <p class="text_child">This call allows us to print the body of the article - a list of nodes. One thing to note is that this routine can be called recursively. The style of the output will look slightly differently. This fact is reflected by the additional parameter <span style="font-weight:bold">child</span>. The result of this method is the HTML generated.</p>
+<p class="code_child">private fun printParagraphs(nodes: List&lt;Paragraph&gt;, child: Boolean = false): String {</p>
+<p class="text_child">We create the variable to hold the result and then we go through the nodes one by one</p>
 <p class="code_child">    var result = &quot;&quot;
-    for (paragraph in paragraphs) {
+    for (paragraph in nodes) {
         result += when (paragraph) {</p>
 <p class="text_child">For each type we call the appropriate routine</p>
 <p class="code_child">            is ParagraphText -&gt; renderParagraphText(paragraph, child)
@@ -69,7 +69,7 @@
 <p class="code_child">    return result.dropLast(1)
 }</p>
 </div>
-<p class="text">We are printing paragraphs by delegating pieces of the tasks to the helper methods, like this one:</p>
+<p class="text">We are printing nodes by delegating pieces of the tasks to the helper methods, like this one:</p>
 <div class="child">
     <h3>com.blaster.business.InteractorPrint::printTemplateParagraph</h3>
     <p class="text_child">Here is how we print paragraph</p>
@@ -84,10 +84,10 @@
 <p class="text">And, finally, when we have a body of the HTML page, we can wrap it into the article. The article contains header, styles, and body declaration.</p>
 <div class="child">
     <h3>com.blaster.business.InteractorPrint::printArticle</h3>
-    <p class="text_child">Parameters of this function are: the output file and a list of paragraphs to be printed</p>
-<p class="code_child">fun printArticle(output: File, paragraphs: List&lt;Paragraph&gt;) {</p>
-<p class="text_child">After receiving a list of paragraphs, we wrap them into an article template</p>
-<p class="code_child">    val article = printingManager.renderTemplate(&quot;template_article.ftlh&quot;, hashMapOf(&quot;article&quot; to printParagraphs(paragraphs)))</p>
+    <p class="text_child">Parameters of this function are: the output file and a list of nodes to be printed</p>
+<p class="code_child">fun printArticle(output: File, nodes: List&lt;Paragraph&gt;) {</p>
+<p class="text_child">After receiving a list of nodes, we wrap them into an article template</p>
+<p class="code_child">    val article = printingManager.renderTemplate(&quot;template_article.ftlh&quot;, hashMapOf(&quot;article&quot; to printParagraphs(nodes)))</p>
 <p class="text_child">The result is sent to printing manager to be put into a file</p>
 <p class="code_child">    printingManager.printArticle(output, article)
 }</p>

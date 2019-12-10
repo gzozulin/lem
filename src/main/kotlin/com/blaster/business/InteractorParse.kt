@@ -2,12 +2,15 @@ package com.blaster.business
 
 import com.blaster.data.managers.kotlin.KotlinManager
 import com.blaster.data.managers.statements.StatementsManager
-import com.blaster.data.paragraphs.Paragraph
+import com.blaster.data.paragraphs.Node
 import com.blaster.platform.LEM_COMPONENT
 import java.io.File
 import javax.inject.Inject
 
 class InteractorParse {
+    @Inject
+    lateinit var kotlinManager: KotlinManager
+
     @Inject
     lateinit var interactorLocation: InteractorLocation
 
@@ -24,14 +27,14 @@ class InteractorParse {
     lateinit var interactorStructs: InteractorStructs
 
     @Inject
-    lateinit var kotlinManager: KotlinManager
+    lateinit var interactorSpans: InteractorSpans
 
     init {
         LEM_COMPONENT.inject(this)
     }
 
     // This call will convert a scenario file into a list of paragraphs. The parameters are self explanatory.
-    fun parseScenario(sourceRoot: File, scenario: File): List<Paragraph> {
+    fun parseScenario(sourceRoot: File, scenario: File): List<Node> {
         // First operation of this method is to convert text in the scenario file into a distinct paragraphs. Paragraphs are separated by the new lines
         val paragraphs = interactorFormat.textToParagraphs(scenario.readText())
         // The next operation is to identify commands in those paragraphs if any
@@ -40,12 +43,12 @@ class InteractorParse {
         val commandsApplied = interactorCommands.applyCommands(sourceRoot, withCommands)
         // We also want to identify possible structures inside of the paragraphs - lists, tables and etc.
         val withStructs = interactorStructs.identifyStructs(commandsApplied)
-        // After the structs are identified, we can apply text formatting
-        return interactorFormat.identifySpans(withStructs)
+        // After the structs are identified, we can identify spans in text - bolt, italic, etc.
+        return interactorSpans.identifySpans(withStructs)
     }
 
     // Routine for parsing of the definitions. Accepts the sources root and a path to a definition. Returns a list of paragraphs with this definition commentaries and code snippets
-    fun parseDef(sourceRoot: File, path: String): List<Paragraph> {
+    fun parseDef(sourceRoot: File, path: String): List<Node> {
         // First thing first - we need to find the actual location of the definition - file, class, etc.
         val location = interactorLocation.locate(sourceRoot, path)
         // When the definition is located, we extract the code with the help of the ANTLR4
@@ -59,19 +62,19 @@ class InteractorParse {
         val commandsApplied = interactorCommands.applyCommands(sourceRoot, withCommands)
         // We also want to identify possible structures inside of the paragraphs - lists, tables and etc.
         val withStructs = interactorStructs.identifyStructs(commandsApplied)
-        // After the structs are identified, we can apply text formatting
-        return interactorFormat.identifySpans(withStructs)
+        // After the structs are identified, we can identify spans in text - bolt, italic, etc.
+        return interactorSpans.identifySpans(withStructs)
     }
 
-    fun parseDecl(sourceRoot: File, path: String): List<Paragraph> {
+    fun parseDecl(sourceRoot: File, path: String): List<Node> {
         val location = interactorLocation.locate(sourceRoot, path)
         val declarations = kotlinManager.extractDeclaration(location)
         val withoutTabulation = mutableListOf<String>()
         declarations.forEach { withoutTabulation.add(interactorFormat.removeCommonTabulation(it)) }
-        val statements = mutableListOf<Paragraph>()
+        val statements = mutableListOf<Node>()
         declarations.forEach { statements.addAll(statementsManager.extractStatements(it)) }
         val commandsApplied = interactorCommands.applyCommands(sourceRoot, statements)
         val withStructs = interactorStructs.identifyStructs(commandsApplied)
-        return interactorFormat.identifySpans(withStructs)
+        return interactorSpans.identifySpans(withStructs)
     }
 }

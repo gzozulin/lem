@@ -1,8 +1,8 @@
 package com.blaster.data.managers.statements
 
-import com.blaster.data.paragraphs.Paragraph
-import com.blaster.data.paragraphs.ParagraphCode
-import com.blaster.data.paragraphs.ParagraphText
+import com.blaster.data.paragraphs.Node
+import com.blaster.data.paragraphs.NodeCode
+import com.blaster.data.paragraphs.NodeText
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.ParserRuleContext
@@ -10,22 +10,22 @@ import org.antlr.v4.runtime.ParserRuleContext
 class StatementsManagerImpl : StatementsManager {
     private val statementsCache = HashMap<String, Pair<CommonTokenStream, StatementsParser>>()
 
-    override fun extractStatements(code: String): List<Paragraph> {
+    override fun extractStatements(code: String): List<Node> {
         val (_, parser) = provideParserForStatememts(code)
         parser.reset()
         val statements = locateStatements(parser)
-        val result = mutableListOf<Paragraph>()
+        val result = mutableListOf<Node>()
         for (statement in statements) {
             when (statement) {
                 is StatementsParser.DelimitedCommentContext -> {
-                    result.add(ParagraphText(statement.text.removePrefix("/*").removeSuffix("*/").trim()))
+                    result.add(NodeText(statement.text.removePrefix("/*").removeSuffix("*/").trim()))
                 }
                 is StatementsParser.LineCommentContext -> {
-                    result.add(ParagraphText(statement.text.removePrefix("//").trim()))
+                    result.add(NodeText(statement.text.removePrefix("//").trim()))
                 }
                 is StatementsParser.CodeContext -> {
                     // todo: unfortunately, Statements grammar considers everything, not included into a comment being a part of the code, that includes newlines of the comments as well
-                    result.add(ParagraphCode(statement.text.removePrefix("\n").trimEnd()))
+                    result.add(NodeCode(statement.text.removePrefix("\n").trimEnd()))
                 }
                 else -> throw IllegalStateException("Unknown statement!")
             }

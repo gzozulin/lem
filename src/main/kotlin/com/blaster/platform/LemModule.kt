@@ -47,7 +47,7 @@ class LemModule {
     @Provides
     fun kotlinManager(): KotlinManager = KotlinManagerImpl()
 
-    // This method will create 'InteractorParse' instance and inject it into the 'rest of the application'. Its annotation tells us, that only one instance of this class will be created.
+    // This method will create 'InteractorParse' instance [text; link] and inject it into the 'rest of the application'. Its annotation tells us, that only one instance of this class will be created.
     @Singleton
     @Provides
     fun interactorParse() = InteractorParse()
@@ -71,4 +71,12 @@ class LemModule {
     @Singleton
     @Provides
     fun interactorStructs() = InteractorStructs()
+
+    @Singleton
+    @Provides
+    fun interactorSpans() = InteractorSpans()
+
+    @Singleton
+    @Provides
+    fun interactorCsv() = InteractorCsv()
 }

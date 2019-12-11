@@ -4,6 +4,7 @@ import com.blaster.data.nodes.*
 
 private val LIST_ITEM_REGEX = "~\\s*(.+)\$".toRegex()
 private val LINK_REGEX = "\\[([^\\[]+)\\]".toRegex()
+private val CITE_REGEX = "/([^/]+)/".toRegex()
 
 class InteractorStructs {
     fun identifyStructs(nodes: List<Node>): List<Node> {
@@ -31,8 +32,20 @@ class InteractorStructs {
     private fun identifyLinks(text: String): List<Node> {
         val result = mutableListOf<Node>()
         identifySpansInText(text, LINK_REGEX) { span: String, isInside: Boolean ->
+            result.addAll(if (isInside) {
+                listOf(parseLink(span))
+            } else {
+                identifyCites(span)
+            })
+        }
+        return result
+    }
+
+    private fun identifyCites(text: String): List<Node> {
+        val result = mutableListOf<Node>()
+        identifySpansInText(text, CITE_REGEX) { span: String, isInside: Boolean ->
             result.add(if (isInside) {
-                parseLink(span)
+                StructCite(span)
             } else {
                 StructText(span)
             })

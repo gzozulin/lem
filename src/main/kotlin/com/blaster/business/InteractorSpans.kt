@@ -17,12 +17,14 @@ class InteractorSpans {
                             for (child in struct.children) {
                                 when (child) {
                                     is StructText -> identifyBoldSpansInText(child)
-                                    is StructLink -> {} // nothing
+                                    is StructLink -> {}
+                                    is StructCite -> {}
                                     else -> TODO()
                                 }
                             }
                         }
-                        is StructLink -> {} // nothing
+                        is StructLink -> {}
+                        is StructCite -> {}
                         else -> TODO()
                     }
                 }

@@ -83,7 +83,7 @@
 </p><p class="text">First of all, in order to employ Dagger 2 for our needs, we have to specify out dependencies. This happens in a so-called Dagger 2 module. Those are application defined classes, which provides all of the necessary information about how to create and manage your application units. You simply need to provide an instance of the class and annotate it accordingly. Here is an example:
 </p><div class="child">
     <h3>com.blaster.platform.LemModule::interactorParse</h3>
-    <p class="text_child">This method will create <span style="font-weight:bold">InteractorParse</span> instance <a class="link_child" href="https://docs.samsungknox.com/dev/common/knox-version-mapping.htm" target="_blank">text</a> and inject it into the <span style="font-weight:bold">rest of the application</span>. Its annotation tells us, that only one instance of this class will be created.
+    <p class="text_child">This method will create <span style="font-weight:bold">InteractorParse</span> instance <a class="link_child" href="https://docs.samsungknox.com/dev/common/knox-version-mapping.htm" target="_blank">text</a> and<sup><a href="#1">1</a></sup> inject it into the <span style="font-weight:bold">rest of the application</span>. Its annotation tells us, that only one instance of this class will be created.
 </p><p class="code_child">@Singleton
 @Provides
 fun interactorParse() = InteractorParse()</p>
@@ -154,6 +154,6 @@ fun freemarkerConfig(@Named(&quot;TEMPLATES_FILE&quot;) templatesFile: File): Co
 </p><p class="text">Each paragraph goes through its own type of template, which will apply different properties of the text and rendering - and will end up in the final HTML representation of the article.
 </p><p class="text">So, to summarize, we start with the scenario for the article. We parse this scenario and extract the nodes of text and commands from it. Then we apply those commands to the current result. Some of those commands will require to parse the additional pieces of code. We will proceed by parsing the code into code snippets and comments. Comments can contain commands, as well. Extracted commands will be recursively applied to the body of the article. And finally, we will print the result all together with the help of the HTML templates.
 </p><p class="text">In the next chapter, we will have a closer look at how things are parsed.
-</p><ul class="list_item"><li>0. <a id="frst" class="link" href="https://translate.google.com/#view=home&amp;op=translate&amp;sl=en&amp;tl=ru&amp;text=cite" target="_blank">First reference</a></li></ul><ul class="list_item"><li>1. <a id="scnd" class="link" href="https://translate.google.com/#view=home&amp;op=translate&amp;sl=en&amp;tl=ru&amp;text=cite" target="_blank">Second reference</a></li></ul>
+</p><ul class="list_item"><li>1: <a id="1" class="link" href="https://translate.google.com/#view=home&amp;op=translate&amp;sl=en&amp;tl=ru&amp;text=cite" target="_blank">First reference</a></li></ul><ul class="list_item"><li>2: <a id="2" class="link" href="https://translate.google.com/#view=home&amp;op=translate&amp;sl=en&amp;tl=ru&amp;text=cite" target="_blank">Second reference</a></li></ul>
     </body>
 </html>

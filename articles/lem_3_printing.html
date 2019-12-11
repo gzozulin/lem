@@ -68,8 +68,8 @@
         }
     }</p>
 <p class="text_child">After all of the paragraphs are rendered, we can add our references
-</p><p class="code_child">    references.forEachIndexed { index, node -&gt;
-        result += printTemplateListItem(                &quot;$index. &quot; + printTemplateCite(node.subcommand, node.argument, node.argument1, child), child)
+</p><p class="code_child">    references.forEach { node -&gt;
+        result += printTemplateListItem(                &quot;${node.subcommand}: &quot; + printTemplateCite(node.subcommand, node.argument, node.argument1, child), child)
     }</p>
 <p class="text_child">The final result is returned from the call
 </p><p class="code_child">    return result

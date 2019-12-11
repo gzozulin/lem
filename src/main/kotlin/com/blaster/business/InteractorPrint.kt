@@ -5,6 +5,7 @@ import com.blaster.data.managers.printing.PrintingManager
 import com.blaster.data.nodes.SpanText.Style
 import com.blaster.platform.LEM_COMPONENT
 import java.io.File
+import java.sql.Struct
 import javax.inject.Inject
 
 class InteractorPrint {
@@ -42,9 +43,9 @@ class InteractorPrint {
             }
         }
         // After all of the paragraphs are rendered, we can add our references
-        references.forEachIndexed { index, node ->
+        references.forEach { node ->
             result += printTemplateListItem(
-                "$index. " + printTemplateCite(node.subcommand, node.argument, node.argument1, child), child)
+                "${node.subcommand}: " + printTemplateCite(node.subcommand, node.argument, node.argument1, child), child)
         }
         // The final result is returned from the call
         return result
@@ -56,6 +57,7 @@ class InteractorPrint {
             result += when (ch) {
                 is StructListItem -> renderListItem(ch, child)
                 is StructLink -> printTemplateLink(ch.text, ch.link, child)
+                is StructCite -> printTemplateCiteLink(ch.id)
                 is StructText -> renderTextSpans(ch.children)
                 else -> TODO()
             }
@@ -68,6 +70,7 @@ class InteractorPrint {
         for (ch in listItem.children) {
             result += when (ch) {
                 is StructLink -> printTemplateLink(ch.text, ch.link, child)
+                is StructCite -> printTemplateCiteLink(ch.id)
                 is StructText -> renderTextSpans(ch.children)
                 else -> TODO()
             }
@@ -137,6 +140,10 @@ class InteractorPrint {
         val clz = if (child) "link_child" else "link"
         return printingManager.renderTemplate(
             "template_cite.ftlh", hashMapOf("id" to id, "class" to clz, "label" to label, "link" to link))
+    }
+
+    private fun printTemplateCiteLink(id: String): String {
+        return printingManager.renderTemplate("template_cite_link.ftlh", hashMapOf("id" to id))
     }
 
     private fun printTemplatePicture(label: String, link: String, child: Boolean): String {

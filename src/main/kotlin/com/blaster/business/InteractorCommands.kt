@@ -42,6 +42,7 @@ class InteractorCommands {
             cmd == COMMAND_PICTURE -> identifyPictureCommand(subcmd)
             cmd == COMMAND_INLINE -> identifyInlineCommand(subcmd)
             cmd == COMMAND_OMIT -> identifyOmitCommand()
+            cmd == COMMAND_CITE -> identifyCiteCommand(subcmd)
             else -> TODO()
         }
     }
@@ -80,6 +81,11 @@ class InteractorCommands {
 
     private fun identifyOmitCommand(): NodeCommand? {
         return NodeCommand(NodeCommand.Type.OMIT, listOf())
+    }
+
+    private fun identifyCiteCommand(stack: List<String>): NodeCommand? {
+        check(stack.size == 3) { "Cite command has to have 3 parameters!" }
+        return NodeCommand(NodeCommand.Type.CITE, listOf(stack[0], stack[1], stack[2]))
     }
 
     // Commands application routine. It receives a source root and a list of nodes as a parameters. The result is a list of nodes modified by all of the commands in the original list.

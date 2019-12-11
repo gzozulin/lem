@@ -55,15 +55,21 @@
     <p class="text_child">This call allows us to print the body of the article - a list of nodes. One thing to note is that this routine can be called recursively. The style of the output will look slightly differently. This fact is reflected by the additional parameter <span style="font-weight:bold">child</span>. The result of this method is the HTML generated.
 </p><p class="code_child">private fun printParagraphs(nodes: List&lt;Node&gt;, child: Boolean = false): String {</p>
 <p class="text_child">We create the variable to hold the result and then we go through the nodes one by one
-</p><p class="code_child">    var result = &quot;&quot;
+</p><p class="code_child">    var result = &quot;&quot;</p>
+<p class="text_child">We also want to keep track of references, which we accumulated while rendering
+</p><p class="code_child">    val references = mutableListOf&lt;NodeCommand&gt;()
     for (node in nodes) {
         result += when (node) {</p>
 <p class="text_child">For each type we call the appropriate routine
 </p><p class="code_child">            is NodeText -&gt; renderNodeText(node, child)
             is NodeCode -&gt; renderNodeCode(node, child)
-            is NodeCommand -&gt; renderNodeCommand(node, child)
+            is NodeCommand -&gt; renderNodeCommand(node, child, references)
             else -&gt; TODO()
         }
+    }</p>
+<p class="text_child">After all of the paragraphs are rendered, we can add our references
+</p><p class="code_child">    references.forEachIndexed { index, node -&gt;
+        result += printTemplateListItem(                &quot;$index. &quot; + printTemplateCite(node.subcommand, node.argument, node.argument1, child), child)
     }</p>
 <p class="text_child">The final result is returned from the call
 </p><p class="code_child">    return result

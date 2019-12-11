@@ -54,15 +54,15 @@
 </p><p class="text">Let us start with a first step - parsing of the scenario file, passed from the input arguments.
 </p><div class="child">
     <h3>com.blaster.business.InteractorParse::parseScenario</h3>
-    <p class="text_child">This call will convert a scenario file into a list of paragraphs. The parameters are self explanatory.
+    <p class="text_child">This call will convert a scenario file into a list of nodes. The parameters are self explanatory.
 </p><p class="code_child">fun parseScenario(sourceRoot: File, scenario: File): List&lt;Node&gt; {</p>
-<p class="text_child">First operation of this method is to convert text in the scenario file into a distinct paragraphs. Paragraphs are separated by the new lines
+<p class="text_child">First operation of this method is to convert text in the scenario file into a distinct nodes. Paragraphs are separated by the new lines
 </p><p class="code_child">    val paragraphs = interactorFormat.textToParagraphs(scenario.readText())</p>
-<p class="text_child">The next operation is to identify commands in those paragraphs if any
+<p class="text_child">The next operation is to identify commands in those nodes if any
 </p><p class="code_child">    val withCommands = interactorCommands.identifyCommands(paragraphs)</p>
 <p class="text_child">If we found any commands - we will apply them to the current result
 </p><p class="code_child">    val commandsApplied = interactorCommands.applyCommands(sourceRoot, withCommands)</p>
-<p class="text_child">We also want to identify possible structures inside of the paragraphs - lists, tables and etc.
+<p class="text_child">We also want to identify possible structures inside of the nodes - lists, tables and etc.
 </p><p class="code_child">    val withStructs = interactorStructs.identifyStructs(commandsApplied)</p>
 <p class="text_child">After the structs are identified, we can identify spans in text - bolt, italic, etc.
 </p><p class="code_child">    return interactorSpans.identifySpans(withStructs)
@@ -90,6 +90,7 @@
         cmd == COMMAND_PICTURE -&gt; identifyPictureCommand(subcmd)
         cmd == COMMAND_INLINE -&gt; identifyInlineCommand(subcmd)
         cmd == COMMAND_OMIT -&gt; identifyOmitCommand()
+        cmd == COMMAND_CITE -&gt; identifyCiteCommand(subcmd)
         else -&gt; TODO()
     }
 }</p>
@@ -151,7 +152,7 @@
 <p class="text">The author of the scenario can choose how to include the code. We can either include definitions of declarations of methods and classes. The difference is that sometimes you want to include the body of the method, and sometimes you want to mention it. Let us see how parsing of the requested definitions works.
 </p><div class="child">
     <h3>com.blaster.business.InteractorParse::parseDef</h3>
-    <p class="text_child">Routine for parsing of the definitions. Accepts the sources root and a path to a definition. Returns a list of paragraphs with this definition commentaries and code snippets
+    <p class="text_child">Routine for parsing of the definitions. Accepts the sources root and a path to a definition. Returns a list of nodes with this definition commentaries and code snippets
 </p><p class="code_child">fun parseDef(sourceRoot: File, path: String): List&lt;Node&gt; {</p>
 <p class="text_child">First thing first - we need to find the actual location of the definition - file, class, etc.
 </p><p class="code_child">    val location = interactorLocation.locate(sourceRoot, path)</p>
@@ -160,11 +161,11 @@
 <p class="text_child">Next step is to split this text onto the commentaries and code snippets. We also format them - removing unused lines, spaces, etc.
 </p><p class="code_child">    val withoutTabulation = interactorFormat.removeCommonTabulation(definition)
     val statements = statementsManager.extractStatements(withoutTabulation)</p>
-<p class="text_child">After formatting is done, we want to find the commands among the paragraphs if any
+<p class="text_child">After formatting is done, we want to find the commands among the nodes if any
 </p><p class="code_child">    val withCommands = interactorCommands.identifyCommands(statements)</p>
 <p class="text_child">And finally, we apply the commands and return the result
 </p><p class="code_child">    val commandsApplied = interactorCommands.applyCommands(sourceRoot, withCommands)</p>
-<p class="text_child">We also want to identify possible structures inside of the paragraphs - lists, tables and etc.
+<p class="text_child">We also want to identify possible structures inside of the nodes - lists, tables and etc.
 </p><p class="code_child">    val withStructs = interactorStructs.identifyStructs(commandsApplied)</p>
 <p class="text_child">After the structs are identified, we can identify spans in text - bolt, italic, etc.
 </p><p class="code_child">    return interactorSpans.identifySpans(withStructs)

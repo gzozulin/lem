@@ -30,14 +30,21 @@ class InteractorPrint {
     private fun printParagraphs(nodes: List<Node>, child: Boolean = false): String {
         // We create the variable to hold the result and then we go through the nodes one by one
         var result = ""
+        // We also want to keep track of references, which we accumulated while rendering
+        val references = mutableListOf<NodeCommand>()
         for (node in nodes) {
             result += when (node) {
                 // For each type we call the appropriate routine
                 is NodeText -> renderNodeText(node, child)
                 is NodeCode -> renderNodeCode(node, child)
-                is NodeCommand -> renderNodeCommand(node, child)
+                is NodeCommand -> renderNodeCommand(node, child, references)
                 else -> TODO()
             }
+        }
+        // After all of the paragraphs are rendered, we can add our references
+        references.forEachIndexed { index, node ->
+            result += printTemplateListItem(
+                "$index. " + printTemplateCite(node.subcommand, node.argument, node.argument1, child), child)
         }
         // The final result is returned from the call
         return result
@@ -72,18 +79,20 @@ class InteractorPrint {
         return printTemplateCode(paragraph.code, child) + "\n"
     }
 
-    private fun renderNodeCommand(paragraph: NodeCommand, child: Boolean): String {
+    private fun renderNodeCommand(node: NodeCommand, child: Boolean, references: MutableList<NodeCommand>): String {
         var result = ""
-        when (paragraph.type) {
+        when (node.type) {
             // It can be something related to the attributes of the page
-            NodeCommand.Type.HEADER -> result +=printTemplateHeader(paragraph.subcommand, paragraph.argument) + "\n"
+            NodeCommand.Type.HEADER -> result +=printTemplateHeader(node.subcommand, node.argument) + "\n"
             // Or a picture insert
-            NodeCommand.Type.PICTURE -> result += printTemplatePicture(paragraph.subcommand, paragraph.argument, child) + "\n"
+            NodeCommand.Type.PICTURE -> result += printTemplatePicture(node.subcommand, node.argument, child) + "\n"
+            // Or a cite reference
+            NodeCommand.Type.CITE -> references.add(node)
             // Else just continue
             else -> {}
         }
-        if (paragraph.children.isNotEmpty()) {
-            result += printTemplateChild(paragraph.argument, paragraph.children) + "\n"
+        if (node.children.isNotEmpty()) {
+            result += printTemplateChild(node.argument, node.children) + "\n"
         }
         return result
     }
@@ -122,6 +131,12 @@ class InteractorPrint {
         val clz = if (child) "link_child" else "link"
         return printingManager.renderTemplate(
             "template_link.ftlh", hashMapOf("class" to clz, "label" to label, "link" to link))
+    }
+
+    private fun printTemplateCite(id: String, label: String, link: String, child: Boolean): String {
+        val clz = if (child) "link_child" else "link"
+        return printingManager.renderTemplate(
+            "template_cite.ftlh", hashMapOf("id" to id, "class" to clz, "label" to label, "link" to link))
     }
 
     private fun printTemplatePicture(label: String, link: String, child: Boolean): String {

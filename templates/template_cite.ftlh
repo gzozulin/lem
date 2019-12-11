@@ -1,0 +1,1 @@
+<a id="${id}" class="${class}" href="${link}" target="_blank">${label}</a>

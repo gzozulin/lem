@@ -33,7 +33,7 @@ fun main(args: Array<String>) {
     if (args.isEmpty()) {
         println("No args, falling back to the defaults!")
         File("scenarios").list()!!.forEach {
-            lemApp.render("https://github.com/madeinsoviets/lem/tree/master/", File("src/main/kotlin"), File("scenarios", it), File("articles", "$it.html"))
+            lemApp.render("https://github.com/madeinsoviets/lem/blob/develop/", File("src/main/kotlin"), File("scenarios", it), File("articles", "$it.html"))
         }
         return
     }

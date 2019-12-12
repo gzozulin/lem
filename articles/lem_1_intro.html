@@ -82,7 +82,7 @@
 </p><p class="text">This particular project uses Google's Dagger 2 to facilitate DI. One of the primary advantages of Dagger 2 over most other DI frameworks is that its strictly generated implementation - no reflexion. It means that the boilerplate code, needed for the injection, is generated during the compile time, rather being constructed during runtime through the reflexion mechanisms. That is a performance boost, of course.
 </p><p class="text">First of all, in order to employ Dagger 2 for our needs, we have to specify out dependencies. This happens in a so-called Dagger 2 module. Those are application defined classes, which provides all of the necessary information about how to create and manage your application units. You simply need to provide an instance of the class and annotate it accordingly. Here is an example:
 </p><div class="child">
-    <h3><a class="link_child" href="https://github.com/madeinsoviets/lem/tree/master/src/main/kotlin/com/blaster/platform/LemModule.kt" target="_blank">com.blaster.platform.LemModule::interactorParse</a></h3>
+    <h3><a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop/src/main/kotlin/com/blaster/platform/LemModule.kt" target="_blank">com.blaster.platform.LemModule::interactorParse</a></h3>
     <p class="text_child">This method will create <span style="font-weight:bold">InteractorParse</span> instance <a class="link_child" href="https://docs.samsungknox.com/dev/common/knox-version-mapping.htm" target="_blank">text</a> and<sup><a href="#1">1</a></sup> inject it into the <span style="font-weight:bold">rest of the application</span>. Its annotation tells us, that only one instance of this class will be created.
 </p><p class="code_child">@Singleton
 @Provides
@@ -91,7 +91,7 @@ fun interactorParse() = InteractorParse()</p>
 </div>
 <p class="text">With DI framework we also can provide unique files and settings:
 </p><div class="child">
-    <h3><a class="link_child" href="https://github.com/madeinsoviets/lem/tree/master/src/main/kotlin/com/blaster/platform/LemModule.kt" target="_blank">com.blaster.platform.LemModule::freemarkerConfig</a></h3>
+    <h3><a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop/src/main/kotlin/com/blaster/platform/LemModule.kt" target="_blank">com.blaster.platform.LemModule::freemarkerConfig</a></h3>
     <p class="text_child">This methods will provide the configuration for the FreeMarker template engine. Its only parameter is a place, where we store the templates. This parameter is fulfilled by DI as well.
 </p><p class="code_child">@Singleton
 @Provides
@@ -108,7 +108,7 @@ fun freemarkerConfig(@Named(&quot;TEMPLATES_FILE&quot;) templatesFile: File): Co
 </div>
 <p class="text">The next task is to clarify the rules on how to resolve the actual dependencies. For example we can restrict a certain set of dependencies to be available only for the specified classes. Those rules can be defined in the Dagger 2 component. It is an interface, which specifies what can be injected where. After Dagger 2 will finish code generation, we will receive an implementation of this interface. The example can be a following call:
 </p><div class="child">
-    <h3><a class="link_child" href="https://github.com/madeinsoviets/lem/tree/master/src/main/kotlin/com/blaster/platform/LemComponent.kt" target="_blank">com.blaster.platform.LemComponent::inject</a></h3>
+    <h3><a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop/src/main/kotlin/com/blaster/platform/LemComponent.kt" target="_blank">com.blaster.platform.LemComponent::inject</a></h3>
     <p class="text_child">This call will allow us to inject classes declared in LemModule into the InteractorCommands
 </p><p class="code_child">fun inject(interactorCommands: InteractorCommands)</p>
 
@@ -119,7 +119,7 @@ fun freemarkerConfig(@Named(&quot;TEMPLATES_FILE&quot;) templatesFile: File): Co
 <p class="text">Let us start by briefly defining what we want to achieve with this application. My original idea was to have a tool that allows you to process the code into a readable article. Since this processing can be done every time the code is updated, we can maintain parity between the codebase and the material. The process can be dissected into distinct stages. In this chapter, we will overview those stages and define a goal for each of those.
 </p><p class="text">The application starts its lifecycle, similarly to most of the JVM-based applications, with the main entry point. The main task at this stage is to handle the parameters and parse the properties of the following operation.
 </p><div class="child">
-    <h3><a class="link_child" href="https://github.com/madeinsoviets/lem/tree/master/src/main/kotlin/com/blaster/platform/LemApp.kt" target="_blank">com.blaster.platform.LemAppKt::main</a></h3>
+    <h3><a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop/src/main/kotlin/com/blaster/platform/LemApp.kt" target="_blank">com.blaster.platform.LemAppKt::main</a></h3>
     <p class="text_child">This is an application main entry point. The only parameter is an array of command line arguments
 </p><p class="code_child">fun main(args: Array&lt;String&gt;) {</p>
 <p class="text_child">We will create the application class first
@@ -129,7 +129,7 @@ fun freemarkerConfig(@Named(&quot;TEMPLATES_FILE&quot;) templatesFile: File): Co
         println(&quot;No args, falling back to the defaults!&quot;)
         File(&quot;scenarios&quot;).list()!!.forEach {
             lemApp.render(&quot;https:</p>
-<p class="text_child">github.com/madeinsoviets/lem/tree/master/", File("src/main/kotlin"), File("scenarios", it), File("articles", "$it.html"))
+<p class="text_child">github.com/madeinsoviets/lem/blob/develop/", File("src/main/kotlin"), File("scenarios", it), File("articles", "$it.html"))
 </p><p class="code_child">        }
         return
     }</p>

@@ -51,7 +51,7 @@
 </p><p class="text">But how to render the actual HTML? Without a proper tool, that can be a very challenging task. For our purposes, we will use a library called FreeMarker.
 </p><p class="text">Apache's FreeMarker is a template engine - a Java library to generate text output (HTML Web pages, e-mails, configuration files, source code, etc.) based on the templates and changing data. Templates are written in a FreeMarker Template Language (FTL), which is a simple specialized language. And, usually, a general-purpose programming language (like Java) is used to prepare data. Let us see how is that implemented by looking at the source code:
 </p><div class="child">
-    <h3><a class="link_child" href="https://github.com/madeinsoviets/lem/tree/master/src/main/kotlin/com/blaster/business/InteractorPrint.kt" target="_blank">com.blaster.business.InteractorPrint::printParagraphs</a></h3>
+    <h3><a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop/src/main/kotlin/com/blaster/business/InteractorPrint.kt" target="_blank">com.blaster.business.InteractorPrint::printParagraphs</a></h3>
     <p class="text_child">This call allows us to print the body of the article - a list of nodes. One thing to note is that this routine can be called recursively. The style of the output will look slightly differently. This fact is reflected by the additional parameter <span style="font-weight:bold">child</span>. The result of this method is the HTML generated.
 </p><p class="code_child">private fun printParagraphs(nodes: List&lt;Node&gt;, child: Boolean = false): String {</p>
 <p class="text_child">We create the variable to hold the result and then we go through the nodes one by one
@@ -78,7 +78,7 @@
 </div>
 <p class="text">We are printing nodes by delegating pieces of the tasks to the helper methods, like this one:
 </p><div class="child">
-    <h3><a class="link_child" href="https://github.com/madeinsoviets/lem/tree/master/src/main/kotlin/com/blaster/business/InteractorPrint.kt" target="_blank">com.blaster.business.InteractorPrint::printTemplateParagraph</a></h3>
+    <h3><a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop/src/main/kotlin/com/blaster/business/InteractorPrint.kt" target="_blank">com.blaster.business.InteractorPrint::printTemplateParagraph</a></h3>
     <p class="text_child">Here is how we print paragraph
 </p><p class="code_child">private fun printTemplateParagraph(paragraph: String, child: Boolean): String {</p>
 <p class="text_child">If this paragraph is a child of another paragraph, appropriate style is selected
@@ -91,7 +91,7 @@
 <p class="text">Each of those will handle its piece of the overall article accordingly.
 </p><p class="text">And, finally, when we have a body of the HTML page, we can wrap it into the article. The article contains header, styles, and body declaration.
 </p><div class="child">
-    <h3><a class="link_child" href="https://github.com/madeinsoviets/lem/tree/master/src/main/kotlin/com/blaster/business/InteractorPrint.kt" target="_blank">com.blaster.business.InteractorPrint::printArticle</a></h3>
+    <h3><a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop/src/main/kotlin/com/blaster/business/InteractorPrint.kt" target="_blank">com.blaster.business.InteractorPrint::printArticle</a></h3>
     <p class="text_child">Parameters of this function are: the source root, the output file and a list of nodes to be printed
 </p><p class="code_child">fun printArticle(output: File, nodes: List&lt;Node&gt;) {</p>
 <p class="text_child">After receiving a list of nodes, we wrap them into an article template

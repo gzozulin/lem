@@ -5,7 +5,6 @@ import com.blaster.data.managers.printing.PrintingManager
 import com.blaster.data.nodes.SpanText.Style
 import com.blaster.platform.LEM_COMPONENT
 import java.io.File
-import java.sql.Struct
 import javax.inject.Inject
 
 class InteractorPrint {
@@ -19,10 +18,12 @@ class InteractorPrint {
         LEM_COMPONENT.inject(this)
     }
 
-    // Parameters of this function are: the output file and a list of nodes to be printed
+    // Parameters of this function are: the source root, the output file and a list of nodes to be printed
     fun printArticle(output: File, nodes: List<Node>) {
         // After receiving a list of nodes, we wrap them into an article template
-        val article = printingManager.renderTemplate("template_article.ftlh", hashMapOf("article" to printParagraphs(nodes)))
+        val article = printingManager.renderTemplate(
+            "template_article.ftlh", hashMapOf("article" to printParagraphs(nodes))
+        )
         // The result is sent to printing manager to be put into a file
         printingManager.printArticle(output, article)
     }
@@ -42,7 +43,7 @@ class InteractorPrint {
                 else -> TODO()
             }
         }
-        // After all of the paragraphs are rendered, we can add our references
+        // After all of the nodes are rendered, we can add our references
         references.forEach { node ->
             result += printTemplateListItem(
                 "${node.subcommand}: " + printTemplateCite(node.subcommand, node.argument, node.argument1, child), child)
@@ -78,15 +79,15 @@ class InteractorPrint {
         return printTemplateListItem(result + "\n", child)
     }
 
-    private fun renderNodeCode(paragraph: NodeCode, child: Boolean): String {
-        return printTemplateCode(paragraph.code, child) + "\n"
+    private fun renderNodeCode(node: NodeCode, child: Boolean): String {
+        return printTemplateCode(node.code, child) + "\n"
     }
 
     private fun renderNodeCommand(node: NodeCommand, child: Boolean, references: MutableList<NodeCommand>): String {
         var result = ""
         when (node.type) {
             // It can be something related to the attributes of the page
-            NodeCommand.Type.HEADER -> result +=printTemplateHeader(node.subcommand, node.argument) + "\n"
+            NodeCommand.Type.HEADER -> result += printTemplateHeader(node.subcommand, node.argument) + "\n"
             // Or a picture insert
             NodeCommand.Type.PICTURE -> result += printTemplatePicture(node.subcommand, node.argument, child) + "\n"
             // Or a cite reference
@@ -95,7 +96,7 @@ class InteractorPrint {
             else -> {}
         }
         if (node.children.isNotEmpty()) {
-            result += printTemplateChild(node.argument, node.children) + "\n"
+            result += printTemplateChild(node.argument, node.location!!.url, node.children) + "\n"
         }
         return result
     }
@@ -108,9 +109,12 @@ class InteractorPrint {
         return result
     }
 
-    private fun printTemplateChild(path: String, children: List<Node>): String {
+    private fun printTemplateChild(path: String, url: String, children: List<Node>): String {
+        val pathLink = printTemplateLink(path, url, true)
         return printingManager.renderTemplate(
-            "template_children.ftlh", hashMapOf("path" to path, "children" to printParagraphs(children, true)))
+            "template_children.ftlh",
+            hashMapOf("path" to pathLink, "children" to printParagraphs(children, true))
+        )
     }
 
     // Here is how we print paragraph

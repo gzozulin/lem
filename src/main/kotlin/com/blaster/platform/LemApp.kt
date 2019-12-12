@@ -3,6 +3,9 @@ package com.blaster.platform
 import com.blaster.business.InteractorParse
 import com.blaster.business.InteractorPrint
 import java.io.File
+import java.lang.IllegalArgumentException
+import java.net.MalformedURLException
+import java.net.URL
 import javax.inject.Inject
 
 class LemApp {
@@ -16,8 +19,8 @@ class LemApp {
         LEM_COMPONENT.inject(this)
     }
 
-    fun render(sourceRoot: File, scenarioFile: File, output: File) {
-        val parsed = interactorParse.parseScenario(sourceRoot, scenarioFile)
+    fun render(sourceUrl: String, sourceRoot: File, scenarioFile: File, output: File) {
+        val parsed = interactorParse.parseScenario(sourceUrl, sourceRoot, scenarioFile)
         interactorPrint.printArticle(output, parsed)
     }
 }
@@ -30,7 +33,7 @@ fun main(args: Array<String>) {
     if (args.isEmpty()) {
         println("No args, falling back to the defaults!")
         File("scenarios").list()!!.forEach {
-            lemApp.render(File("src/main/kotlin"), File("scenarios", it), File("articles", "$it.html"))
+            lemApp.render("https://github.com/madeinsoviets/lem/tree/master/", File("src/main/kotlin"), File("scenarios", it), File("articles", "$it.html"))
         }
         return
     }
@@ -38,10 +41,16 @@ fun main(args: Array<String>) {
     check(args.size == 3) { "Wrong number of parameters!" }
     val sourceRoot = File(args[0])
     check(sourceRoot.exists()) { "Sources rout doesn't exists!" }
-    val scenarioFile = File(args[1])
+    val sourceUrl = args[1]
+    try {
+        URL(sourceUrl)
+    } catch (e: MalformedURLException) {
+        throw IllegalArgumentException(e)
+    }
+    val scenarioFile = File(args[2])
     check(scenarioFile.exists()) { "Scenario file doest't exists!" }
-    val output = File(args[2])
+    val output = File(args[3])
     check(output.parentFile.exists()) { "Output folder doesn't exists!" }
     // When everything is extracted - we can proceed to rendering of the task
-    lemApp.render(sourceRoot, scenarioFile, output)
+    lemApp.render(sourceUrl, sourceRoot, scenarioFile, output)
 }

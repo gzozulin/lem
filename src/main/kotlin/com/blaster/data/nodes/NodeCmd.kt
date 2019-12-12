@@ -1,5 +1,7 @@
 package com.blaster.data.nodes
 
+import com.blaster.business.Location
+
 const val COMMAND_IDENTIFIER    = "#"
 
 const val COMMAND_INCLUDE       = "include"
@@ -17,6 +19,7 @@ const val SUBCOMMAND_H2         = "h2"
 data class NodeCommand(val type: Type, val arguments: List<String>) : Node() {
     enum class Type { INCLUDE, OMIT, HEADER, PICTURE, INLINE, CITE }
 
+    // TODO: I do not like the generic approach
     val subcommand: String
         get() = arguments[0]
 
@@ -28,4 +31,6 @@ data class NodeCommand(val type: Type, val arguments: List<String>) : Node() {
 
     val argument2: String
         get() = arguments[3]
+
+    var location: Location? = null
 }

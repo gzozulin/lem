@@ -7,6 +7,7 @@ import com.blaster.platform.LEM_COMPONENT
 import java.io.File
 import javax.inject.Inject
 
+// TODO: too much common code
 class InteractorParse {
     @Inject
     lateinit var kotlinManager: KotlinManager

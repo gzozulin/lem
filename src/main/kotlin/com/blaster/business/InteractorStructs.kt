@@ -4,7 +4,7 @@ import com.blaster.data.nodes.*
 
 private val LIST_ITEM_REGEX = "~\\s*(.+)\$".toRegex()
 private val LINK_REGEX = "\\[([^\\[]+)\\]".toRegex()
-private val CITE_REGEX = "/([^/]+)/".toRegex()
+private val CITE_REGEX = "\\\\([^\\\\]+)\\\\".toRegex()
 
 class InteractorStructs {
     fun identifyStructs(nodes: List<Node>): List<Node> {

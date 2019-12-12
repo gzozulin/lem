@@ -47,7 +47,7 @@ class LemModule {
     @Provides
     fun kotlinManager(): KotlinManager = KotlinManagerImpl()
 
-    // This method will create 'InteractorParse' instance [text; https://docs.samsungknox.com/dev/common/knox-version-mapping.htm] and/1/ inject it into the 'rest of the application'. Its annotation tells us, that only one instance of this class will be created.
+    // This method will create 'InteractorParse' instance [text; https://docs.samsungknox.com/dev/common/knox-version-mapping.htm] and\1\ inject it into the 'rest of the application'. Its annotation tells us, that only one instance of this class will be created.
     @Singleton
     @Provides
     fun interactorParse() = InteractorParse()

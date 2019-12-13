@@ -9,11 +9,15 @@ private val CITE_REGEX = "\\\\([^\\\\]+)\\\\".toRegex()
 class InteractorStructs {
     fun identifyStructs(nodes: List<Node>): List<Node> {
         val result = mutableListOf<Node>()
-        for (paragraph in nodes) {
-            result.add(paragraph)
-            if (paragraph is NodeText) {
-                paragraph.children.addAll(identifyListItems(paragraph))
-            }
+        for (node in nodes) {
+            result.add(when (node) {
+                is NodeText -> {
+                    val transformed = mutableListOf<Node>()
+                    transformed.addAll(identifyListItems(node))
+                    node.copy(children = transformed)
+                }
+                else -> node
+            })
         }
         return result
     }
@@ -21,9 +25,8 @@ class InteractorStructs {
     private fun identifyListItems(paragraph: NodeText): List<Node> {
         val match = LIST_ITEM_REGEX.find(paragraph.text)
         return if (match != null) {
-            val li = StructListItem()
-            li.children.addAll(identifyLinks(match.groups[1]!!.value))
-            listOf(li)
+            val identified = identifyLinks(match.groups[1]!!.value)
+            listOf(StructListItem(identified))
         } else {
             identifyLinks(paragraph.text)
         }

@@ -107,7 +107,7 @@ class InteractorCommands {
             if (node is NodeCommand) {
                 when (node.type) {
                     // We apply the command accordingly
-                    NodeCommand.Type.INCLUDE -> applyIncludeCommand(sourceUrl, sourceRoot, node)
+                    NodeCommand.Type.INCLUDE -> applyIncludeCommand(sourceUrl, sourceRoot, iterator, node)
                     NodeCommand.Type.OMIT -> applyOmitCommand(iterator)
                     NodeCommand.Type.INLINE -> applyInlineCommand(sourceUrl, sourceRoot, iterator, node)
                     // Some commands have meaning only for printing, so we do nothing right now
@@ -120,8 +120,7 @@ class InteractorCommands {
     }
 
     private fun applyInlineCommand(
-        sourceUrl: String, sourceRoot: File, iterator: MutableListIterator<Node>, insert: NodeCommand
-    ) {
+        sourceUrl: String, sourceRoot: File, iterator: MutableListIterator<Node>, insert: NodeCommand) {
         iterator.remove()
         when (insert.subcommand) {
             SUBCOMMAND_DECL -> {
@@ -135,11 +134,15 @@ class InteractorCommands {
         }
     }
 
-    private fun applyIncludeCommand(sourceUrl: String, sourceRoot: File, insert: NodeCommand) {
-        when (insert.subcommand) {
-            SUBCOMMAND_DECL -> insert.children.addAll(interactorParse.get().parseDecl(sourceUrl, sourceRoot, insert.location!!))
-            SUBCOMMAND_DEF -> insert.children.addAll(interactorParse.get().parseDef(sourceUrl, sourceRoot, insert.location!!))
+    private fun applyIncludeCommand(
+        sourceUrl: String, sourceRoot: File, iterator: MutableListIterator<Node>, insert: NodeCommand) {
+        iterator.remove()
+        val children = when (insert.subcommand) {
+            SUBCOMMAND_DECL -> interactorParse.get().parseDecl(sourceUrl, sourceRoot, insert.location!!)
+            SUBCOMMAND_DEF -> interactorParse.get().parseDef(sourceUrl, sourceRoot, insert.location!!)
+            else -> TODO()
         }
+        iterator.add(insert.copy(children = children))
     }
 
     private fun applyOmitCommand(iterator: MutableListIterator<Node>) {

@@ -1,3 +1,3 @@
 package com.blaster.data.nodes
 
-class StructListItem: Node()
+data class StructListItem(val children: List<Node> = listOf()): Node

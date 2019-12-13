@@ -51,24 +51,24 @@ class InteractorCommands {
     }
 
     private fun identifyIncludeCommand(sourceUrl: String, sourceRoot: File, stack: List<String>): NodeCommand? {
+        val location = interactorLocation.locate(sourceUrl, sourceRoot, stack[1])
         val subcmd = stack[0]
         val cmd = when {
-            subcmd == SUBCOMMAND_DECL -> NodeCommand(NodeCommand.Type.INCLUDE, listOf(SUBCOMMAND_DECL, stack[1]))
-            subcmd == SUBCOMMAND_DEF -> NodeCommand(NodeCommand.Type.INCLUDE, listOf(SUBCOMMAND_DEF, stack[1]))
+            subcmd == SUBCOMMAND_DECL -> NodeCommand(NodeCommand.Type.INCLUDE, listOf(SUBCOMMAND_DECL, stack[1]), location)
+            subcmd == SUBCOMMAND_DEF -> NodeCommand(NodeCommand.Type.INCLUDE, listOf(SUBCOMMAND_DEF, stack[1]), location)
             else -> TODO()
         }
-        cmd.location = interactorLocation.locate(sourceUrl, sourceRoot, stack[1])
         return cmd
     }
 
     private fun identifyInlineCommand(sourceUrl: String, sourceRoot: File, stack: List<String>): NodeCommand? {
+        val location = interactorLocation.locate(sourceUrl, sourceRoot, stack[1])
         val subcmd = stack[0]
         val cmd =  when {
-            subcmd == SUBCOMMAND_DECL -> NodeCommand(NodeCommand.Type.INLINE, listOf(SUBCOMMAND_DECL, stack[1]))
-            subcmd == SUBCOMMAND_DEF -> NodeCommand(NodeCommand.Type.INLINE, listOf(SUBCOMMAND_DEF, stack[1]))
+            subcmd == SUBCOMMAND_DECL -> NodeCommand(NodeCommand.Type.INLINE, listOf(SUBCOMMAND_DECL, stack[1]), location)
+            subcmd == SUBCOMMAND_DEF -> NodeCommand(NodeCommand.Type.INLINE, listOf(SUBCOMMAND_DEF, stack[1]), location)
             else -> TODO()
         }
-        cmd.location = interactorLocation.locate(sourceUrl, sourceRoot, stack[1])
         return cmd
     }
 

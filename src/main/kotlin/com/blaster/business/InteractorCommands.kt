@@ -19,15 +19,11 @@ class InteractorCommands {
         LEM_COMPONENT.inject(this)
     }
 
-    fun identifyCommands(sourceUrl: URL, sourceRoot: File, nodes: List<Node>): List<Node> {
-        val result = mutableListOf<Node>()
-        nodes.forEach {
-            result.add(when (it) {
-                is NodeText -> identifyCommand(sourceUrl, sourceRoot, it.text) ?: it
-                else -> it
-            })
+    fun identifyCommands(sourceUrl: URL, sourceRoot: File, nodes: List<Node>): List<Node> = nodes.map {
+        when (it) {
+            is NodeText -> identifyCommand(sourceUrl, sourceRoot, it.text) ?: it
+            else -> it
         }
-        return result
     }
 
     // Main commands identification routine. Will return a command if identified, or null if nothing found
@@ -77,11 +73,12 @@ class InteractorCommands {
 
     private fun identifyHeaderCommand(stack: List<String>): NodeCommand? {
         val subcmd = stack[0]
-        return when {
+        val cmd = when {
             subcmd == SUBCOMMAND_H1 -> NodeCommand(NodeCommand.Type.HEADER, listOf(SUBCOMMAND_H1, stack[1]))
             subcmd == SUBCOMMAND_H2 -> NodeCommand(NodeCommand.Type.HEADER, listOf(SUBCOMMAND_H2, stack[1]))
             else -> TODO()
         }
+        return cmd
     }
 
     private fun identifyPictureCommand(subcmd: List<String>): NodeCommand? {
@@ -134,6 +131,7 @@ class InteractorCommands {
                 val definitions = interactorParse.get().parseDef(sourceUrl, sourceRoot, insert.location!!)
                 definitions.forEach { iterator.add(it) }
             }
+            else -> TODO()
         }
     }
 

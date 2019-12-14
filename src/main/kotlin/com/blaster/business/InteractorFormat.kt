@@ -5,7 +5,7 @@ import com.blaster.data.nodes.*
 private val LINE_REGEX = "[\r*\n]+".toRegex()
 
 class InteractorFormat {
-    fun textToParagraphs(text: String): List<NodeText> = text.split(LINE_REGEX)
+    fun textToNodes(text: String): List<NodeText> = text.split(LINE_REGEX)
         .map { NodeText(it) }
 
     fun removeCommonTabulation(code: String): String {

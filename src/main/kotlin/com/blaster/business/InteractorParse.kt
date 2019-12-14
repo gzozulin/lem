@@ -32,9 +32,9 @@ class InteractorParse {
     // This call will convert a scenario file into a list of nodes. The parameters are self explanatory.
     fun parseScenario(sourceUrl: URL, sourceRoot: File, scenario: File): List<Node> {
         // First operation of this method is to convert text in the scenario file into a distinct nodes. Paragraphs are separated by the new lines
-        val paragraphs = interactorFormat.textToParagraphs(scenario.readText())
+        val nodes = interactorFormat.textToNodes(scenario.readText())
         // The next operation is to identify commands in those nodes if any. In this case this is a root element, therefore the location of it is == null
-        val withCommands = interactorCommands.identifyCommands(sourceUrl, sourceRoot, paragraphs)
+        val withCommands = interactorCommands.identifyCommands(sourceUrl, sourceRoot, nodes)
         // If we found any commands - we will apply them to the current result
         val commandsApplied = interactorCommands.applyCommands(sourceUrl, sourceRoot, withCommands)
         // We also want to identify possible structures inside of the nodes - lists, tables and etc.

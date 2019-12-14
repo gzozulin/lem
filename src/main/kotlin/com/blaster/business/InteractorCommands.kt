@@ -5,6 +5,7 @@ import com.blaster.platform.LEM_COMPONENT
 import dagger.Lazy
 
 import java.io.File
+import java.net.URL
 import javax.inject.Inject
 
 class InteractorCommands {
@@ -18,7 +19,7 @@ class InteractorCommands {
         LEM_COMPONENT.inject(this)
     }
 
-    fun identifyCommands(sourceUrl: String, sourceRoot: File, nodes: List<Node>): List<Node> = nodes
+    fun identifyCommands(sourceUrl: URL, sourceRoot: File, nodes: List<Node>): List<Node> = nodes
         .map {
             if (it is NodeText) {
                 identifyCommand(sourceUrl, sourceRoot, it.text) ?: it
@@ -28,7 +29,7 @@ class InteractorCommands {
         }
 
     // Main commands identification routine. Will return a command if identified, or null if nothing found
-    private fun identifyCommand(sourceUrl: String, sourceRoot: File, command: String): NodeCommand? {
+    private fun identifyCommand(sourceUrl: URL, sourceRoot: File, command: String): NodeCommand? {
         // We prefix all of the commands in the text with a '#' symbol. If it is not found - it is not a command
         if (!command.startsWith(COMMAND_IDENTIFIER)) {
             return null
@@ -50,7 +51,7 @@ class InteractorCommands {
         }
     }
 
-    private fun identifyIncludeCommand(sourceUrl: String, sourceRoot: File, stack: List<String>): NodeCommand? {
+    private fun identifyIncludeCommand(sourceUrl: URL, sourceRoot: File, stack: List<String>): NodeCommand? {
         val location = interactorLocation.locate(sourceUrl, sourceRoot, stack[1])
         val subcmd = stack[0]
         val cmd = when {
@@ -61,7 +62,7 @@ class InteractorCommands {
         return cmd
     }
 
-    private fun identifyInlineCommand(sourceUrl: String, sourceRoot: File, stack: List<String>): NodeCommand? {
+    private fun identifyInlineCommand(sourceUrl: URL, sourceRoot: File, stack: List<String>): NodeCommand? {
         val location = interactorLocation.locate(sourceUrl, sourceRoot, stack[1])
         val subcmd = stack[0]
         val cmd =  when {
@@ -96,7 +97,7 @@ class InteractorCommands {
     }
 
     // Commands application routine. It receives a source url and root and a list of nodes as a parameters. The result is a list of nodes modified by all of the commands in the original list.
-    fun applyCommands(sourceUrl: String, sourceRoot: File, nodes: List<Node>): List<Node> {
+    fun applyCommands(sourceUrl: URL, sourceRoot: File, nodes: List<Node>): List<Node> {
         // Since we will do operations on the list, we want to convert it to a mutable one - the structure of the list can be changed this way
         val mutableList = ArrayList(nodes)
         val iterator = mutableList.listIterator()
@@ -120,7 +121,7 @@ class InteractorCommands {
     }
 
     private fun applyInlineCommand(
-        sourceUrl: String, sourceRoot: File, iterator: MutableListIterator<Node>, insert: NodeCommand) {
+        sourceUrl: URL, sourceRoot: File, iterator: MutableListIterator<Node>, insert: NodeCommand) {
         iterator.remove()
         when (insert.subcommand) {
             SUBCOMMAND_DECL -> {
@@ -135,7 +136,7 @@ class InteractorCommands {
     }
 
     private fun applyIncludeCommand(
-        sourceUrl: String, sourceRoot: File, iterator: MutableListIterator<Node>, insert: NodeCommand) {
+        sourceUrl: URL, sourceRoot: File, iterator: MutableListIterator<Node>, insert: NodeCommand) {
         iterator.remove()
         val children = when (insert.subcommand) {
             SUBCOMMAND_DECL -> interactorParse.get().parseDecl(sourceUrl, sourceRoot, insert.location!!)

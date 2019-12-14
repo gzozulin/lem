@@ -5,6 +5,7 @@ import com.blaster.data.managers.statements.StatementsManager
 import com.blaster.data.nodes.Node
 import com.blaster.platform.LEM_COMPONENT
 import java.io.File
+import java.net.URL
 import javax.inject.Inject
 
 // TODO: too much common code
@@ -32,7 +33,7 @@ class InteractorParse {
     }
 
     // This call will convert a scenario file into a list of nodes. The parameters are self explanatory.
-    fun parseScenario(sourceUrl: String, sourceRoot: File, scenario: File): List<Node> {
+    fun parseScenario(sourceUrl: URL, sourceRoot: File, scenario: File): List<Node> {
         // First operation of this method is to convert text in the scenario file into a distinct nodes. Paragraphs are separated by the new lines
         val paragraphs = interactorFormat.textToParagraphs(scenario.readText())
         // The next operation is to identify commands in those nodes if any. In this case this is a root element, therefore the location of it is == null
@@ -46,7 +47,7 @@ class InteractorParse {
     }
 
     // Routine for parsing of the definitions. Accepts the sources url and root and a path to a definition. Returns a list of nodes with this definition commentaries and code snippets
-    fun parseDef(sourceUrl: String, sourceRoot: File, location: Location): List<Node> {
+    fun parseDef(sourceUrl: URL, sourceRoot: File, location: Location): List<Node> {
         // When the definition is located, we extract the code with the help of the ANTLR4
         val definition = kotlinManager.extractDefinition(location)
         // Next step is to split this text onto the commentaries and code snippets. We also format them - removing unused lines, spaces, etc.
@@ -62,7 +63,7 @@ class InteractorParse {
         return interactorSpans.identifySpans(withStructs)
     }
 
-    fun parseDecl(sourceUrl: String, sourceRoot: File, location: Location): List<Node> {
+    fun parseDecl(sourceUrl: URL, sourceRoot: File, location: Location): List<Node> {
         val declarations = kotlinManager.extractDeclaration(location)
         val withoutTabulation = mutableListOf<String>()
         declarations.forEach { withoutTabulation.add(interactorFormat.removeCommonTabulation(it)) }

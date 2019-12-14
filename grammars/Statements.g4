@@ -1,7 +1,7 @@
 grammar Statements;
 
 @header {
-package com.blaster.data.managers.kotlin;
+package com.blaster.data.managers.statements;
 }
 
 DelimitedComment:   '/*' ( DelimitedComment | . )*? '*/';

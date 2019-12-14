@@ -5,6 +5,7 @@ import com.blaster.data.managers.printing.PrintingManager
 import com.blaster.data.nodes.SpanText.Style
 import com.blaster.platform.LEM_COMPONENT
 import java.io.File
+import java.net.URL
 import javax.inject.Inject
 
 class InteractorPrint {
@@ -109,7 +110,7 @@ class InteractorPrint {
         return result
     }
 
-    private fun printTemplateChild(path: String, url: String, children: List<Node>): String {
+    private fun printTemplateChild(path: String, url: URL, children: List<Node>): String {
         val pathLink = printTemplateLink(path, url, true)
         return printingManager.renderTemplate(
             "template_children.ftlh",
@@ -134,7 +135,7 @@ class InteractorPrint {
         return printingManager.renderTemplate("template_header.ftlh", hashMapOf("type" to type, "header" to text))
     }
 
-    private fun printTemplateLink(label: String, link: String, child: Boolean): String {
+    private fun printTemplateLink(label: String, link: URL, child: Boolean): String {
         val clz = if (child) "link_child" else "link"
         return printingManager.renderTemplate(
             "template_link.ftlh", hashMapOf("class" to clz, "label" to label, "link" to link))

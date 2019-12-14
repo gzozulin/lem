@@ -128,21 +128,15 @@ fun freemarkerConfig(@Named(&quot;TEMPLATES_FILE&quot;) templatesFile: File): Co
 </p><p class="code_child">    if (args.isEmpty()) {
         println(&quot;No args, falling back to the defaults!&quot;)
         File(&quot;scenarios&quot;).list()!!.forEach {
-            lemApp.render(&quot;https:</p>
-<p class="text_child">github.com/madeinsoviets/lem/blob/develop/", File("src/main/kotlin"), File("scenarios", it), File("articles", "$it.html"))
-</p><p class="code_child">        }
+            lemApp.render(URL(&quot;https&quot;, &quot;github.com&quot;, &quot;/madeinsoviets/lem/blob/develop/&quot;), File(&quot;src/main/kotlin&quot;), File(&quot;scenarios&quot;, it), File(&quot;articles&quot;, &quot;$it.html&quot;))
+        }
         return
     }</p>
 <p class="text_child">After that we will extract the necessary settings one by one while checking the actual values in the process
 </p><p class="code_child">    check(args.size == 3) { &quot;Wrong number of parameters!&quot; }
     val sourceRoot = File(args[0])
     check(sourceRoot.exists()) { &quot;Sources rout doesn&#39;t exists!&quot; }
-    val sourceUrl = args[1]
-    try {
-        URL(sourceUrl)
-    } catch (e: MalformedURLException) {
-        throw IllegalArgumentException(e)
-    }
+    val sourceUrl = URL(&quot;https&quot;, &quot;github.com&quot;, args[1])
     val scenarioFile = File(args[2])
     check(scenarioFile.exists()) { &quot;Scenario file doest&#39;t exists!&quot; }
     val output = File(args[3])

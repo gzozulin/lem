@@ -1,6 +1,6 @@
 // Generated from Statements.g4 by ANTLR 4.7.2
 
-package com.blaster.data.managers.kotlin;
+package com.blaster.data.managers.statements;
 
 import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
 

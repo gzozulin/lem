@@ -1,3 +1,5 @@
 package com.blaster.data.nodes
 
-data class StructLink(val text: String, val link: String) : Node
+import java.net.URL
+
+data class StructLink(val text: String, val link: URL) : Node

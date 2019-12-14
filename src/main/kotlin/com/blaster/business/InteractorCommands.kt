@@ -19,14 +19,16 @@ class InteractorCommands {
         LEM_COMPONENT.inject(this)
     }
 
-    fun identifyCommands(sourceUrl: URL, sourceRoot: File, nodes: List<Node>): List<Node> = nodes
-        .map {
-            if (it is NodeText) {
-                identifyCommand(sourceUrl, sourceRoot, it.text) ?: it
-            } else {
-                it
-            }
+    fun identifyCommands(sourceUrl: URL, sourceRoot: File, nodes: List<Node>): List<Node> {
+        val result = mutableListOf<Node>()
+        nodes.forEach {
+            result.add(when (it) {
+                is NodeText -> identifyCommand(sourceUrl, sourceRoot, it.text) ?: it
+                else -> it
+            })
         }
+        return result
+    }
 
     // Main commands identification routine. Will return a command if identified, or null if nothing found
     private fun identifyCommand(sourceUrl: URL, sourceRoot: File, command: String): NodeCommand? {

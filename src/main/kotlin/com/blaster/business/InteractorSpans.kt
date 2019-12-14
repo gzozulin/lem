@@ -24,14 +24,16 @@ class InteractorSpans {
 
     private fun identifySpansInStructs(struct: Node): List<Node> {
         return when (struct) {
-            is StructText -> identifySpansInTextStruct(struct)
+            is StructText -> {
+                listOf(struct.copy(children = identifySpansInTextStruct(struct)))
+            }
             is StructListItem -> {
                 val transformed = mutableListOf<Node>()
                 struct.children.forEach { transformed.addAll(identifySpansInStructs(it)) }
-                listOf<Node>(struct.copy(children = transformed))
+                listOf(struct.copy(children = transformed))
             }
-            is StructLink -> listOf()
-            is StructCite -> listOf()
+            is StructLink -> listOf(struct)
+            is StructCite -> listOf(struct)
             else -> TODO()
         }
     }

@@ -111,7 +111,7 @@
 </p><p class="code_child">        if (node is NodeCommand) {
             when (node.type) {</p>
 <p class="text_child">We apply the command accordingly
-</p><p class="code_child">                NodeCommand.Type.INCLUDE -&gt; applyIncludeCommand(sourceUrl, sourceRoot, node)
+</p><p class="code_child">                NodeCommand.Type.INCLUDE -&gt; applyIncludeCommand(sourceUrl, sourceRoot, iterator, node)
                 NodeCommand.Type.OMIT -&gt; applyOmitCommand(iterator)
                 NodeCommand.Type.INLINE -&gt; applyInlineCommand(sourceUrl, sourceRoot, iterator, node)</p>
 <p class="text_child">Some commands have meaning only for printing, so we do nothing right now

@@ -6,6 +6,7 @@ import java.net.URL
 private val LIST_ITEM_REGEX = "~\\s*(.+)\$".toRegex()
 private val LINK_REGEX = "\\[([^\\[]+)\\]".toRegex()
 private val CITE_REGEX = "\\\\([^\\\\]+)\\\\".toRegex()
+private val BOLD_REGEX = "'([^']+)'".toRegex()
 
 class InteractorStructs {
     fun identifyStructs(nodes: List<Node>): List<Node> {
@@ -23,13 +24,13 @@ class InteractorStructs {
         return result
     }
 
-    private fun identifyListItems(paragraph: NodeText): List<Node> {
-        val match = LIST_ITEM_REGEX.find(paragraph.text)
+    private fun identifyListItems(node: NodeText): List<Node> {
+        val match = LIST_ITEM_REGEX.find(node.text)
         return if (match != null) {
             val identified = identifyLinks(match.groups[1]!!.value)
             listOf(StructListItem(identified))
         } else {
-            identifyLinks(paragraph.text)
+            identifyLinks(node.text)
         }
     }
 
@@ -51,8 +52,21 @@ class InteractorStructs {
             result.add(if (isInside) {
                 StructCite(span)
             } else {
-                StructText(span)
+                val children = identifySpansInText(span)
+                StructText(children)
             })
+        }
+        return result
+    }
+
+    private fun identifySpansInText(text: String): List<Node> {
+        val result = mutableListOf<Node>()
+        identifySpansInText(text, BOLD_REGEX) { span: String, isInside: Boolean ->
+            if (isInside) {
+                result.add(SpanText(span, SpanText.Style.BOLD))
+            } else {
+                result.add(SpanText(span, SpanText.Style.NORMAL))
+            }
         }
         return result
     }

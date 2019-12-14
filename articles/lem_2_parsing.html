@@ -63,9 +63,7 @@
 <p class="text_child">If we found any commands - we will apply them to the current result
 </p><p class="code_child">    val commandsApplied = interactorCommands.applyCommands(sourceUrl, sourceRoot, withCommands)</p>
 <p class="text_child">We also want to identify possible structures inside of the nodes - lists, tables and etc.
-</p><p class="code_child">    val withStructs = interactorStructs.identifyStructs(commandsApplied)</p>
-<p class="text_child">After the structs are identified, we can identify spans in text - bolt, italic, etc.
-</p><p class="code_child">    return interactorSpans.identifySpans(withStructs)
+</p><p class="code_child">    return interactorStructs.identifyStructs(commandsApplied)
 }</p>
 
 </div>
@@ -166,9 +164,7 @@
 <p class="text_child">And finally, we apply the commands and return the result
 </p><p class="code_child">    val commandsApplied = interactorCommands.applyCommands(sourceUrl, sourceRoot, withCommands)</p>
 <p class="text_child">We also want to identify possible structures inside of the nodes - lists, tables and etc.
-</p><p class="code_child">    val withStructs = interactorStructs.identifyStructs(commandsApplied)</p>
-<p class="text_child">After the structs are identified, we can identify spans in text - bolt, italic, etc.
-</p><p class="code_child">    return interactorSpans.identifySpans(withStructs)
+</p><p class="code_child">    return interactorStructs.identifyStructs(commandsApplied)
 }</p>
 
 </div>

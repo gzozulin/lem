@@ -25,9 +25,6 @@ class InteractorParse {
     @Inject
     lateinit var interactorStructs: InteractorStructs
 
-    @Inject
-    lateinit var interactorSpans: InteractorSpans
-
     init {
         LEM_COMPONENT.inject(this)
     }
@@ -41,9 +38,7 @@ class InteractorParse {
         // If we found any commands - we will apply them to the current result
         val commandsApplied = interactorCommands.applyCommands(sourceUrl, sourceRoot, withCommands)
         // We also want to identify possible structures inside of the nodes - lists, tables and etc.
-        val withStructs = interactorStructs.identifyStructs(commandsApplied)
-        // After the structs are identified, we can identify spans in text - bolt, italic, etc.
-        return interactorSpans.identifySpans(withStructs)
+        return interactorStructs.identifyStructs(commandsApplied)
     }
 
     // Routine for parsing of the definitions. Accepts the sources url and root and a path to a definition. Returns a list of nodes with this definition commentaries and code snippets
@@ -58,9 +53,7 @@ class InteractorParse {
         // And finally, we apply the commands and return the result
         val commandsApplied = interactorCommands.applyCommands(sourceUrl, sourceRoot, withCommands)
         // We also want to identify possible structures inside of the nodes - lists, tables and etc.
-        val withStructs = interactorStructs.identifyStructs(commandsApplied)
-        // After the structs are identified, we can identify spans in text - bolt, italic, etc.
-        return interactorSpans.identifySpans(withStructs)
+        return interactorStructs.identifyStructs(commandsApplied)
     }
 
     fun parseDecl(sourceUrl: URL, sourceRoot: File, location: Location): List<Node> {
@@ -71,7 +64,6 @@ class InteractorParse {
         declarations.forEach { statements.addAll(statementsManager.extractStatements(it)) }
         val withCommands = interactorCommands.identifyCommands(sourceUrl, sourceRoot, statements)
         val commandsApplied = interactorCommands.applyCommands(sourceUrl, sourceRoot, withCommands)
-        val withStructs = interactorStructs.identifyStructs(commandsApplied)
-        return interactorSpans.identifySpans(withStructs)
+        return interactorStructs.identifyStructs(commandsApplied)
     }
 }

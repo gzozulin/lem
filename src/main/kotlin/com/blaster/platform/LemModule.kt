@@ -71,8 +71,4 @@ class LemModule {
     @Singleton
     @Provides
     fun interactorStructs() = InteractorStructs()
-
-    @Singleton
-    @Provides
-    fun interactorSpans() = InteractorSpans()
 }

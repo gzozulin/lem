@@ -3,17 +3,20 @@ package com.blaster.business
 import java.io.File
 import java.net.URL
 
-open class Location(val url: URL, val file: File)
+interface Location {
+    val url: URL
+    val file: File
+}
 
-class LocationClass(url: URL, file: File, val clazz: String) : Location(url, file) {
+data class LocationClass(override val url: URL, override val file: File, val clazz: String) : Location {
     override fun toString(): String = "{file: $file, class: $clazz}"
 }
 
-class LocationMember(url: URL, file: File, val clazz: String, val identifier: String) : Location(url, file) {
+data class LocationMember(override val url: URL, override val file: File, val clazz: String, val identifier: String) : Location {
     override fun toString(): String = "{file: $file, class: $clazz, identifier: $identifier}"
 }
 
-class LocationGlobal(url: URL, file: File, val identifier: String) : Location(url, file) {
+data class LocationGlobal(override val url: URL, override val file: File, val identifier: String) : Location {
     override fun toString(): String = "{file: $file, identifier: $identifier}"
 }
 

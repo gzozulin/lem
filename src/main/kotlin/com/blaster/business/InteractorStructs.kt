@@ -27,8 +27,7 @@ class InteractorStructs {
     private fun identifyListItems(node: NodeText): List<Node> {
         val match = LIST_ITEM_REGEX.find(node.text)
         return if (match != null) {
-            val identified = identifyLinks(match.groups[1]!!.value)
-            listOf(StructListItem(identified))
+            listOf(StructListItem(identifyLinks(match.groups[1]!!.value)))
         } else {
             identifyLinks(node.text)
         }
@@ -52,8 +51,7 @@ class InteractorStructs {
             result.add(if (isInside) {
                 StructCite(span)
             } else {
-                val children = identifySpansInText(span)
-                StructText(children)
+                StructText(identifySpansInText(span))
             })
         }
         return result

@@ -1,45 +1,37 @@
 #header; h2; Why? What?
 Many of us have a hobby or an art or a craft of some sort. But how to showcase it to the like-minded audience? There are many ways out there: you can write an article, you can create a video on YouTube, you can maintain a page on Wikipedia. You can even create your podcast series. Each of those approaches has its advantages and disadvantages. Some are a bit more entertaining, and the others are easier to produce. In my opinion, my craft - the art of programming - requires a unique approach.
-
-#cite; 1; First reference; https://translate.google.com/#view=home&op=translate&sl=en&tl=ru&text=cite
-
-
-Here is a cool list:
-~ Uno [link goes here; https://docs.samsungknox.com/dev/common/knox-version-mapping.htm]
-~ Dos
-~ Tres
-
-#picture; Cool town; https://media.cntraveler.com/photos/5b05bec47f70e97cf7c0dea9/4:3/w_480,c_limit/FJ1XDN.jpg
+#picture; Stanislaw Lem; http://gzozulin.com/wp-content/uploads/2019/12/lem.jpg
 
 I saw many videos about programming on YouTube. Their main disadvantage is the fact that it is quite hard to follow them. Imagine if you want to recreate or learn some specific details from the video. You will have to pause all the time, and you cannot copy the code snippets from the video. And sometimes, the details of the algorithms or complex mechanics are not explained deep enough due to the specifics of the medium.
 
-
-#cite; 2; Second reference; https://translate.google.com/#view=home&op=translate&sl=en&tl=ru&text=cite
-
 Articles have disadvantages as well - especially the old ones. The codebase has a tendency to develop over time: bugs are fixed, ideas getting mature. If you ever read the technical articles about ancient and established products, you probably noticed what I am talking about - when the code and the text diverge significantly.
 
-One of the approaches I liked was a so-called literate programming first time introduced by Donald Knuth. In this case, source code behaves like an open book. The author explains the codebase in proper order and with an in-depth explanation, available on the spot. I want to develop a tool that allows defining a codebase in a particular manner. Imagine, if you have an article, which can be compiled as a part of the codebase. This approach allows the code and the text to always be in sync - even if the project is being modified over time.
+One of the approaches I liked was a so-called literate programming first time introduced by Donald Knuth\1\. In this case, source code behaves like an open book. The author explains the codebase in proper order and with an in-depth explanation, available on the spot. I want to develop a tool that allows defining a codebase in a particular manner. Imagine, if you have an article, which can be compiled as a part of the codebase. This approach allows the code and the text to always be in sync - even if the project is being modified over time.
+#cite; 1; Literate Programming; http://www.literateprogramming.com/
 
 One more influence is the example of the C programming language. When you port a C compiler on a different hardware platform, C becomes a self-compiling assembler. You start with porting a basic functionality, then more advanced features of the language can be added on top of it while utilizing the basics. This article is something along those lines. Over time, more features will be added to the tool, and the material will be updated. This article is an example and a first use case for this tool.
 
-I decided to call this tool Lem in the memory of one of my favorite authors - Stanislav Lem. He was a Polish writer of science fiction, philosophy and satire, and a trained physician. His books were a source of great inspiration during my childhood and early youth. If you have never read those - make yourself a favor.
+I decided to call this tool Lem in the memory of one of my favorite authors - Stanislav Lem\2\. He was a Polish writer of science fiction, philosophy and satire, and a trained physician. His books were a source of great inspiration during my childhood and early youth. If you have never read those - make yourself a favor.
+#cite; 2; Stanislaw Lem on Wikipedia; https://en.wikipedia.org/wiki/Stanis%C5%82aw_Lem
 
 Let's now start discussing the internal construction of the tool. We will dive deep into the application by explaining the foundations - the architecture of the application.
 
 #header; h2; The CLEAN architecture of the app
 Every application should have some meaningful structure behind it. This structure, commonly known as the application architecture, is the primary reference while reading and understanding the code. The common fallacy behind the application architectures is to exist just for the sake of existing. A good sign of it is when the design is too restrictive and rigid when it is hard to add use cases, which were not evident during the designing stage. To avoid this common pitfall, I am usually trying to use something as flexible as possible. The most important part of the design is to do not restrict yourself. As we all know, premature optimization is the root of all evil.
 
-That is why I often employ a so-called CLEAN design. This approach was created and formalized by "Uncle" Bob Martin based on several other architectural designs. I like the flexibility and fundamental ideas behind this design.
+That is why I often employ a so-called CLEAN design\3\. This approach was created and formalized by "Uncle" Bob Martin based on several other architectural designs. I like the flexibility and fundamental ideas behind this design.
+#cite; 3; The Clean Architecture; https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html
 
-The main point behind the CLEAN design is the principle of Separation of Concerns. From Wikipedia: Separation of Concerns is a design principle for separating a computer program into distinct sections so that each section addresses a separate concern. This approach allows you to represent your application as a sort of layered pie, where each layer serves to its purpose.
+The main point behind the CLEAN design is the principle of Separation of Concerns\4\. From Wikipedia: Separation of Concerns is a design principle for separating a computer program into distinct sections so that each section addresses a separate concern. This approach allows you to represent your application as a sort of layered pie, where each layer serves to its purpose.
+#cite; 4; Separation of Concerns on Wikipedia; https://en.wikipedia.org/wiki/Separation_of_concerns
 
 The main layers are Presentational Layer, Business Logic Layer, and Data Access Layer. If done from the beginning, the application can be dissected into three distinct aspects without too much hassle. That gives the ability to work abstractly and independently, brings enormous benefits during the testing stage.
 
-Presentational Layer contains all of the logic for interacting with the platform on which your application is running. It can be something as straightforward as a Web or a mobile device, but also it can be something a bit more obscured, like a CLI style application.
+~ Presentational Layer contains all of the logic for interacting with the platform on which your application is running. It can be something as straightforward as a Web or a mobile device, but also it can be something a bit more obscured, like a CLI style application.
 
-Business Layer contains all of the mechanics of the application. Theoretically, it should be simple to take your Business layer and move it to the other platform like a drop-in replacement. This layer is also subdivided into specific use cases.
+~ Business Layer contains all of the mechanics of the application. Theoretically, it should be simple to take your Business layer and move it to the other platform like a drop-in replacement. This layer is also subdivided into specific use cases.
 
-Data Access Layer, as the name suggests, is mostly an abstraction over the actual entities on which you operate during the application lifecycle.
+~ Data Access Layer, as the name suggests, is mostly an abstraction over the actual entities on which you operate during the application lifecycle.
 
 I am not following the design too strictly to allow myself some slack. In my opinion, every tool can be adjusted for a job.
 
@@ -50,11 +42,13 @@ In the next chapter, we will talk about additional auxiliary facilities, which s
 #header; h2; Dependencies boilerplate
 The key to managing the complexity of a growing project is the modularization. Modularization is a division of a system or a product into physically and functionally distinct units to allow removal and replacement. Those units have to reference each other somehow. And also we would like to allow ourselves some control and flexibility over those references. Wouldn't it be cool to be able to just remove and replace parts of the system without interrupting others?
 
-All of that is possible with a Dependency Injection system. In software engineering, Dependency Injection is a technique, whereby one object supplies the dependencies of another object. With such system you control the creation, the destruction and a lifecycle of every component. For example you can decide if you will have only one instance of the component and therefore it will be marked as a singleton, or it will be created every time when it is required.
+All of that is possible with a Dependency Injection system. In software engineering, Dependency Injection is a technique, whereby one object supplies the dependencies of another object \5\. With such system you control the creation, the destruction and a lifecycle of every component. For example you can decide if you will have only one instance of the component and therefore it will be marked as a singleton, or it will be created every time when it is required.
+#cite; 5; Dependency injection on Wikipedia; https://en.wikipedia.org/wiki/Dependency_injection
 
 One more advantage of a good Dependency Injection framework is that it allows you to significantly reduce the amount of boilerplate code. Instead of dragging each dependency through the chain of constructors, you can simply inject a field through the DI on the creation stage.
 
 This particular project uses Google's Dagger 2 to facilitate DI. One of the primary advantages of Dagger 2 over most other DI frameworks is that its strictly generated implementation - no reflexion. It means that the boilerplate code, needed for the injection, is generated during the compile time, rather being constructed during runtime through the reflexion mechanisms. That is a performance boost, of course.
+#cite; 6; Dagger 2; https://dagger.dev/
 
 First of all, in order to employ Dagger 2 for our needs, we have to specify out dependencies. This happens in a so-called Dagger 2 module. Those are application defined classes, which provides all of the necessary information about how to create and manage your application units. You simply need to provide an instance of the class and annotate it accordingly. Here is an example:
 #include; def; com.blaster.platform.LemModule::interactorParse
@@ -80,12 +74,25 @@ When we have a list of nodes and first extracted commands on hands, we can move 
 
 In most of the cases, as a result of some commands execution, some code will be queued to be parsed. That is how we keep a permanent link between an article and a codebase. As a result of the parsing of the code, we will receive snippets and comments. It is possible to have additional commands in those comments. Those commands will follow the same procedure: after being extracted from the comments, they will be applied to a current result. You can immediately notice the recursive nature of the process.
 
-Those steps can repeat many times. When finally, all of the commands are extracted and applied, and we have a list final list of nodes, we can move on to the next stage.
+After all of the commands applied we can finally work with the text. It means, that we can identify structures and formatting in paragraphs. At this stage, for example, we can highlight all those lists and tables, different spans, links and etc.
+
+Those steps can repeat many times. When finally, all of the preparations are done, and we have a list final list of nodes, we can move on to the next stage.
 
 The final stage in the lifecycle of our application is the Printing Stage. At this stage, we take the list of nodes from the previous steps and convert them into an HTML page with the help of templates.
 
 Each paragraph goes through its own type of template, which will apply different properties of the text and rendering - and will end up in the final HTML representation of the article.
 
-So, to summarize, we start with the scenario for the article. We parse this scenario and extract the nodes of text and commands from it. Then we apply those commands to the current result. Some of those commands will require to parse the additional pieces of code. We will proceed by parsing the code into code snippets and comments. Comments can contain commands, as well. Extracted commands will be recursively applied to the body of the article. And finally, we will print the result all together with the help of the HTML templates.
+So, to summarize:
+~ We start with the scenario for the article
+~ We parse this scenario and extract the nodes of text and commands from it
+~ Then we apply those commands to the current result
+~ Some of those commands will require to parse the additional pieces of code
+~ We will proceed by parsing the code into code snippets and comments
+~ Comments can contain commands, as well
+~ Extracted commands will be recursively applied to the body of the article
+~ Structures, like lists, tables, spans and links are identified
+~ And finally, we will print the result all together with the help of the HTML templates
 
 In the next chapter, we will have a closer look at how things are parsed.
+
+#header; h2; References

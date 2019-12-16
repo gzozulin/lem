@@ -91,7 +91,7 @@ class InteractorCommands {
     }
 
     private fun identifyCiteCommand(stack: List<String>): NodeCommand? {
-        check(stack.size == 3) { "Cite command has to have 3 parameters!" }
+        check(stack.size == 3) { "Cite command has to have 3 parameters! ${stack.joinToString { "" }}" }
         return NodeCommand(NodeCommand.Type.CITE, listOf(stack[0], stack[1], stack[2]))
     }
 

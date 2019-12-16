@@ -47,7 +47,8 @@ class InteractorPrint {
         // After all of the nodes are rendered, we can add our references
         references.forEach { node ->
             result += printTemplateListItem(
-                "${node.subcommand}: " + printTemplateCite(node.subcommand, node.argument, node.argument1, child), child)
+                printTemplateLink("&#8593;[${node.subcommand}]: ", "#${node.subcommand}_origin", child, false) +
+                        printTemplateCite(node.subcommand, node.argument, node.argument1, child), child)
         }
         // The final result is returned from the call
         return result
@@ -58,7 +59,7 @@ class InteractorPrint {
         for (ch in node.children) {
             result += when (ch) {
                 is StructListItem -> renderListItem(ch, child)
-                is StructLink -> printTemplateLink(ch.text, ch.link, child)
+                is StructLink -> printTemplateLink(ch.text, ch.link.toString(), child)
                 is StructCite -> printTemplateCiteLink(ch.id)
                 is StructText -> renderTextSpans(ch.children)
                 else -> TODO()
@@ -71,7 +72,7 @@ class InteractorPrint {
         var result = ""
         for (ch in listItem.children) {
             result += when (ch) {
-                is StructLink -> printTemplateLink(ch.text, ch.link, child)
+                is StructLink -> printTemplateLink(ch.text, ch.link.toString(), child)
                 is StructCite -> printTemplateCiteLink(ch.id)
                 is StructText -> renderTextSpans(ch.children)
                 else -> TODO()
@@ -111,7 +112,7 @@ class InteractorPrint {
     }
 
     private fun printTemplateChild(path: String, url: URL, children: List<Node>): String {
-        val pathLink = printTemplateLink(path, url, true)
+        val pathLink = printTemplateLink(path, url.toString(), true)
         return printingManager.renderTemplate(
             "template_children.ftlh",
             hashMapOf("path" to pathLink, "children" to printParagraphs(children, true))
@@ -135,10 +136,10 @@ class InteractorPrint {
         return printingManager.renderTemplate("template_header.ftlh", hashMapOf("type" to type, "header" to text))
     }
 
-    private fun printTemplateLink(label: String, link: URL, child: Boolean): String {
+    private fun printTemplateLink(label: String, link: String, child: Boolean, newWindow: Boolean = true): String {
         val clz = if (child) "link_child" else "link"
         return printingManager.renderTemplate(
-            "template_link.ftlh", hashMapOf("class" to clz, "label" to label, "link" to link))
+            "template_link.ftlh", hashMapOf("class" to clz, "label" to label, "link" to link, "newWindow" to newWindow))
     }
 
     private fun printTemplateCite(id: String, label: String, link: String, child: Boolean): String {

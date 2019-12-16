@@ -1,1 +1,1 @@
-<sup><a href="#${id}">${id}</a></sup>
+<sup id="${id}_origin"><a href="#${id}">&#91;${id}&#93;</a></sup>

@@ -49,7 +49,8 @@
 
 <p class="text">Many of us have a hobby or an art or a craft of some sort. But how to showcase it to the like-minded audience? There are many ways out there: you can write an article, you can create a video on YouTube, you can maintain a page on Wikipedia. You can even create your podcast series. Each of those approaches has its advantages and disadvantages. Some are a bit more entertaining, and the others are easier to produce. In my opinion, my craft - the art of programming - requires a unique approach.
 </p><p class="text">Here is a cool list:
-</p><p class="text"><ul class="list_item"><li>Uno <a class="link" href="https://docs.samsungknox.com/dev/common/knox-version-mapping.htm" target="_blank">link goes here</a>
+</p><p class="text"><ul class="list_item"><li>Uno     <a class="link" href="https://docs.samsungknox.com/dev/common/knox-version-mapping.htm" target="_blank">link goes here</a>
+
 </li></ul>
 </p><p class="text"><ul class="list_item"><li>Dos
 </li></ul>
@@ -82,8 +83,10 @@
 </p><p class="text">This particular project uses Google's Dagger 2 to facilitate DI. One of the primary advantages of Dagger 2 over most other DI frameworks is that its strictly generated implementation - no reflexion. It means that the boilerplate code, needed for the injection, is generated during the compile time, rather being constructed during runtime through the reflexion mechanisms. That is a performance boost, of course.
 </p><p class="text">First of all, in order to employ Dagger 2 for our needs, we have to specify out dependencies. This happens in a so-called Dagger 2 module. Those are application defined classes, which provides all of the necessary information about how to create and manage your application units. You simply need to provide an instance of the class and annotate it accordingly. Here is an example:
 </p><div class="child">
-    <h3><a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop/src/main/kotlin/com/blaster/platform/LemModule.kt" target="_blank">com.blaster.platform.LemModule::interactorParse</a></h3>
-    <p class="text_child">This method will create <span style="font-weight:bold">InteractorParse</span> instance <a class="link_child" href="https://docs.samsungknox.com/dev/common/knox-version-mapping.htm" target="_blank">text</a> and<sup><a href="#1">1</a></sup> inject it into the <span style="font-weight:bold">rest of the application</span>. Its annotation tells us, that only one instance of this class will be created.
+    <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop/src/main/kotlin/com/blaster/platform/LemModule.kt" target="_blank">com.blaster.platform.LemModule::interactorParse</a>
+</h3>
+    <p class="text_child">This method will create <span style="font-weight:bold">InteractorParse</span> instance     <a class="link_child" href="https://docs.samsungknox.com/dev/common/knox-version-mapping.htm" target="_blank">text</a>
+ and<sup id="1_origin"><a href="#1">&#91;1&#93;</a></sup> inject it into the <span style="font-weight:bold">rest of the application</span>. Its annotation tells us, that only one instance of this class will be created.
 </p><p class="code_child">@Singleton
 @Provides
 fun interactorParse() = InteractorParse()</p>
@@ -91,7 +94,8 @@ fun interactorParse() = InteractorParse()</p>
 </div>
 <p class="text">With DI framework we also can provide unique files and settings:
 </p><div class="child">
-    <h3><a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop/src/main/kotlin/com/blaster/platform/LemModule.kt" target="_blank">com.blaster.platform.LemModule::freemarkerConfig</a></h3>
+    <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop/src/main/kotlin/com/blaster/platform/LemModule.kt" target="_blank">com.blaster.platform.LemModule::freemarkerConfig</a>
+</h3>
     <p class="text_child">This methods will provide the configuration for the FreeMarker template engine. Its only parameter is a place, where we store the templates. This parameter is fulfilled by DI as well.
 </p><p class="code_child">@Singleton
 @Provides
@@ -108,7 +112,8 @@ fun freemarkerConfig(@Named(&quot;TEMPLATES_FILE&quot;) templatesFile: File): Co
 </div>
 <p class="text">The next task is to clarify the rules on how to resolve the actual dependencies. For example we can restrict a certain set of dependencies to be available only for the specified classes. Those rules can be defined in the Dagger 2 component. It is an interface, which specifies what can be injected where. After Dagger 2 will finish code generation, we will receive an implementation of this interface. The example can be a following call:
 </p><div class="child">
-    <h3><a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop/src/main/kotlin/com/blaster/platform/LemComponent.kt" target="_blank">com.blaster.platform.LemComponent::inject</a></h3>
+    <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop/src/main/kotlin/com/blaster/platform/LemComponent.kt" target="_blank">com.blaster.platform.LemComponent::inject</a>
+</h3>
     <p class="text_child">This call will allow us to inject classes declared in LemModule into the InteractorCommands
 </p><p class="code_child">fun inject(interactorCommands: InteractorCommands)</p>
 
@@ -119,7 +124,8 @@ fun freemarkerConfig(@Named(&quot;TEMPLATES_FILE&quot;) templatesFile: File): Co
 <p class="text">Let us start by briefly defining what we want to achieve with this application. My original idea was to have a tool that allows you to process the code into a readable article. Since this processing can be done every time the code is updated, we can maintain parity between the codebase and the material. The process can be dissected into distinct stages. In this chapter, we will overview those stages and define a goal for each of those.
 </p><p class="text">The application starts its lifecycle, similarly to most of the JVM-based applications, with the main entry point. The main task at this stage is to handle the parameters and parse the properties of the following operation.
 </p><div class="child">
-    <h3><a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop/src/main/kotlin/com/blaster/platform/LemApp.kt" target="_blank">com.blaster.platform.LemAppKt::main</a></h3>
+    <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop/src/main/kotlin/com/blaster/platform/LemApp.kt" target="_blank">com.blaster.platform.LemAppKt::main</a>
+</h3>
     <p class="text_child">This is an application main entry point. The only parameter is an array of command line arguments
 </p><p class="code_child">fun main(args: Array&lt;String&gt;) {</p>
 <p class="text_child">We will create the application class first
@@ -155,6 +161,8 @@ fun freemarkerConfig(@Named(&quot;TEMPLATES_FILE&quot;) templatesFile: File): Co
 </p><p class="text">Each paragraph goes through its own type of template, which will apply different properties of the text and rendering - and will end up in the final HTML representation of the article.
 </p><p class="text">So, to summarize, we start with the scenario for the article. We parse this scenario and extract the nodes of text and commands from it. Then we apply those commands to the current result. Some of those commands will require to parse the additional pieces of code. We will proceed by parsing the code into code snippets and comments. Comments can contain commands, as well. Extracted commands will be recursively applied to the body of the article. And finally, we will print the result all together with the help of the HTML templates.
 </p><p class="text">In the next chapter, we will have a closer look at how things are parsed.
-</p><ul class="list_item"><li>1: <a id="1" class="link" href="https://translate.google.com/#view=home&amp;op=translate&amp;sl=en&amp;tl=ru&amp;text=cite" target="_blank">First reference</a></li></ul><ul class="list_item"><li>2: <a id="2" class="link" href="https://translate.google.com/#view=home&amp;op=translate&amp;sl=en&amp;tl=ru&amp;text=cite" target="_blank">Second reference</a></li></ul>
+</p><ul class="list_item"><li>    <a class="link" href="#1_origin">&#8593;[1]: </a>
+<a id="1" class="link" href="https://translate.google.com/#view=home&amp;op=translate&amp;sl=en&amp;tl=ru&amp;text=cite" target="_blank">First reference</a></li></ul><ul class="list_item"><li>    <a class="link" href="#2_origin">&#8593;[2]: </a>
+<a id="2" class="link" href="https://translate.google.com/#view=home&amp;op=translate&amp;sl=en&amp;tl=ru&amp;text=cite" target="_blank">Second reference</a></li></ul>
     </body>
 </html>

@@ -27,7 +27,7 @@ The main point behind the CLEAN design is the principle of Separation of Concern
 
 The main layers are Presentational Layer, Business Logic Layer, and Data Access Layer. If done from the beginning, the application can be dissected into three distinct aspects without too much hassle. That gives the ability to work abstractly and independently, brings enormous benefits during the testing stage.
 
-~ Presentational Layer contains all of the logic for interacting with the platform on which your application is running. It can be something as straightforward as a Web or a mobile device, but also it can be something a bit more obscured, like a CLI style application.
+~ Presentation Layer contains all of the logic for interacting with the platform on which your application is running. It can be something as straightforward as a Web or a mobile device, but also it can be something a bit more obscured, like a CLI style application.
 
 ~ Business Layer contains all of the mechanics of the application. Theoretically, it should be simple to take your Business layer and move it to the other platform like a drop-in replacement. This layer is also subdivided into specific use cases.
 

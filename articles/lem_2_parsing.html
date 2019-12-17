@@ -47,9 +47,9 @@
     <body>
             <h2>The Parsing Stage</h2>
 
-<p class="text">In this chapter, we will see the details of the parsing of the scenario. Parsing of a modern programming language is an incredibly complex task. And this task is far outside of the reach of this article. If you need to parse multiple languages and formats, the complexity of this task can easily outweigh the gain from the project.
-</p><p class="text">To avoid unnecessary complexity and to facilitate parsing, we will be using a tool called ANTLR4. What is especially good about this tool is that it comes with already available grammar for most of the modern languages. Those grammars are contributed and supported by people who are highly proficient with the languages in question.
-</p><p class="text">We will employ two grammar files for our task at hand. One is for Kotlin language, and another is our custom grammar, which allows us to separate the code from the comments. If we would like to add the support for languages, other than Kotlin in the future, we always can do this by expanding the pool of available grammar.
+<p class="text">In this chapter, we will see the details of the parsing of the scenario. Parsing of a modern programming language is an incredibly complex task. And this task is far outside of the reach of this article. If you need to parse multiple languages and formats, the complexity of this task can easily outweigh the joy from the project.
+</p><p class="text">To avoid unnecessary complexity and to facilitate parsing, we will be using a tool called ANTLR4<sup id="1_origin"><a href="#1">&#91;1&#93;</a></sup>. What is especially good about this tool is that it comes with already available grammar for most of the modern<sup id="2_origin"><a href="#2">&#91;2&#93;</a></sup>. Those grammars are contributed and supported by people who are highly proficient with the languages in question.
+</p><p class="text">We will employ two grammar files for our task at hand. One is for Kotlin language<sup id="3_origin"><a href="#3">&#91;3&#93;</a></sup>, and another is our custom grammar, which allows us to separate the code from the comments. If we would like to add the support for languages, other than Kotlin in the future, we always can do this by expanding the pool of available grammar.
 </p><p class="text">I will not discuss the creation of the grammars and how to use ANTLR4 because it is outside of the scope of this article. For simplicity, we can think about it as if some tool will convert the provided language constructs into the classes, available for consumption in the language of our choice - in our case - Kotlin.
 </p><p class="text">Let us start with a first step - parsing of the scenario file, passed from the input arguments.
 </p><div class="child">
@@ -59,13 +59,19 @@
 </p><p class="code_child">fun parseScenario(sourceUrl: URL, sourceRoot: File, scenario: File): List&lt;Node&gt; {</p>
 <p class="text_child">First operation of this method is to convert text in the scenario file into a distinct nodes. Paragraphs are separated by the new lines
 </p><p class="code_child">    val nodes = interactorFormat.textToNodes(scenario.readText())</p>
-<p class="text_child">The next operation is to identify commands in those nodes if any. In this case this is a root element, therefore the location of it is == null
-</p><p class="code_child">    val withCommands = interactorCommands.identifyCommands(sourceUrl, sourceRoot, nodes)</p>
-<p class="text_child">If we found any commands - we will apply them to the current result
-</p><p class="code_child">    val commandsApplied = interactorCommands.applyCommands(sourceUrl, sourceRoot, withCommands)</p>
-<p class="text_child">We also want to identify possible structures inside of the nodes - lists, tables and etc.
-</p><p class="code_child">    return interactorStructs.identifyStructs(commandsApplied)
+<p class="text_child">The next task is to apply common procedures for the nodes: identification and application of commands, identification of the structures
+</p><p class="code_child">    return renderNodes(sourceUrl, sourceRoot, nodes)</p>
+<div class="child">
+    <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop/src/main/kotlin/com/blaster/business/InteractorParse.kt" target="_blank">com.blaster.business.InteractorParse::renderNodes</a>
+</h3>
+    <p class="code_child">private fun renderNodes(sourceUrl: URL, sourceRoot: File, nodes: List&lt;Node&gt;): List&lt;Node&gt; {
+    val withCommands = interactorCommands.identifyCommands(sourceUrl, sourceRoot, nodes)
+    val commandsApplied = interactorCommands.applyCommands(sourceUrl, sourceRoot, withCommands)
+    return interactorStructs.identifyStructs(commandsApplied)
 }</p>
+
+</div>
+<p class="code_child">}</p>
 
 </div>
 <p class="text">The scenario will produce a list of nodes and commands, which were identified. Let's see how the identification of the commands works.
@@ -137,9 +143,9 @@
 </p><p class="code_child">    val clazz = extractClass(path)</p>
 <p class="text_child">Next we want to retreive the actual file, containing the class. We do that by looking at the sources root and a package
 </p><p class="code_child">    val file = locateFile(sourceRoot, clazz)</p>
-<p class="text_child">We also want to assemble the URL to the location
+<p class="text_child">We also want to assemble the URL to the location based source url on Github
 </p><p class="code_child">    val url = URL(sourceUrl.toString() + file.toString().replace(&quot;\\&quot;, &quot;/&quot;))</p>
-<p class="text_child">Now we can choose it this is a path to a whole class or to one of its members. We can be sure that the it is a global function or property if the class name ends with <span style="font-weight:bold">Kt</span> according to a Kotlin notation. Else it is a path to a standalone class
+<p class="text_child">Now we can choose if this is a path to a whole class or to one of its members. We can be sure that the it is a global function or property if the class name ends with Kt according to a Kotlin notation. Else it is a path to a standalone class
 </p><p class="code_child">    return if (path.contains(&quot;::&quot;)) {
         val member = extractMember(path)
         if (clazz.endsWith(&quot;Kt&quot;)) {
@@ -153,29 +159,145 @@
 }</p>
 
 </div>
-<p class="text">The author of the scenario can choose how to include the code. We can either include definitions of declarations of methods and classes. The difference is that sometimes you want to include the body of the method, and sometimes you want to mention it. Let us see how parsing of the requested definitions works.
+<p class="text">The author of the scenario can choose how to include the code. We can either include definitions of declarations of methods and classes. The difference is that sometimes you want to include the body of the method, and sometimes you just want to mention it. Let us see how parsing of the requested definitions works.
 </p><div class="child">
     <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop/src/main/kotlin/com/blaster/business/InteractorParse.kt" target="_blank">com.blaster.business.InteractorParse::parseDef</a>
 </h3>
-    <p class="text_child">Routine for parsing of the definitions. Accepts the sources url and root and a path to a definition. Returns a list of nodes with this definition commentaries and code snippets
+    <p class="text_child">Routine for parsing of the definitions. Accepts the sources url and root and a location of the definition. Returns a list of nodes for this definition (commentaries, code, commands, etc.)
 </p><p class="code_child">fun parseDef(sourceUrl: URL, sourceRoot: File, location: Location): List&lt;Node&gt; {</p>
 <p class="text_child">When the definition is located, we extract the code with the help of the ANTLR4
 </p><p class="code_child">    val definition = kotlinManager.extractDefinition(location)</p>
 <p class="text_child">Next step is to split this text onto the commentaries and code snippets. We also format them - removing unused lines, spaces, etc.
 </p><p class="code_child">    val withoutTabulation = interactorFormat.removeCommonTabulation(definition)
-    val statements = statementsManager.extractStatements(withoutTabulation)</p>
-<p class="text_child">After formatting is done, we want to find the commands among the nodes if any
-</p><p class="code_child">    val withCommands = interactorCommands.identifyCommands(sourceUrl, sourceRoot, statements)</p>
-<p class="text_child">And finally, we apply the commands and return the result
-</p><p class="code_child">    val commandsApplied = interactorCommands.applyCommands(sourceUrl, sourceRoot, withCommands)</p>
-<p class="text_child">We also want to identify possible structures inside of the nodes - lists, tables and etc.
-</p><p class="code_child">    return interactorStructs.identifyStructs(commandsApplied)
+    val statements = statementsManager.extractStatements(withoutTabulation)
+    return renderNodes(sourceUrl, sourceRoot, statements)</p>
+<div class="child">
+    <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop/src/main/kotlin/com/blaster/business/InteractorParse.kt" target="_blank">com.blaster.business.InteractorParse::renderNodes</a>
+</h3>
+    <p class="code_child">private fun renderNodes(sourceUrl: URL, sourceRoot: File, nodes: List&lt;Node&gt;): List&lt;Node&gt; {
+    val withCommands = interactorCommands.identifyCommands(sourceUrl, sourceRoot, nodes)
+    val commandsApplied = interactorCommands.applyCommands(sourceUrl, sourceRoot, withCommands)
+    return interactorStructs.identifyStructs(commandsApplied)
 }</p>
 
 </div>
-<p class="text">Parsing of the requested declarations works very similarly to definitions and we will omit this piece.
-</p><p class="text">After the command is executed and the snippet of the code is included, the commentaries in the code can contain additional commands. In this case, we will recursively go back to the stage of the application of commands.
-</p><p class="text">Finally, after all of that is done, we should have a result of the parsing stage. This result will be passed to the next step, which is the printing of the article. We will have a look at the details of the printing in the next chapter.
-</p>
+<p class="code_child">}</p>
+
+</div>
+<p class="text">Parsing of the requested declarations works very similarly to definitions.
+</p><div class="child">
+    <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop/src/main/kotlin/com/blaster/business/InteractorParse.kt" target="_blank">com.blaster.business.InteractorParse::parseDecl</a>
+</h3>
+    <p class="code_child">fun parseDecl(sourceUrl: URL, sourceRoot: File, location: Location): List&lt;Node&gt; {
+    val declarations = kotlinManager.extractDeclaration(location)
+    val withoutTabulation = mutableListOf&lt;String&gt;()
+    declarations.forEach { withoutTabulation.add(interactorFormat.removeCommonTabulation(it)) }
+    val statements = mutableListOf&lt;Node&gt;()
+    declarations.forEach { statements.addAll(statementsManager.extractStatements(it)) }
+    return renderNodes(sourceUrl, sourceRoot, statements)
+}</p>
+
+</div>
+<p class="text">Couple of words should be said about identifying the structures among the text. After all of the text pieces are located, we want to check if they contain any kind of lists, tables, links, spans and etc.:
+</p><div class="child">
+    <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop/src/main/kotlin/com/blaster/business/InteractorStructs.kt" target="_blank">com.blaster.business.InteractorStructs::identifyStructs</a>
+</h3>
+    <p class="text_child">This routine will kickstart the process of identification of formatting inside of the TextNode. The identification is based on the regular expressions checks. If a certain regular expression is found, we extract pieces of text with the appropriate formatting
+</p><p class="code_child">fun identifyStructs(nodes: List&lt;Node&gt;): List&lt;Node&gt; = nodes.map {
+    when (it) {
+        is NodeText -&gt; {
+            val transformed = mutableListOf&lt;Node&gt;()</p>
+<p class="text_child">If the node is TextNode, we are trying to identify list items among the text
+</p><p class="code_child">            transformed.addAll(identifyListItems(it))
+            it.copy(children = transformed)
+        }
+        else -&gt; it
+    }
+}</p>
+
+</div>
+<p class="text">We sequentially check if the remaining text contains any of the above mentioned in the following order:
+</p><p class="text"><ul class="list_item"><li>We try to identify list items first
+</li></ul>
+</p><div class="child">
+    <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop/src/main/kotlin/com/blaster/business/InteractorStructs.kt" target="_blank">com.blaster.business.InteractorStructs::identifyListItems</a>
+</h3>
+    <p class="code_child">private fun identifyListItems(node: NodeText): List&lt;Node&gt; {
+    val match = LIST_ITEM_REGEX.find(node.text)
+    return if (match != null) {</p>
+<p class="text_child">We can have links inside of the list items
+</p><p class="code_child">        listOf(StructListItem(identifyLinks(match.groups[1]!!.value)))
+    } else {</p>
+<p class="text_child">Or inside of any text
+</p><p class="code_child">        identifyLinks(node.text)
+    }
+}</p>
+
+</div>
+<p class="text"><ul class="list_item"><li>Then we go for the links
+</li></ul>
+</p><div class="child">
+    <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop/src/main/kotlin/com/blaster/business/InteractorStructs.kt" target="_blank">com.blaster.business.InteractorStructs::identifyLinks</a>
+</h3>
+    <p class="code_child">private fun identifyLinks(text: String): List&lt;Node&gt; {
+    val result = mutableListOf&lt;Node&gt;()
+    identifySpansInText(text, LINK_REGEX) { span: String, isInside: Boolean -&gt;
+        val node = if (isInside) {
+            listOf(parseLink(span))
+        } else {</p>
+<p class="text_child">If text is not a part of the link, it still can contain references to the other sources
+</p><p class="code_child">            identifyCites(span)
+        }
+        result.addAll(node)
+    }
+    return result
+}</p>
+
+</div>
+<p class="text"><ul class="list_item"><li>Then we check for the references marks
+</li></ul>
+</p><div class="child">
+    <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop/src/main/kotlin/com/blaster/business/InteractorStructs.kt" target="_blank">com.blaster.business.InteractorStructs::identifyCites</a>
+</h3>
+    <p class="code_child">private fun identifyCites(text: String): List&lt;Node&gt; {
+    val result = mutableListOf&lt;Node&gt;()
+    identifySpansInText(text, CITE_REGEX) { span: String, isInside: Boolean -&gt;
+        val node = if (isInside) {
+            StructCite(span)
+        } else {</p>
+<p class="text_child">If we have just a piece of a text, we want to identify spans if any
+</p><p class="code_child">            StructText(identifySpans(span))
+        }
+        result.add(node)
+    }
+    return result
+}</p>
+
+</div>
+<p class="text"><ul class="list_item"><li>And finally we are looking for formatting in the text
+</li></ul>
+</p><div class="child">
+    <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop/src/main/kotlin/com/blaster/business/InteractorStructs.kt" target="_blank">com.blaster.business.InteractorStructs::identifySpans</a>
+</h3>
+    <p class="code_child">private fun identifySpans(text: String): List&lt;Node&gt; {
+    val result = mutableListOf&lt;Node&gt;()
+    identifySpansInText(text, BOLD_REGEX) { span: String, isInside: Boolean -&gt;
+        if (isInside) {</p>
+<p class="text_child">Currently, we support only bold or normal text
+</p><p class="code_child">            result.add(SpanText(span, SpanText.Style.BOLD))
+        } else {
+            result.add(SpanText(span, SpanText.Style.NORMAL))
+        }
+    }
+    return result
+}</p>
+
+</div>
+<p class="text">After all of the commands are executed and the snippets of the code are included from the repository, the commentaries in the code could contain additional commands. In this case, we will recursively go back to the stage of the commands and repeat the process.
+</p><p class="text">Finally, after all of that is done, we should have a result of the parsing stage - a list of nodes, which represents our article. This result will be passed to the next step, which is the printing of the article. We will have a look at the details of the printing in the next chapter.
+</p><ul class="list_item"><li>    <a class="link" href="#1_origin">&#8593;[1]: </a>
+<a id="1" class="link" href="https://github.com/antlr/antlr4" target="_blank">ANTLR4 on Github</a></li></ul><ul class="list_item"><li>    <a class="link" href="#2_origin">&#8593;[2]: </a>
+<a id="2" class="link" href="https://github.com/antlr/grammars-v4" target="_blank">Grammars for ANTLR4 on Github</a></li></ul><ul class="list_item"><li>    <a class="link" href="#3_origin">&#8593;[3]: </a>
+<a id="3" class="link" href="https://github.com/antlr/grammars-v4" target="_blank">Grammar for Kotlin on Github</a></li></ul>
     </body>
 </html>

@@ -36,9 +36,9 @@ class InteractorLocation {
         val clazz = extractClass(path)
         // Next we want to retreive the actual file, containing the class. We do that by looking at the sources root and a package
         val file = locateFile(sourceRoot, clazz)
-        // We also want to assemble the URL to the location
+        // We also want to assemble the URL to the location based source url on Github
         val url = URL(sourceUrl.toString() + file.toString().replace("\\", "/"))
-        // Now we can choose it this is a path to a whole class or to one of its members. We can be sure that the it is a global function or property if the class name ends with 'Kt' according to a Kotlin notation. Else it is a path to a standalone class
+        // Now we can choose if this is a path to a whole class or to one of its members. We can be sure that the it is a global function or property if the class name ends with Kt according to a Kotlin notation. Else it is a path to a standalone class
         return if (path.contains("::")) {
             val member = extractMember(path)
             if (clazz.endsWith("Kt")) {

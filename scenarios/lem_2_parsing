@@ -1,9 +1,14 @@
 #header; h2; The Parsing Stage
-In this chapter, we will see the details of the parsing of the scenario. Parsing of a modern programming language is an incredibly complex task. And this task is far outside of the reach of this article. If you need to parse multiple languages and formats, the complexity of this task can easily outweigh the gain from the project.
+In this chapter, we will see the details of the parsing of the scenario. Parsing of a modern programming language is an incredibly complex task. And this task is far outside of the reach of this article. If you need to parse multiple languages and formats, the complexity of this task can easily outweigh the joy from the project.
 
-To avoid unnecessary complexity and to facilitate parsing, we will be using a tool called ANTLR4. What is especially good about this tool is that it comes with already available grammar for most of the modern languages. Those grammars are contributed and supported by people who are highly proficient with the languages in question.
+To avoid unnecessary complexity and to facilitate parsing, we will be using a tool called ANTLR4\1\. What is especially good about this tool is that it comes with already available grammar for most of the modern\2\. Those grammars are contributed and supported by people who are highly proficient with the languages in question.
 
-We will employ two grammar files for our task at hand. One is for Kotlin language, and another is our custom grammar, which allows us to separate the code from the comments. If we would like to add the support for languages, other than Kotlin in the future, we always can do this by expanding the pool of available grammar.
+#cite; 1; ANTLR4 on Github; https://github.com/antlr/antlr4
+#cite; 2; Grammars for ANTLR4 on Github; https://github.com/antlr/grammars-v4
+
+We will employ two grammar files for our task at hand. One is for Kotlin language\3\, and another is our custom grammar, which allows us to separate the code from the comments. If we would like to add the support for languages, other than Kotlin in the future, we always can do this by expanding the pool of available grammar.
+
+#cite; 3; Grammar for Kotlin on Github; https://github.com/antlr/grammars-v4
 
 I will not discuss the creation of the grammars and how to use ANTLR4 because it is outside of the scope of this article. For simplicity, we can think about it as if some tool will convert the provided language constructs into the classes, available for consumption in the language of our choice - in our case - Kotlin.
 
@@ -19,11 +24,29 @@ After the commands are identified, we can finally apply them.
 As we already know, some commands will request to include the additional code to showcase the mechanics. Such a command will have a command name, command arguments, and the path of the code to be included. Here is the code, responsible for locating the snippets:
 #include; def; com.blaster.business.InteractorLocation::locate
 
-The author of the scenario can choose how to include the code. We can either include definitions of declarations of methods and classes. The difference is that sometimes you want to include the body of the method, and sometimes you want to mention it. Let us see how parsing of the requested definitions works.
+The author of the scenario can choose how to include the code. We can either include definitions of declarations of methods and classes. The difference is that sometimes you want to include the body of the method, and sometimes you just want to mention it. Let us see how parsing of the requested definitions works.
 #include; def; com.blaster.business.InteractorParse::parseDef
 
-Parsing of the requested declarations works very similarly to definitions and we will omit this piece.
+Parsing of the requested declarations works very similarly to definitions.
+#include; def; com.blaster.business.InteractorParse::parseDecl
 
-After the command is executed and the snippet of the code is included, the commentaries in the code can contain additional commands. In this case, we will recursively go back to the stage of the application of commands.
+Couple of words should be said about identifying the structures among the text. After all of the text pieces are located, we want to check if they contain any kind of lists, tables, links, spans and etc.:
+#include; def; com.blaster.business.InteractorStructs::identifyStructs
 
-Finally, after all of that is done, we should have a result of the parsing stage. This result will be passed to the next step, which is the printing of the article. We will have a look at the details of the printing in the next chapter.
+We sequentially check if the remaining text contains any of the above mentioned in the following order:
+
+~ We try to identify list items first
+#include; def; com.blaster.business.InteractorStructs::identifyListItems
+
+~ Then we go for the links
+#include; def; com.blaster.business.InteractorStructs::identifyLinks
+
+~ Then we check for the references marks
+#include; def; com.blaster.business.InteractorStructs::identifyCites
+
+~ And finally we are looking for formatting in the text
+#include; def; com.blaster.business.InteractorStructs::identifySpans
+
+After all of the commands are executed and the snippets of the code are included from the repository, the commentaries in the code could contain additional commands. In this case, we will recursively go back to the stage of the commands and repeat the process.
+
+Finally, after all of that is done, we should have a result of the parsing stage - a list of nodes, which represents our article. This result will be passed to the next step, which is the printing of the article. We will have a look at the details of the printing in the next chapter.

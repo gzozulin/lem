@@ -33,36 +33,33 @@ class InteractorParse {
     fun parseScenario(sourceUrl: URL, sourceRoot: File, scenario: File): List<Node> {
         // First operation of this method is to convert text in the scenario file into a distinct nodes. Paragraphs are separated by the new lines
         val nodes = interactorFormat.textToNodes(scenario.readText())
-        // The next operation is to identify commands in those nodes if any. In this case this is a root element, therefore the location of it is == null
-        val withCommands = interactorCommands.identifyCommands(sourceUrl, sourceRoot, nodes)
-        // If we found any commands - we will apply them to the current result
-        val commandsApplied = interactorCommands.applyCommands(sourceUrl, sourceRoot, withCommands)
-        // We also want to identify possible structures inside of the nodes - lists, tables and etc.
-        return interactorStructs.identifyStructs(commandsApplied)
+        // The next task is to apply common procedures for the nodes: identification and application of commands, identification of the structures
+        return renderNodes(sourceUrl, sourceRoot, nodes)
+        // #include; def; com.blaster.business.InteractorParse::renderNodes
     }
 
-    // Routine for parsing of the definitions. Accepts the sources url and root and a path to a definition. Returns a list of nodes with this definition commentaries and code snippets
+    // Routine for parsing of the definitions. Accepts the sources url and root and a location of the definition. Returns a list of nodes for this definition (commentaries, code, commands, etc.)
     fun parseDef(sourceUrl: URL, sourceRoot: File, location: Location): List<Node> {
         // When the definition is located, we extract the code with the help of the ANTLR4
         val definition = kotlinManager.extractDefinition(location)
         // Next step is to split this text onto the commentaries and code snippets. We also format them - removing unused lines, spaces, etc.
         val withoutTabulation = interactorFormat.removeCommonTabulation(definition)
         val statements = statementsManager.extractStatements(withoutTabulation)
-        // After formatting is done, we want to find the commands among the nodes if any
-        val withCommands = interactorCommands.identifyCommands(sourceUrl, sourceRoot, statements)
-        // And finally, we apply the commands and return the result
-        val commandsApplied = interactorCommands.applyCommands(sourceUrl, sourceRoot, withCommands)
-        // We also want to identify possible structures inside of the nodes - lists, tables and etc.
-        return interactorStructs.identifyStructs(commandsApplied)
+        return renderNodes(sourceUrl, sourceRoot, statements)
+        // #include; def; com.blaster.business.InteractorParse::renderNodes
     }
-
+    
     fun parseDecl(sourceUrl: URL, sourceRoot: File, location: Location): List<Node> {
         val declarations = kotlinManager.extractDeclaration(location)
         val withoutTabulation = mutableListOf<String>()
         declarations.forEach { withoutTabulation.add(interactorFormat.removeCommonTabulation(it)) }
         val statements = mutableListOf<Node>()
         declarations.forEach { statements.addAll(statementsManager.extractStatements(it)) }
-        val withCommands = interactorCommands.identifyCommands(sourceUrl, sourceRoot, statements)
+        return renderNodes(sourceUrl, sourceRoot, statements)
+    }
+
+    private fun renderNodes(sourceUrl: URL, sourceRoot: File, nodes: List<Node>): List<Node> {
+        val withCommands = interactorCommands.identifyCommands(sourceUrl, sourceRoot, nodes)
         val commandsApplied = interactorCommands.applyCommands(sourceUrl, sourceRoot, withCommands)
         return interactorStructs.identifyStructs(commandsApplied)
     }

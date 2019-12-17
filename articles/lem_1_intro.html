@@ -61,7 +61,7 @@
 </p><p class="text">That is why I often employ a so-called CLEAN design<sup id="3_origin"><a href="#3">&#91;3&#93;</a></sup>. This approach was created and formalized by "Uncle" Bob Martin based on several other architectural designs. I like the flexibility and fundamental ideas behind this design.
 </p><p class="text">The main point behind the CLEAN design is the principle of Separation of Concerns<sup id="4_origin"><a href="#4">&#91;4&#93;</a></sup>. From Wikipedia: Separation of Concerns is a design principle for separating a computer program into distinct sections so that each section addresses a separate concern. This approach allows you to represent your application as a sort of layered pie, where each layer serves to its purpose.
 </p><p class="text">The main layers are Presentational Layer, Business Logic Layer, and Data Access Layer. If done from the beginning, the application can be dissected into three distinct aspects without too much hassle. That gives the ability to work abstractly and independently, brings enormous benefits during the testing stage.
-</p><p class="text"><ul class="list_item"><li>Presentational Layer contains all of the logic for interacting with the platform on which your application is running. It can be something as straightforward as a Web or a mobile device, but also it can be something a bit more obscured, like a CLI style application.
+</p><p class="text"><ul class="list_item"><li>Presentation Layer contains all of the logic for interacting with the platform on which your application is running. It can be something as straightforward as a Web or a mobile device, but also it can be something a bit more obscured, like a CLI style application.
 </li></ul>
 </p><p class="text"><ul class="list_item"><li>Business Layer contains all of the mechanics of the application. Theoretically, it should be simple to take your Business layer and move it to the other platform like a drop-in replacement. This layer is also subdivided into specific use cases.
 </li></ul>
@@ -80,8 +80,7 @@
 </p><div class="child">
     <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop/src/main/kotlin/com/blaster/platform/LemModule.kt" target="_blank">com.blaster.platform.LemModule::interactorParse</a>
 </h3>
-    <p class="text_child">This method will create <span style="font-weight:bold">InteractorParse</span> instance     <a class="link_child" href="https://docs.samsungknox.com/dev/common/knox-version-mapping.htm" target="_blank">text</a>
- and<sup id="1_origin"><a href="#1">&#91;1&#93;</a></sup> inject it into the <span style="font-weight:bold">rest of the application</span>. Its annotation tells us, that only one instance of this class will be created.
+    <p class="text_child">This method will create InteractorParse instance and inject it into the <span style="font-weight:bold">rest of the application</span>. Its annotation tells us, that only one instance of this class will be created.
 </p><p class="code_child">@Singleton
 @Provides
 fun interactorParse() = InteractorParse()</p>

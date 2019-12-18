@@ -37,7 +37,7 @@ class InteractorPrint {
         val references = mutableListOf<NodeCommand>()
         for (node in nodes) {
             result += when (node) {
-                // For each type we call the appropriate routine
+                // For each type we call the appropriate template
                 is NodeText -> renderNodeText(node, child)
                 is NodeCode -> renderNodeCode(node, child)
                 is NodeCommand -> renderNodeCommand(node, child, references)
@@ -46,18 +46,18 @@ class InteractorPrint {
         }
         // After all of the nodes are rendered, we can add our references
         references.forEach { node ->
-            result += printTemplateListItem(
-                printTemplateLink("&#8593;[${node.subcommand}]: ", "#${node.subcommand}_origin", child, false) +
-                        printTemplateCite(node.subcommand, node.argument, node.argument1, child), child)
+            result += printTemplateListItem(printTemplateLink("&#8593;[${node.subcommand}]: ", "#${node.subcommand}_origin", child, false) + printTemplateCite(node.subcommand, node.argument, node.argument1, child), child)
         }
         // The final result is returned from the call
         return result
     }
 
+    // This routine will print a text node
     private fun renderNodeText(node: NodeText, child: Boolean): String {
         var result = ""
         for (ch in node.children) {
             result += when (ch) {
+                // Depending on which children we have to render, we can select an appropriate template
                 is StructListItem -> renderListItem(ch, child)
                 is StructLink -> printTemplateLink(ch.text, ch.link.toString(), child)
                 is StructCite -> printTemplateCiteLink(ch.id)
@@ -65,6 +65,7 @@ class InteractorPrint {
                 else -> TODO()
             }
         }
+        // And then we can wrap it into a paragraph tags
         return printTemplateParagraph(result + "\n", child)
     }
 
@@ -81,10 +82,12 @@ class InteractorPrint {
         return printTemplateListItem(result + "\n", child)
     }
 
+    // A relatively straightforward routine to render the code. We just pass the code into a template
     private fun renderNodeCode(node: NodeCode, child: Boolean): String {
         return printTemplateCode(node.code, child) + "\n"
     }
 
+    // With this routine we can include additions like headers, pictures and etc.
     private fun renderNodeCommand(node: NodeCommand, child: Boolean, references: MutableList<NodeCommand>): String {
         var result = ""
         when (node.type) {
@@ -97,6 +100,7 @@ class InteractorPrint {
             // Else just continue
             else -> {}
         }
+        // When we include the code and comments into the article they come as children of the command which included them
         if (node.children.isNotEmpty()) {
             result += printTemplateChild(node.argument, node.location!!.url, node.children) + "\n"
         }

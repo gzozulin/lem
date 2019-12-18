@@ -48,8 +48,22 @@
             <h2>The Printing stage</h2>
 
 <p class="text">The target destination of our article is an HTML file. We want to create those by parsing the codebase and executing steps required by the commands.
-</p><p class="text">But how to render the actual HTML? Without a proper tool, that can be a very challenging task. For our purposes, we will use a library called FreeMarker.
-</p><p class="text">Apache's FreeMarker is a template engine - a Java library to generate text output (HTML Web pages, e-mails, configuration files, source code, etc.) based on the templates and changing data. Templates are written in a FreeMarker Template Language (FTL), which is a simple specialized language. And, usually, a general-purpose programming language (like Java) is used to prepare data. Let us see how is that implemented by looking at the source code:
+</p><p class="text">But how to render the actual HTML? Without a proper tool, that can be a very challenging task. For our purposes, we will use a library called FreeMarker<sup id="1_origin"><a href="#1">&#91;1&#93;</a></sup>.
+</p><p class="text">Apache's FreeMarker is a template engine - a Java library to generate text output (HTML Web pages, e-mails, configuration files, source code, etc.) based on the templates and changing data. Templates are written in a FreeMarker Template Language (FTL), which is a simple specialized language. And, usually, a general-purpose programming language (like Java) is used to prepare data. Let us see how is that implemented by looking at the source code.
+</p><p class="text">Everything starts with an article. The article contains header, styles, and body declaration.
+</p><div class="child">
+    <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop/src/main/kotlin/com/blaster/business/InteractorPrint.kt" target="_blank">com.blaster.business.InteractorPrint::printArticle</a>
+</h3>
+    <p class="text_child">Parameters of this function are: the source root, the output file and a list of nodes to be printed
+</p><p class="code_child">fun printArticle(output: File, nodes: List&lt;Node&gt;) {</p>
+<p class="text_child">After receiving a list of nodes, we wrap them into an article template
+</p><p class="code_child">    val article = printingManager.renderTemplate(            &quot;template_article.ftlh&quot;, hashMapOf(&quot;article&quot; to printParagraphs(nodes))        )</p>
+<p class="text_child">The result is sent to printing manager to be put into a file
+</p><p class="code_child">    printingManager.printArticle(output, article)
+}</p>
+
+</div>
+<p class="text">Internally, the article printing routine will call for a method to print paragraphs:
 </p><div class="child">
     <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop/src/main/kotlin/com/blaster/business/InteractorPrint.kt" target="_blank">com.blaster.business.InteractorPrint::printParagraphs</a>
 </h3>
@@ -61,7 +75,7 @@
 </p><p class="code_child">    val references = mutableListOf&lt;NodeCommand&gt;()
     for (node in nodes) {
         result += when (node) {</p>
-<p class="text_child">For each type we call the appropriate routine
+<p class="text_child">For each type we call the appropriate template
 </p><p class="code_child">            is NodeText -&gt; renderNodeText(node, child)
             is NodeCode -&gt; renderNodeCode(node, child)
             is NodeCommand -&gt; renderNodeCommand(node, child, references)
@@ -70,10 +84,71 @@
     }</p>
 <p class="text_child">After all of the nodes are rendered, we can add our references
 </p><p class="code_child">    references.forEach { node -&gt;
-        result += printTemplateListItem(                printTemplateLink(&quot;&amp;#8593;[${node.subcommand}]: &quot;, &quot;#${node.subcommand}_origin&quot;, child, false) +                        printTemplateCite(node.subcommand, node.argument, node.argument1, child), child)
+        result += printTemplateListItem(printTemplateLink(&quot;&amp;#8593;[${node.subcommand}]: &quot;, &quot;#${node.subcommand}_origin&quot;, child, false) + printTemplateCite(node.subcommand, node.argument, node.argument1, child), child)
     }</p>
 <p class="text_child">The final result is returned from the call
 </p><p class="code_child">    return result
+}</p>
+
+</div>
+<p class="text">Here are the three methods, responsible for the main chunks of the work:
+</p><p class="text"><ul class="list_item"><li>Here is how we print the text nodes:
+</li></ul>
+</p><div class="child">
+    <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop/src/main/kotlin/com/blaster/business/InteractorPrint.kt" target="_blank">com.blaster.business.InteractorPrint::renderNodeText</a>
+</h3>
+    <p class="text_child">This routine will print a text node
+</p><p class="code_child">private fun renderNodeText(node: NodeText, child: Boolean): String {
+    var result = &quot;&quot;
+    for (ch in node.children) {
+        result += when (ch) {</p>
+<p class="text_child">Depending on which children we have to render, we can select an appropriate template
+</p><p class="code_child">            is StructListItem -&gt; renderListItem(ch, child)
+            is StructLink -&gt; printTemplateLink(ch.text, ch.link.toString(), child)
+            is StructCite -&gt; printTemplateCiteLink(ch.id)
+            is StructText -&gt; renderTextSpans(ch.children)
+            else -&gt; TODO()
+        }
+    }</p>
+<p class="text_child">And then we can wrap it into a paragraph tags
+</p><p class="code_child">    return printTemplateParagraph(result + &quot;\n&quot;, child)
+}</p>
+
+</div>
+<p class="text"><ul class="list_item"><li>Here is how to insert a code snippet:
+</li></ul>
+</p><div class="child">
+    <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop/src/main/kotlin/com/blaster/business/InteractorPrint.kt" target="_blank">com.blaster.business.InteractorPrint::renderNodeCode</a>
+</h3>
+    <p class="text_child">A relatively straightforward routine to render the code. We just pass the code into a template
+</p><p class="code_child">private fun renderNodeCode(node: NodeCode, child: Boolean): String {
+    return printTemplateCode(node.code, child) + &quot;\n&quot;
+}</p>
+
+</div>
+<p class="text"><ul class="list_item"><li>And here is how we handle the commands:
+</li></ul>
+</p><div class="child">
+    <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop/src/main/kotlin/com/blaster/business/InteractorPrint.kt" target="_blank">com.blaster.business.InteractorPrint::renderNodeCommand</a>
+</h3>
+    <p class="text_child">With this routine we can include additions like headers, pictures and etc.
+</p><p class="code_child">private fun renderNodeCommand(node: NodeCommand, child: Boolean, references: MutableList&lt;NodeCommand&gt;): String {
+    var result = &quot;&quot;
+    when (node.type) {</p>
+<p class="text_child">It can be something related to the attributes of the page
+</p><p class="code_child">        NodeCommand.Type.HEADER -&gt; result += printTemplateHeader(node.subcommand, node.argument) + &quot;\n&quot;</p>
+<p class="text_child">Or a picture insert
+</p><p class="code_child">        NodeCommand.Type.PICTURE -&gt; result += printTemplatePicture(node.subcommand, node.argument, child) + &quot;\n&quot;</p>
+<p class="text_child">Or a cite reference
+</p><p class="code_child">        NodeCommand.Type.CITE -&gt; references.add(node)</p>
+<p class="text_child">Else just continue
+</p><p class="code_child">        else -&gt; {}
+    }</p>
+<p class="text_child">When we include the code and comments into the article they come as children of the command which included them
+</p><p class="code_child">    if (node.children.isNotEmpty()) {
+        result += printTemplateChild(node.argument, node.location!!.url, node.children) + &quot;\n&quot;
+    }
+    return result
 }</p>
 
 </div>
@@ -91,25 +166,16 @@
 
 </div>
 <p class="text">Each of those will handle its piece of the overall article accordingly.
-</p><p class="text">And, finally, when we have a body of the HTML page, we can wrap it into the article. The article contains header, styles, and body declaration.
-</p><div class="child">
-    <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop/src/main/kotlin/com/blaster/business/InteractorPrint.kt" target="_blank">com.blaster.business.InteractorPrint::printArticle</a>
-</h3>
-    <p class="text_child">Parameters of this function are: the source root, the output file and a list of nodes to be printed
-</p><p class="code_child">fun printArticle(output: File, nodes: List&lt;Node&gt;) {</p>
-<p class="text_child">After receiving a list of nodes, we wrap them into an article template
-</p><p class="code_child">    val article = printingManager.renderTemplate(            &quot;template_article.ftlh&quot;, hashMapOf(&quot;article&quot; to printParagraphs(nodes))        )</p>
-<p class="text_child">The result is sent to printing manager to be put into a file
-</p><p class="code_child">    printingManager.printArticle(output, article)
-}</p>
-
-</div>
-<p class="text">At this point, we had a look at all steps required for processing the article - starting from the scenario and until the actual HTML output. Of course, we did not cover everything. The best place to find each and every detail is the source code. But I hope, at this point, most of the high-level concepts are explained and understood.
+</p><p class="text">At this point, we had a look at all steps required for processing the article - starting from the scenario and until the actual HTML output. Of course, we did not cover everything. The best place to find each and every detail is the source code. But I hope, at this point, most of the high-level concepts are explained.
 </p>    <h2>What&#39;s next?</h2>
 
 <p class="text">Any craftsman can say that there is no tool, which works equally well for every job. The idea behind Lem is to be versatile enough to showcase some of the projects on which I am working.
-</p><p class="text">In this article, I have shown a full pipeline of the project: from the preparation of the material to the printing stage.
-</p><p class="text">The main target for Lem is to be a handy tool in explaining the Blaster - an offline renderer, on which I am currently working. I hope this article was interesting enough and will be glad to see you soon on the pages dedicated to the actual hobby - the Blaster engine - Poehali!
-</p>
+</p><p class="text">In this series of articles, I have shown a full pipeline of the project: from the preparation of the material to the printing stage.
+</p><p class="text">The main target for Lem is to be a handy tool in explaining the Blaster - an offline renderer, on which I am currently working. I hope this article was interesting enough and will be glad to see you soon on the pages dedicated to the actual hobby - the Blaster engine - Poyekhali!<sup id="2_origin"><a href="#2">&#91;2&#93;</a></sup>
+</p>    <h2>References</h2>
+
+<ul class="list_item"><li>    <a class="link" href="#1_origin">&#8593;[1]: </a>
+<a id="1" class="link" href="https://freemarker.apache.org/" target="_blank">FreeMarker from Apache Foundation</a></li></ul><ul class="list_item"><li>    <a class="link" href="#2_origin">&#8593;[2]: </a>
+<a id="2" class="link" href="https://en.wikipedia.org/wiki/File:Gagarin-Poyekhali.ogg" target="_blank">Gagarin&#39;s &quot;Poyekhali&quot; on Wikipedia</a></li></ul>
     </body>
 </html>

@@ -48,7 +48,7 @@ class InteractorParse {
         return renderNodes(sourceUrl, sourceRoot, statements)
         // #include; def; com.blaster.business.InteractorParse::renderNodes
     }
-    
+
     fun parseDecl(sourceUrl: URL, sourceRoot: File, location: Location): List<Node> {
         val declarations = kotlinManager.extractDeclaration(location)
         val withoutTabulation = mutableListOf<String>()

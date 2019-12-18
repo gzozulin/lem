@@ -50,3 +50,5 @@ We sequentially check if the remaining text contains any of the above mentioned 
 After all of the commands are executed and the snippets of the code are included from the repository, the commentaries in the code could contain additional commands. In this case, we will recursively go back to the stage of the commands and repeat the process.
 
 Finally, after all of that is done, we should have a result of the parsing stage - a list of nodes, which represents our article. This result will be passed to the next step, which is the printing of the article. We will have a look at the details of the printing in the next chapter.
+
+#header; h2; References

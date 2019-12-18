@@ -17,6 +17,13 @@ class LemApp {
         LEM_COMPONENT.inject(this)
     }
 
+    fun renderProject(root: File) {
+        File(root, "scenarios").list()!!.forEach {
+            render(URL("https", "github.com", "/madeinsoviets/lem/blob/develop/"),
+                File(root, "src/main/kotlin"), File(File(root, "scenarios"), it), File(File(root, "articles"), "$it.html"))
+        }
+    }
+
     fun render(sourceUrl: URL, sourceRoot: File, scenarioFile: File, output: File) {
         val parsed = interactorParse.parseScenario(sourceUrl, sourceRoot, scenarioFile)
         interactorPrint.printArticle(output, parsed)
@@ -30,9 +37,10 @@ fun main(args: Array<String>) {
     // If we do not have any arguments - we will fall back to the default values
     if (args.isEmpty()) {
         println("No args, falling back to the defaults!")
-        File("scenarios").list()!!.forEach {
-            lemApp.render(URL("https", "github.com", "/madeinsoviets/lem/blob/develop/"), File("src/main/kotlin"), File("scenarios", it), File("articles", "$it.html"))
-        }
+        // Rendering Lem's defaults
+        lemApp.renderProject(File("."))
+        // Rendering Blaster's defaults
+        lemApp.renderProject(File("../blaster"))
         return
     }
     // After that we will extract the necessary settings one by one while checking the actual values in the process

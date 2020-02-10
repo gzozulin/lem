@@ -1,5 +1,7 @@
 package com.blaster.business
 
+val LINE_REGEX = "[\r*\n]+".toRegex()
+
 fun identifySpansInText(
     text: String, pattern: Regex, action: (span: String, isInside: Boolean) -> Unit) {
     var remainder = text

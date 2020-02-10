@@ -66,9 +66,5 @@ class LemModule {
 
     @Singleton
     @Provides
-    fun interactorFormat() = InteractorFormat()
-
-    @Singleton
-    @Provides
     fun interactorStructs() = InteractorStructs()
 }

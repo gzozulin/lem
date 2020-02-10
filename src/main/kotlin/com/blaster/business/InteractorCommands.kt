@@ -1,23 +1,14 @@
 package com.blaster.business
 
 import com.blaster.data.nodes.*
-import com.blaster.platform.LEM_COMPONENT
-import dagger.Lazy
-
+import com.blaster.platform.kodein
+import org.kodein.di.generic.instance
 import java.io.File
 import java.net.URL
-import javax.inject.Inject
 
 class InteractorCommands {
-    @Inject
-    lateinit var interactorParse: Lazy<InteractorParse>
-
-    @Inject
-    lateinit var interactorLocation: InteractorLocation
-
-    init {
-        LEM_COMPONENT.inject(this)
-    }
+    private val interactorParse: InteractorParse by kodein.instance()
+    private val interactorLocation: InteractorLocation by kodein.instance()
 
     fun identifyCommands(sourceUrl: URL, sourceRoot: File, nodes: List<Node>): List<Node> = nodes.map {
         when (it) {
@@ -124,11 +115,11 @@ class InteractorCommands {
         iterator.remove()
         when (insert.subcommand) {
             SUBCOMMAND_DECL -> {
-                val declarations = interactorParse.get().parseDecl(sourceUrl, sourceRoot, insert.location!!)
+                val declarations = interactorParse.parseDecl(sourceUrl, sourceRoot, insert.location!!)
                 declarations.forEach { iterator.add(it) }
             }
             SUBCOMMAND_DEF -> {
-                val definitions = interactorParse.get().parseDef(sourceUrl, sourceRoot, insert.location!!)
+                val definitions = interactorParse.parseDef(sourceUrl, sourceRoot, insert.location!!)
                 definitions.forEach { iterator.add(it) }
             }
             else -> TODO()
@@ -139,8 +130,8 @@ class InteractorCommands {
         sourceUrl: URL, sourceRoot: File, iterator: MutableListIterator<Node>, insert: NodeCommand) {
         iterator.remove()
         val children = when (insert.subcommand) {
-            SUBCOMMAND_DECL -> interactorParse.get().parseDecl(sourceUrl, sourceRoot, insert.location!!)
-            SUBCOMMAND_DEF -> interactorParse.get().parseDef(sourceUrl, sourceRoot, insert.location!!)
+            SUBCOMMAND_DECL -> interactorParse.parseDecl(sourceUrl, sourceRoot, insert.location!!)
+            SUBCOMMAND_DEF -> interactorParse.parseDef(sourceUrl, sourceRoot, insert.location!!)
             else -> TODO()
         }
         iterator.add(insert.copy(children = children))

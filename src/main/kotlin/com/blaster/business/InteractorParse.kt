@@ -4,28 +4,17 @@ import com.blaster.data.managers.kotlin.KotlinManager
 import com.blaster.data.managers.statements.StatementsManager
 import com.blaster.data.nodes.Node
 import com.blaster.data.nodes.NodeText
-import com.blaster.platform.LEM_COMPONENT
+import com.blaster.platform.kodein
+import org.kodein.di.generic.instance
 import java.io.File
 import java.net.URL
-import javax.inject.Inject
 
 // TODO: too much common code
 class InteractorParse {
-    @Inject
-    lateinit var kotlinManager: KotlinManager
-
-    @Inject
-    lateinit var interactorCommands: InteractorCommands
-
-    @Inject
-    lateinit var statementsManager: StatementsManager
-
-    @Inject
-    lateinit var interactorStructs: InteractorStructs
-
-    init {
-        LEM_COMPONENT.inject(this)
-    }
+    private val kotlinManager: KotlinManager by kodein.instance()
+    private val interactorCommands: InteractorCommands by kodein.instance()
+    private val statementsManager: StatementsManager by kodein.instance()
+    private val interactorStructs: InteractorStructs by kodein.instance()
 
     // This call will convert a scenario file into a list of nodes. The parameters are self explanatory.
     fun parseScenario(sourceUrl: URL, sourceRoot: File, scenario: File): List<Node> {

@@ -95,50 +95,8 @@
 </p><p class="text">
 </p><p class="text">One more advantage of a good Dependency Injection framework is that it allows you to significantly reduce the amount of boilerplate code. Instead of dragging each dependency through the chain of constructors, you can simply inject a field through the DI on the creation stage.
 </p><p class="text">
-</p><p class="text">This particular project uses Google's Dagger 2 to facilitate DI. One of the primary advantages of Dagger 2 over most other DI frameworks is that its strictly generated implementation - no reflexion. It means that the boilerplate code, needed for the injection, is generated during the compile time, rather being constructed during runtime through the reflexion mechanisms. That is a performance boost, of course.
+</p><p class="text">This particular project uses Kodein to facilitate DI <sup id="6_origin"><a href="#6">&#91;6&#93;</a></sup>.
 </p><p class="text">
-</p><p class="text">First of all, in order to employ Dagger 2 for our needs, we have to specify out dependencies. This happens in a so-called Dagger 2 module. Those are application defined classes, which provides all of the necessary information about how to create and manage your application units. You simply need to provide an instance of the class and annotate it accordingly. Here is an example:
-</p><div class="child">
-    <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop/src/main/kotlin/com/blaster/platform/LemModule.kt" target="_blank">com.blaster.platform.LemModule::interactorParse</a>
-</h3>
-    <p class="code_child"></p>
-<p class="text_child">This method will create InteractorParse instance and inject it into the rest of the application. Its annotation tells us, that only one instance of this class will be created.
-</p><p class="code_child">@Singleton
-@Provides
-fun interactorParse() = InteractorParse()</p>
-
-</div>
-<p class="text">
-</p><p class="text">With DI framework we also can provide unique files and settings:
-</p><div class="child">
-    <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop/src/main/kotlin/com/blaster/platform/LemModule.kt" target="_blank">com.blaster.platform.LemModule::freemarkerConfig</a>
-</h3>
-    <p class="code_child"></p>
-<p class="text_child">This methods will provide the configuration for the FreeMarker template engine. Its only parameter is a place, where we store the templates. This parameter is fulfilled by DI as well.
-</p><p class="code_child">@Singleton
-@Provides
-fun freemarkerConfig(@Named(&quot;TEMPLATES_FILE&quot;) templatesFile: File): Configuration {
-    val cfg = Configuration(Configuration.VERSION_2_3_27)
-    cfg.setDirectoryForTemplateLoading(templatesFile)
-    cfg.defaultEncoding = &quot;UTF-8&quot;
-    cfg.templateExceptionHandler = TemplateExceptionHandler.RETHROW_HANDLER
-    cfg.logTemplateExceptions = false
-    cfg.wrapUncheckedExceptions = true
-    return cfg
-}</p>
-
-</div>
-<p class="text">
-</p><p class="text">The next task is to clarify the rules on how to resolve the actual dependencies. For example we can restrict a certain set of dependencies to be available only for the specified classes. Those rules can be defined in the Dagger 2 component. It is an interface, which specifies what can be injected where. After Dagger 2 will finish code generation, we will receive an implementation of this interface. The example can be a following call:
-</p><div class="child">
-    <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop/src/main/kotlin/com/blaster/platform/LemComponent.kt" target="_blank">com.blaster.platform.LemComponent::inject</a>
-</h3>
-    <p class="code_child"></p>
-<p class="text_child">This call will allow us to inject classes declared in LemModule into the InteractorCommands
-</p><p class="code_child">fun inject(interactorCommands: InteractorCommands)</p>
-
-</div>
-<p class="text">
 </p><p class="text">In the next chapter we will discuss a general overview of the application pipeline.
 </p><p class="text">
 </p>    <h2>The pipeline overview</h2>
@@ -204,6 +162,6 @@ fun freemarkerConfig(@Named(&quot;TEMPLATES_FILE&quot;) templatesFile: File): Co
 <a id="3" class="link" href="https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html" target="_blank">The Clean Architecture</a></li></ul><ul class="list_item"><li>    <a class="link" href="#4_origin">&#8593;[4]: </a>
 <a id="4" class="link" href="https://en.wikipedia.org/wiki/Separation_of_concerns" target="_blank">Separation of Concerns on Wikipedia</a></li></ul><ul class="list_item"><li>    <a class="link" href="#5_origin">&#8593;[5]: </a>
 <a id="5" class="link" href="https://en.wikipedia.org/wiki/Dependency_injection" target="_blank">Dependency injection on Wikipedia</a></li></ul><ul class="list_item"><li>    <a class="link" href="#6_origin">&#8593;[6]: </a>
-<a id="6" class="link" href="https://dagger.dev/" target="_blank">Dagger 2</a></li></ul>
+<a id="6" class="link" href="https://kodein.org/" target="_blank">Kodein Framework</a></li></ul>
     </body>
 </html>

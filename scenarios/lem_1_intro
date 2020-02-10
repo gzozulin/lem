@@ -47,17 +47,8 @@ All of that is possible with a Dependency Injection system. In software engineer
 
 One more advantage of a good Dependency Injection framework is that it allows you to significantly reduce the amount of boilerplate code. Instead of dragging each dependency through the chain of constructors, you can simply inject a field through the DI on the creation stage.
 
-This particular project uses Google's Dagger 2 to facilitate DI. One of the primary advantages of Dagger 2 over most other DI frameworks is that its strictly generated implementation - no reflexion. It means that the boilerplate code, needed for the injection, is generated during the compile time, rather being constructed during runtime through the reflexion mechanisms. That is a performance boost, of course.
-#cite; 6; Dagger 2; https://dagger.dev/
-
-First of all, in order to employ Dagger 2 for our needs, we have to specify out dependencies. This happens in a so-called Dagger 2 module. Those are application defined classes, which provides all of the necessary information about how to create and manage your application units. You simply need to provide an instance of the class and annotate it accordingly. Here is an example:
-#include; def; com.blaster.platform.LemModule::interactorParse
-
-With DI framework we also can provide unique files and settings:
-#include; def; com.blaster.platform.LemModule::freemarkerConfig
-
-The next task is to clarify the rules on how to resolve the actual dependencies. For example we can restrict a certain set of dependencies to be available only for the specified classes. Those rules can be defined in the Dagger 2 component. It is an interface, which specifies what can be injected where. After Dagger 2 will finish code generation, we will receive an implementation of this interface. The example can be a following call:
-#include; def; com.blaster.platform.LemComponent::inject
+This particular project uses Kodein to facilitate DI \6\.
+#cite; 6; Kodein Framework; https://kodein.org/
 
 In the next chapter we will discuss a general overview of the application pipeline.
 

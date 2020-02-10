@@ -151,7 +151,7 @@
 <p class="text_child">This routine helps us to locate pieces of code, pointed out by path parameter. It returns a class, which represents the location of the found snippet.
 </p><p class="code_child">fun locate(sourceUrl: URL, sourceRoot: File, path: String): Location {</p>
 <p class="text_child">First of all we want to assert if the path is formatted properly. This allows to highlight errors early
-</p><p class="code_child">    check(PATH_REGEX.find(path)!!.value.length == path.length) { &quot;Wrong path for the location: $path&quot; }</p>
+</p><p class="code_child">    check(regexPath.find(path)!!.value.length == path.length) { &quot;Wrong path for the location: $path&quot; }</p>
 <p class="text_child">We start by extracting the class from path string. It simply grabs everything before <span style="font-weight:bold">:</span>
 </p><p class="code_child">    val clazz = extractClass(path)</p>
 <p class="text_child">Next we want to retreive the actual file, containing the class. We do that by looking at the sources root and a package
@@ -242,7 +242,7 @@
     <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop/src/main/kotlin/com/blaster/business/InteractorStructs.kt" target="_blank">com.blaster.business.InteractorStructs::identifyListItems</a>
 </h3>
     <p class="code_child">private fun identifyListItems(node: NodeText): List&lt;Node&gt; {
-    val match = LIST_ITEM_REGEX.find(node.text)
+    val match = regexListItem.find(node.text)
     return if (match != null) {</p>
 <p class="text_child">We can have links inside of the list items
 </p><p class="code_child">        listOf(StructListItem(identifyLinks(match.groups[1]!!.value)))
@@ -261,7 +261,7 @@
 </h3>
     <p class="code_child">private fun identifyLinks(text: String): List&lt;Node&gt; {
     val result = mutableListOf&lt;Node&gt;()
-    identifySpansInText(text, LINK_REGEX) { span: String, isInside: Boolean -&gt;
+    identifySpansInText(text, regexLink) { span: String, isInside: Boolean -&gt;
         val node = if (isInside) {
             listOf(parseLink(span))
         } else {</p>
@@ -282,7 +282,7 @@
 </h3>
     <p class="code_child">private fun identifyCites(text: String): List&lt;Node&gt; {
     val result = mutableListOf&lt;Node&gt;()
-    identifySpansInText(text, CITE_REGEX) { span: String, isInside: Boolean -&gt;
+    identifySpansInText(text, regexCite) { span: String, isInside: Boolean -&gt;
         val node = if (isInside) {
             StructCite(span)
         } else {</p>
@@ -303,7 +303,7 @@
 </h3>
     <p class="code_child">private fun identifySpans(text: String): List&lt;Node&gt; {
     val result = mutableListOf&lt;Node&gt;()
-    identifySpansInText(text, BOLD_REGEX) { span: String, isInside: Boolean -&gt;
+    identifySpansInText(text, regexBold) { span: String, isInside: Boolean -&gt;
         if (isInside) {</p>
 <p class="text_child">Currently, we support only bold or normal text
 </p><p class="code_child">            result.add(SpanText(span, SpanText.Style.BOLD))

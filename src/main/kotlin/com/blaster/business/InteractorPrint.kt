@@ -1,23 +1,15 @@
 package com.blaster.business
 
-import com.blaster.data.nodes.*
 import com.blaster.data.managers.printing.PrintingManager
+import com.blaster.data.nodes.*
 import com.blaster.data.nodes.SpanText.Style
-import com.blaster.platform.LEM_COMPONENT
+import com.blaster.platform.kodein
+import org.kodein.di.generic.instance
 import java.io.File
 import java.net.URL
-import javax.inject.Inject
 
 class InteractorPrint {
-    @Inject
-    lateinit var interactorLocation: InteractorLocation
-
-    @Inject
-    lateinit var printingManager: PrintingManager
-
-    init {
-        LEM_COMPONENT.inject(this)
-    }
+    private val printingManager: PrintingManager by kodein.instance()
 
     // Parameters of this function are: the source root, the output file and a list of nodes to be printed
     fun printArticle(output: File, nodes: List<Node>) {

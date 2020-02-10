@@ -1,29 +1,33 @@
 package com.blaster.platform
 
-import com.blaster.business.InteractorParse
-import com.blaster.business.InteractorPrint
+import com.blaster.business.*
+import com.blaster.data.managers.kotlin.KotlinManager
+import com.blaster.data.managers.kotlin.KotlinManagerImpl
+import com.blaster.data.managers.printing.PrintingManager
+import com.blaster.data.managers.printing.PrintingManagerImpl
+import com.blaster.data.managers.statements.StatementsManager
+import com.blaster.data.managers.statements.StatementsManagerImpl
 import org.kodein.di.Kodein
 import org.kodein.di.generic.bind
 import org.kodein.di.generic.instance
 import org.kodein.di.generic.singleton
 import java.io.File
 import java.net.URL
-import javax.inject.Inject
 
 val kodein = Kodein {
-    bind<InteractorParse>() with singleton { InteractorParse() }
+    bind<InteractorParse>()     with singleton { InteractorParse() }
+    bind<StatementsManager>()   with singleton { StatementsManagerImpl() }
+    bind<PrintingManager>()     with singleton { PrintingManagerImpl() }
+    bind<KotlinManager>()       with singleton { KotlinManagerImpl() }
+    bind<InteractorLocation>()  with singleton { InteractorLocation() }
+    bind<InteractorPrint>()     with singleton { InteractorPrint() }
+    bind<InteractorCommands>()  with singleton { InteractorCommands() }
+    bind<InteractorStructs>()   with singleton { InteractorStructs() }
 }
 
 class LemApp {
-
     private val interactorParse: InteractorParse by kodein.instance()
-
-    @Inject
-    lateinit var interactorPrint: InteractorPrint
-
-    init {
-        LEM_COMPONENT.inject(this)
-    }
+    private val interactorPrint: InteractorPrint by kodein.instance()
 
     private fun render(sourceUrl: URL, sourceRoot: File, scenarioFile: File, outputfile: File) {
         val parsed = interactorParse.parseScenario(sourceUrl, sourceRoot, scenarioFile)

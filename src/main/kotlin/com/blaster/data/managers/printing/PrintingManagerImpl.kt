@@ -1,22 +1,24 @@
 package com.blaster.data.managers.printing
 
-import com.blaster.platform.LEM_COMPONENT
 import freemarker.template.Configuration
 import freemarker.template.Template
+import freemarker.template.TemplateExceptionHandler
 import java.io.File
 import java.io.FileOutputStream
 import java.io.StringWriter
-import javax.inject.Inject
 
 class PrintingManagerImpl : PrintingManager {
-    @Inject
-    lateinit var configuration: Configuration
-
-    private val templateCache = HashMap<String, Template>()
+    private val configuration: Configuration = Configuration(Configuration.VERSION_2_3_27)
 
     init {
-        LEM_COMPONENT.inject(this)
+        configuration.setDirectoryForTemplateLoading(File("templates"))
+        configuration.defaultEncoding = "UTF-8"
+        configuration.templateExceptionHandler = TemplateExceptionHandler.RETHROW_HANDLER
+        configuration.logTemplateExceptions = false
+        configuration.wrapUncheckedExceptions = true
     }
+
+    private val templateCache = HashMap<String, Template>()
 
     override fun renderTemplate(id: String, dateModel: Any): String {
         val template = getTemplate(id)

@@ -30,7 +30,7 @@ class InteractorParse {
     // This call will convert a scenario file into a list of nodes. The parameters are self explanatory.
     fun parseScenario(sourceUrl: URL, sourceRoot: File, scenario: File): List<Node> {
         // First operation of this method is to convert text in the scenario file into a distinct nodes. Paragraphs are separated by the new lines
-        val nodes = scenario.readText().split(LINE_REGEX).map { NodeText(it) }
+        val nodes = scenario.readText().lines().map { NodeText(it) }
         // The next task is to apply common procedures for the nodes: identification and application of commands, identification of the structures
         return renderNodes(sourceUrl, sourceRoot, nodes)
         // #include; def; com.blaster.business.InteractorParse::renderNodes

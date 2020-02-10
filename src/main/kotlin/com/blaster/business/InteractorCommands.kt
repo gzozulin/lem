@@ -34,7 +34,7 @@ class InteractorCommands {
         }
         // Removing the prefix and converting a command into a stack of words
         val noPrefix = command.removePrefix(COMMAND_IDENTIFIER)
-        val stack = splitCsv(noPrefix)
+        val stack = noPrefix.splitCsv()
         val cmd = stack[0]
         val subcmd = stack.subList(1, stack.size)
         // Then identifying each command family by command name. We remove the head of the stack each time when we go to the next level. Each command family will be parsed in the similar fashion, until nothing is left on the stack

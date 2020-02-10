@@ -3,6 +3,8 @@ package com.blaster.business
 import java.io.File
 import java.net.URL
 
+private val regexPath = "\\w+(\\.\\w+)+(::\\w+)?".toRegex()
+
 interface Location {
     val url: URL
     val file: File
@@ -20,8 +22,6 @@ data class LocationGlobal(override val url: URL, override val file: File, val id
     override fun toString(): String = "{file: $file, identifier: $identifier}"
 }
 
-val PATH_REGEX = "\\w+(\\.\\w+)+(::\\w+)?".toRegex()
-
 // global method:       com.blaster.platform.LemAppKt::main
 // member in class:     com.blaster.platform.LemApp::render
 // class:               com.blaster.platform.LemApp
@@ -31,7 +31,7 @@ class InteractorLocation {
     // This routine helps us to locate pieces of code, pointed out by path parameter. It returns a class, which represents the location of the found snippet.
     fun locate(sourceUrl: URL, sourceRoot: File, path: String): Location {
         // First of all we want to assert if the path is formatted properly. This allows to highlight errors early
-        check(PATH_REGEX.find(path)!!.value.length == path.length) { "Wrong path for the location: $path" }
+        check(regexPath.find(path)!!.value.length == path.length) { "Wrong path for the location: $path" }
         // We start by extracting the class from path string. It simply grabs everything before ':'
         val clazz = extractClass(path)
         // Next we want to retreive the actual file, containing the class. We do that by looking at the sources root and a package

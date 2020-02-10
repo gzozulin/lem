@@ -75,7 +75,7 @@ class InteractorStructs {
     }
 
     private fun parseLink(link: String): StructLink {
-        val split = splitCsv(link)
+        val split = link.splitCsv()
         check(split.size == 2) { "Unknown parameters for a link: $link" }
         return StructLink(split[0], URL(split[1]))
     }

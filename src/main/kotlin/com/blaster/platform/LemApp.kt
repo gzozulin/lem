@@ -2,13 +2,21 @@ package com.blaster.platform
 
 import com.blaster.business.InteractorParse
 import com.blaster.business.InteractorPrint
+import org.kodein.di.Kodein
+import org.kodein.di.generic.bind
+import org.kodein.di.generic.instance
+import org.kodein.di.generic.singleton
 import java.io.File
 import java.net.URL
 import javax.inject.Inject
 
+val kodein = Kodein {
+    bind<InteractorParse>() with singleton { InteractorParse() }
+}
+
 class LemApp {
-    @Inject
-    lateinit var interactorParse: InteractorParse
+
+    private val interactorParse: InteractorParse by kodein.instance()
 
     @Inject
     lateinit var interactorPrint: InteractorPrint

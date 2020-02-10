@@ -84,11 +84,11 @@ class InteractorPrint {
         var result = ""
         when (node.cmdType) {
             // It can be something related to the attributes of the page
-            NodeCommand.CmdType.HEADER -> result += printTemplateHeader(node.subcommand, node.argument) + "\n"
+            CmdType.HEADER -> result += printTemplateHeader(node.subcommand, node.argument) + "\n"
             // Or a picture insert
-            NodeCommand.CmdType.PICTURE -> result += printTemplatePicture(node.subcommand, node.argument, child) + "\n"
+            CmdType.PICTURE -> result += printTemplatePicture(node.subcommand, node.argument, child) + "\n"
             // Or a cite reference
-            NodeCommand.CmdType.CITE -> references.add(node)
+            CmdType.CITE -> references.add(node)
             // Else just continue
             else -> {}
         }

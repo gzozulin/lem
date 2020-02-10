@@ -16,11 +16,10 @@ const val SUBCOMMAND_DEF        = "def"
 const val SUBCOMMAND_H1         = "h1"
 const val SUBCOMMAND_H2         = "h2"
 
-data class NodeCommand(
-    val type: Type, val arguments: List<String>, val location: Location? = null, val children: List<Node> = listOf()
-) : Node {
-    enum class Type { INCLUDE, OMIT, HEADER, PICTURE, INLINE, CITE }
+enum class CmdType { INCLUDE, OMIT, HEADER, PICTURE, INLINE, CITE }
 
+data class NodeCommand(val cmdType: CmdType, val arguments: List<String>,
+                       val location: Location? = null, val children: List<Node> = listOf()) : Node {
     // TODO: I do not like the generic approach
     val subcommand: String
         get() = arguments[0]

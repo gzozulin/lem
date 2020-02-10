@@ -82,13 +82,13 @@ class InteractorPrint {
     // With this routine we can include additions like headers, pictures and etc.
     private fun renderNodeCommand(node: NodeCommand, child: Boolean, references: MutableList<NodeCommand>): String {
         var result = ""
-        when (node.type) {
+        when (node.cmdType) {
             // It can be something related to the attributes of the page
-            NodeCommand.Type.HEADER -> result += printTemplateHeader(node.subcommand, node.argument) + "\n"
+            NodeCommand.CmdType.HEADER -> result += printTemplateHeader(node.subcommand, node.argument) + "\n"
             // Or a picture insert
-            NodeCommand.Type.PICTURE -> result += printTemplatePicture(node.subcommand, node.argument, child) + "\n"
+            NodeCommand.CmdType.PICTURE -> result += printTemplatePicture(node.subcommand, node.argument, child) + "\n"
             // Or a cite reference
-            NodeCommand.Type.CITE -> references.add(node)
+            NodeCommand.CmdType.CITE -> references.add(node)
             // Else just continue
             else -> {}
         }

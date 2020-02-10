@@ -44,8 +44,8 @@ class InteractorCommands {
         val location = interactorLocation.locate(sourceUrl, sourceRoot, stack[1])
         val subcmd = stack[0]
         val cmd = when {
-            subcmd == SUBCOMMAND_DECL -> NodeCommand(NodeCommand.Type.INCLUDE, listOf(SUBCOMMAND_DECL, stack[1]), location)
-            subcmd == SUBCOMMAND_DEF -> NodeCommand(NodeCommand.Type.INCLUDE, listOf(SUBCOMMAND_DEF, stack[1]), location)
+            subcmd == SUBCOMMAND_DECL -> NodeCommand(NodeCommand.CmdType.INCLUDE, listOf(SUBCOMMAND_DECL, stack[1]), location)
+            subcmd == SUBCOMMAND_DEF -> NodeCommand(NodeCommand.CmdType.INCLUDE, listOf(SUBCOMMAND_DEF, stack[1]), location)
             else -> TODO()
         }
         return cmd
@@ -55,8 +55,8 @@ class InteractorCommands {
         val location = interactorLocation.locate(sourceUrl, sourceRoot, stack[1])
         val subcmd = stack[0]
         val cmd =  when {
-            subcmd == SUBCOMMAND_DECL -> NodeCommand(NodeCommand.Type.INLINE, listOf(SUBCOMMAND_DECL, stack[1]), location)
-            subcmd == SUBCOMMAND_DEF -> NodeCommand(NodeCommand.Type.INLINE, listOf(SUBCOMMAND_DEF, stack[1]), location)
+            subcmd == SUBCOMMAND_DECL -> NodeCommand(NodeCommand.CmdType.INLINE, listOf(SUBCOMMAND_DECL, stack[1]), location)
+            subcmd == SUBCOMMAND_DEF -> NodeCommand(NodeCommand.CmdType.INLINE, listOf(SUBCOMMAND_DEF, stack[1]), location)
             else -> TODO()
         }
         return cmd
@@ -65,8 +65,8 @@ class InteractorCommands {
     private fun identifyHeaderCommand(stack: List<String>): NodeCommand? {
         val subcmd = stack[0]
         val cmd = when {
-            subcmd == SUBCOMMAND_H1 -> NodeCommand(NodeCommand.Type.HEADER, listOf(SUBCOMMAND_H1, stack[1]))
-            subcmd == SUBCOMMAND_H2 -> NodeCommand(NodeCommand.Type.HEADER, listOf(SUBCOMMAND_H2, stack[1]))
+            subcmd == SUBCOMMAND_H1 -> NodeCommand(NodeCommand.CmdType.HEADER, listOf(SUBCOMMAND_H1, stack[1]))
+            subcmd == SUBCOMMAND_H2 -> NodeCommand(NodeCommand.CmdType.HEADER, listOf(SUBCOMMAND_H2, stack[1]))
             else -> TODO()
         }
         return cmd
@@ -74,16 +74,16 @@ class InteractorCommands {
 
     private fun identifyPictureCommand(subcmd: List<String>): NodeCommand? {
         check(subcmd.size == 2) { "Wrong amount of parameters for a picture command!" }
-        return NodeCommand(NodeCommand.Type.PICTURE, listOf(subcmd[0], subcmd[1]))
+        return NodeCommand(NodeCommand.CmdType.PICTURE, listOf(subcmd[0], subcmd[1]))
     }
 
     private fun identifyOmitCommand(): NodeCommand? {
-        return NodeCommand(NodeCommand.Type.OMIT, listOf())
+        return NodeCommand(NodeCommand.CmdType.OMIT, listOf())
     }
 
     private fun identifyCiteCommand(stack: List<String>): NodeCommand? {
         check(stack.size == 3) { "Cite command has to have 3 parameters! ${stack.joinToString { "" }}" }
-        return NodeCommand(NodeCommand.Type.CITE, listOf(stack[0], stack[1], stack[2]))
+        return NodeCommand(NodeCommand.CmdType.CITE, listOf(stack[0], stack[1], stack[2]))
     }
 
     // Commands application routine. It receives a source url and root and a list of nodes as a parameters. The result is a list of nodes modified by all of the commands in the original list.
@@ -96,11 +96,11 @@ class InteractorCommands {
             val node = iterator.next()
             // If the next item in the list is a command
             if (node is NodeCommand) {
-                when (node.type) {
+                when (node.cmdType) {
                     // We apply the command accordingly
-                    NodeCommand.Type.INCLUDE -> applyIncludeCommand(sourceUrl, sourceRoot, iterator, node)
-                    NodeCommand.Type.OMIT -> applyOmitCommand(iterator)
-                    NodeCommand.Type.INLINE -> applyInlineCommand(sourceUrl, sourceRoot, iterator, node)
+                    NodeCommand.CmdType.INCLUDE -> applyIncludeCommand(sourceUrl, sourceRoot, iterator, node)
+                    NodeCommand.CmdType.OMIT -> applyOmitCommand(iterator)
+                    NodeCommand.CmdType.INLINE -> applyInlineCommand(sourceUrl, sourceRoot, iterator, node)
                     // Some commands have meaning only for printing, so we do nothing right now
                     else -> {}
                 }

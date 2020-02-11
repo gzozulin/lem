@@ -10,10 +10,10 @@ import java.io.File
 import java.net.URL
 
 class InteractorParse {
-    private val kotlinManager: KotlinManager by kodein.instance()
-    private val interactorCommands: InteractorCommands by kodein.instance()
-    private val statementsManager: StatementsManager by kodein.instance()
-    private val interactorStructs: InteractorStructs by kodein.instance()
+    private val kotlinManager: KotlinManager            by kodein.instance()
+    private val interactorCommands: InteractorCommands  by kodein.instance()
+    private val statementsManager: StatementsManager    by kodein.instance()
+    private val interactorStructs: InteractorStructs    by kodein.instance()
 
     // This call will convert a scenario file into a list of nodes. The parameters are self explanatory.
     fun parseScenario(root: File, sourceUrl: URL, scenario: File): List<Node> {

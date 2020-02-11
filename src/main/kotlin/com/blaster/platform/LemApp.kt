@@ -34,7 +34,7 @@ class LemApp {
         interactorPrint.printArticle(outputfile, parsed)
     }
 
-    fun renderScenarios(root: String, url: String, scenarios: String, articles: String) {
+    fun renderScenarios(root: String, url: String, scenarios: String = "scenarios", articles: String = "articles") {
         val scenariosDir = File("$root/$scenarios")
         val outputDir = File("$root/$articles")
         scenariosDir.list()!!.forEach { filename ->
@@ -50,6 +50,6 @@ class LemApp {
 // This is an application main entry point. Here we define all the projects we want to process into the articles.
 fun main() {
     val lemApp = LemApp()
-    lemApp.renderScenarios(".",          "/madeinsoviets/lem/blob/develop/",     "scenarios", "articles")
-    lemApp.renderScenarios("../blaster", "/madeinsoviets/blaster/blob/master/",  "scenarios", "articles")
+    lemApp.renderScenarios("./",         "/madeinsoviets/lem/blob/develop/")
+    lemApp.renderScenarios("../blaster", "/madeinsoviets/blaster/blob/master/")
 }

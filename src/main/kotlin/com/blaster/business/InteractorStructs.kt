@@ -8,6 +8,24 @@ private val regexLink       = """\[([^\[]+)\]""".toRegex()
 private val regexCite       = """\\([^\\]+)\\""".toRegex()
 private val regexBold       = """'([^']+)'""".toRegex()
 
+private fun identifySpansInText(text: String, pattern: Regex, action: (span: String, isInside: Boolean) -> Unit) {
+    var remainder = text
+    var match = pattern.find(remainder)
+    while (match != null) {
+        val whole = match.groups[0]
+        val value = match.groups[1]
+        val outside = remainder.substring(0, whole!!.range.first)
+        val inside = value!!.value
+        action(outside, false)
+        action(inside, true)
+        remainder = remainder.substring(whole.range.last + 1, remainder.length)
+        match = pattern.find(remainder)
+    }
+    if (remainder.isNotEmpty()) {
+        action(remainder, false)
+    }
+}
+
 class InteractorStructs {
     // This routine will kickstart the process of identification of formatting inside of the TextNode. The identification is based on the regular expressions checks. If a certain regular expression is found, we extract pieces of text with the appropriate formatting
     fun identifyStructs(nodes: List<Node>): List<Node> = nodes.map {

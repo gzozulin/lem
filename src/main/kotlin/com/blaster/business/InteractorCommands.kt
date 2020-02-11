@@ -6,9 +6,12 @@ import org.kodein.di.generic.instance
 import java.io.File
 import java.net.URL
 
+private val CSV_PATTERN = ";\\s?".toPattern()
+fun String.splitCsv() = this.split(CSV_PATTERN)
+
 class InteractorCommands {
-    private val interactorParse: InteractorParse by kodein.instance()
-    private val interactorLocation: InteractorLocation by kodein.instance()
+    private val interactorParse: InteractorParse        by kodein.instance()
+    private val interactorLocation: InteractorLocation  by kodein.instance()
 
     fun identifyCommands(root: File, sourceUrl: URL, nodes: List<Node>): List<Node> = nodes.map {
         when (it) {

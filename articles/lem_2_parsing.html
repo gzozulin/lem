@@ -61,8 +61,7 @@
 </p><div class="child">
     <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop//src/main/kotlin/com/blaster/business/InteractorParse.kt" target="_blank">com.blaster.business.InteractorParse::parseScenario</a>
 </h3>
-    <p class="code_child"></p>
-<p class="text_child">This call will convert a scenario file into a list of nodes. The parameters are self explanatory.
+    <p class="text_child">This call will convert a scenario file into a list of nodes. The parameters are self explanatory.
 </p><p class="code_child">fun parseScenario(root: File, sourceUrl: URL, scenario: File): List&lt;Node&gt; {</p>
 <p class="text_child">First operation of this method is to convert text in the scenario file into a distinct nodes. Paragraphs are separated by the new lines
 </p><p class="code_child">    val nodes = scenario.readText().lines().map { NodeText(it) }</p>
@@ -86,8 +85,7 @@
 </p><div class="child">
     <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop//src/main/kotlin/com/blaster/business/InteractorCommands.kt" target="_blank">com.blaster.business.InteractorCommands::identifyCommand</a>
 </h3>
-    <p class="code_child"></p>
-<p class="text_child">Main commands identification routine. Will return a command if identified, or null if nothing found
+    <p class="text_child">Main commands identification routine. Will return a command if identified, or null if nothing found
 </p><p class="code_child">private fun identifyCommand(root: File, sourceUrl: URL, command: String): NodeCommand? {</p>
 <p class="text_child">We prefix all of the commands in the text with a <span style="font-weight:bold">#</span> symbol. If it is not found - it is not a command
 </p><p class="code_child">    if (!command.startsWith(COMMAND_IDENTIFIER)) {
@@ -116,8 +114,7 @@
 </p><div class="child">
     <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop//src/main/kotlin/com/blaster/business/InteractorCommands.kt" target="_blank">com.blaster.business.InteractorCommands::applyCommands</a>
 </h3>
-    <p class="code_child"></p>
-<p class="text_child">Commands application routine. It receives a source url and root and a list of nodes as a parameters. The result is a list of nodes modified by all of the commands in the original list.
+    <p class="text_child">Commands application routine. It receives a source url and root and a list of nodes as a parameters. The result is a list of nodes modified by all of the commands in the original list.
 </p><p class="code_child">fun applyCommands(root: File, sourceUrl: URL, nodes: List&lt;Node&gt;): List&lt;Node&gt; {</p>
 <p class="text_child">Since we will do operations on the list, we want to convert it to a mutable one - the structure of the list can be changed this way
 </p><p class="code_child">    val mutableList = ArrayList(nodes)
@@ -180,13 +177,12 @@
 </p><div class="child">
     <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop//src/main/kotlin/com/blaster/business/InteractorParse.kt" target="_blank">com.blaster.business.InteractorParse::parseDef</a>
 </h3>
-    <p class="code_child"></p>
-<p class="text_child">Routine for parsing of the definitions. Accepts the sources url and root and a location of the definition. Returns a list of nodes for this definition (commentaries, code, commands, etc.)
+    <p class="text_child">Routine for parsing of the definitions. Accepts the sources url and root and a location of the definition. Returns a list of nodes for this definition (commentaries, code, commands, etc.)
 </p><p class="code_child">fun parseDef(root: File, sourceUrl: URL, location: Location): List&lt;Node&gt; {</p>
 <p class="text_child">When the definition is located, we extract the code with the help of the ANTLR4
 </p><p class="code_child">    val definition = kotlinManager.extractDefinition(location)</p>
 <p class="text_child">Next step is to split this text onto the commentaries and code snippets. We also format them - removing unused lines, spaces, etc.
-</p><p class="code_child">    val withoutTabulation = definition.trimIndent()
+</p><p class="code_child">    val withoutTabulation = definition.clearCode()
     val statements = statementsManager.extractStatements(withoutTabulation)
     return renderNodes(root, sourceUrl, statements)</p>
 <div class="child">
@@ -209,7 +205,7 @@
 </h3>
     <p class="code_child">fun parseDecl(root: File, sourceUrl: URL, location: Location): List&lt;Node&gt; {
     val declarations = kotlinManager.extractDeclaration(location)
-    val withoutTabulation = declarations.map { it.trimIndent() }
+    val withoutTabulation = declarations.map { it.clearCode() }
     val statements = withoutTabulation.flatMap { statementsManager.extractStatements(it) }
     return renderNodes(root, sourceUrl, statements)
 }</p>

@@ -58,8 +58,7 @@
 </p><div class="child">
     <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop//src/main/kotlin/com/blaster/business/InteractorPrint.kt" target="_blank">com.blaster.business.InteractorPrint::printArticle</a>
 </h3>
-    <p class="code_child"></p>
-<p class="text_child">Parameters of this function are: the source root, the output file and a list of nodes to be printed
+    <p class="text_child">Parameters of this function are: the source root, the output file and a list of nodes to be printed
 </p><p class="code_child">fun printArticle(output: File, nodes: List&lt;Node&gt;) {</p>
 <p class="text_child">After receiving a list of nodes, we wrap them into an article template
 </p><p class="code_child">    val article = printingManager.renderTemplate(            &quot;template_article.ftlh&quot;, hashMapOf(&quot;article&quot; to printParagraphs(nodes))        )</p>
@@ -73,8 +72,7 @@
 </p><div class="child">
     <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop//src/main/kotlin/com/blaster/business/InteractorPrint.kt" target="_blank">com.blaster.business.InteractorPrint::printParagraphs</a>
 </h3>
-    <p class="code_child"></p>
-<p class="text_child">This call allows us to print the body of the article - a list of nodes. One thing to note is that this routine can be called recursively. The style of the output will look slightly differently. This fact is reflected by the additional parameter <span style="font-weight:bold">child</span>. The result of this method is the HTML generated.
+    <p class="text_child">This call allows us to print the body of the article - a list of nodes. One thing to note is that this routine can be called recursively. The style of the output will look slightly differently. This fact is reflected by the additional parameter <span style="font-weight:bold">child</span>. The result of this method is the HTML generated.
 </p><p class="code_child">private fun printParagraphs(nodes: List&lt;Node&gt;, child: Boolean = false): String {</p>
 <p class="text_child">We create the variable to hold the result and then we go through the nodes one by one
 </p><p class="code_child">    var result = &quot;&quot;</p>
@@ -105,8 +103,7 @@
 </p><div class="child">
     <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop//src/main/kotlin/com/blaster/business/InteractorPrint.kt" target="_blank">com.blaster.business.InteractorPrint::renderNodeText</a>
 </h3>
-    <p class="code_child"></p>
-<p class="text_child">This routine will print a text node
+    <p class="text_child">This routine will print a text node
 </p><p class="code_child">private fun renderNodeText(node: NodeText, child: Boolean): String {
     var result = &quot;&quot;
     for (ch in node.children) {
@@ -130,8 +127,7 @@
 </p><div class="child">
     <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop//src/main/kotlin/com/blaster/business/InteractorPrint.kt" target="_blank">com.blaster.business.InteractorPrint::renderNodeCode</a>
 </h3>
-    <p class="code_child"></p>
-<p class="text_child">A relatively straightforward routine to render the code. We just pass the code into a template
+    <p class="text_child">A relatively straightforward routine to render the code. We just pass the code into a template
 </p><p class="code_child">private fun renderNodeCode(node: NodeCode, child: Boolean): String {
     return printTemplateCode(node.code, child) + &quot;\n&quot;
 }</p>
@@ -143,8 +139,7 @@
 </p><div class="child">
     <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop//src/main/kotlin/com/blaster/business/InteractorPrint.kt" target="_blank">com.blaster.business.InteractorPrint::renderNodeCommand</a>
 </h3>
-    <p class="code_child"></p>
-<p class="text_child">With this routine we can include additions like headers, pictures and etc.
+    <p class="text_child">With this routine we can include additions like headers, pictures and etc.
 </p><p class="code_child">private fun renderNodeCommand(node: NodeCommand, child: Boolean, references: MutableList&lt;NodeCommand&gt;): String {
     var result = &quot;&quot;
     when (node.cmdType) {</p>
@@ -170,8 +165,7 @@
 </p><div class="child">
     <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop//src/main/kotlin/com/blaster/business/InteractorPrint.kt" target="_blank">com.blaster.business.InteractorPrint::printTemplateParagraph</a>
 </h3>
-    <p class="code_child"></p>
-<p class="text_child">Here is how we print paragraph
+    <p class="text_child">Here is how we print paragraph
 </p><p class="code_child">private fun printTemplateParagraph(paragraph: String, child: Boolean): String {</p>
 <p class="text_child">If this paragraph is a child of another paragraph, appropriate style is selected
 </p><p class="code_child">    val clz = if (child) &quot;text_child&quot; else &quot;text&quot;</p>

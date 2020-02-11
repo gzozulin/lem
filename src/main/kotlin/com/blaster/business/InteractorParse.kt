@@ -9,6 +9,8 @@ import org.kodein.di.generic.instance
 import java.io.File
 import java.net.URL
 
+private fun String.clearCode() = this.removePrefix("\n").trimIndent()
+
 class InteractorParse {
     private val kotlinManager: KotlinManager            by kodein.instance()
     private val interactorCommands: InteractorCommands  by kodein.instance()
@@ -29,7 +31,7 @@ class InteractorParse {
         // When the definition is located, we extract the code with the help of the ANTLR4
         val definition = kotlinManager.extractDefinition(location)
         // Next step is to split this text onto the commentaries and code snippets. We also format them - removing unused lines, spaces, etc.
-        val withoutTabulation = definition.trimIndent()
+        val withoutTabulation = definition.clearCode()
         val statements = statementsManager.extractStatements(withoutTabulation)
         return renderNodes(root, sourceUrl, statements)
         // #include; def; com.blaster.business.InteractorParse::renderNodes
@@ -37,7 +39,7 @@ class InteractorParse {
 
     fun parseDecl(root: File, sourceUrl: URL, location: Location): List<Node> {
         val declarations = kotlinManager.extractDeclaration(location)
-        val withoutTabulation = declarations.map { it.trimIndent() }
+        val withoutTabulation = declarations.map { it.clearCode() }
         val statements = withoutTabulation.flatMap { statementsManager.extractStatements(it) }
         return renderNodes(root, sourceUrl, statements)
     }

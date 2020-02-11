@@ -9,7 +9,6 @@ import org.kodein.di.generic.instance
 import java.io.File
 import java.net.URL
 
-// TODO: too much common code
 class InteractorParse {
     private val kotlinManager: KotlinManager by kodein.instance()
     private val interactorCommands: InteractorCommands by kodein.instance()

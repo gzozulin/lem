@@ -35,7 +35,6 @@ class KotlinManagerImpl : KotlinManager {
             is LocationGlobal -> listOf(locateGlobalMethodDecl(parser, location))
             is LocationMember -> listOf(locateMemberDecl(parser, location))
             is LocationClass -> locateClassDecls(parser, location)
-            else -> throw UnsupportedOperationException()
         }
         return declarations.map { extractDeclaration(tokenStream, it) }
     }

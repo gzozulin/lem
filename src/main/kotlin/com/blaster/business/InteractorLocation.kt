@@ -7,20 +7,20 @@ private val regexPath = """(\w+/)?\w+(\.\w+)+(::\w+)?""".toRegex()
 
 private const val kotlinSources = "src/main/kotlin"
 
-interface Location {
-    val url: URL
-    val file: File
+sealed class Location {
+    abstract val url: URL
+    abstract val file: File
 }
 
-data class LocationClass(override val url: URL, override val file: File, val clazz: String) : Location {
+data class LocationClass(override val url: URL, override val file: File, val clazz: String) : Location() {
     override fun toString(): String = "{file: $file, class: $clazz}"
 }
 
-data class LocationMember(override val url: URL, override val file: File, val clazz: String, val identifier: String) : Location {
+data class LocationMember(override val url: URL, override val file: File, val clazz: String, val identifier: String) : Location() {
     override fun toString(): String = "{file: $file, class: $clazz, identifier: $identifier}"
 }
 
-data class LocationGlobal(override val url: URL, override val file: File, val identifier: String) : Location {
+data class LocationGlobal(override val url: URL, override val file: File, val identifier: String) : Location() {
     override fun toString(): String = "{file: $file, identifier: $identifier}"
 }
 

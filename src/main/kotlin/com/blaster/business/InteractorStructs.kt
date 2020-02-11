@@ -3,10 +3,10 @@ package com.blaster.business
 import com.blaster.data.nodes.*
 import java.net.URL
 
-private val regexListItem = "~\\s*(.+)\$".toRegex()
-private val regexLink = "\\[([^\\[]+)\\]".toRegex()
-private val regexCite = "\\\\([^\\\\]+)\\\\".toRegex()
-private val regexBold = "'([^']+)'".toRegex()
+private val regexListItem   = """~\s*(.+)${'$'}""".toRegex()
+private val regexLink       = """\[([^\[]+)\]""".toRegex()
+private val regexCite       = """\\([^\\]+)\\""".toRegex()
+private val regexBold       = """'([^']+)'""".toRegex()
 
 class InteractorStructs {
     // This routine will kickstart the process of identification of formatting inside of the TextNode. The identification is based on the regular expressions checks. If a certain regular expression is found, we extract pieces of text with the appropriate formatting

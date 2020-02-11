@@ -7,7 +7,7 @@ private val regexPath = """(\w+/)?\w+(\.\w+)+(::\w+)?""".toRegex()
 
 private const val kotlinSources = "src/main/kotlin"
 
-data class Location(val url: URL, val file: File, val clazz: String, val identifier: String)
+data class Location(var url: URL, val file: File, val identifier: String)
 
 class InteractorLocation {
     // This routine helps us to locate pieces of code, pointed out by path parameter. It returns a class, which represents the location of the found snippet.
@@ -26,7 +26,7 @@ class InteractorLocation {
         val url = constructUrl(sourceUrl, module, filepath)
         // If the path contains exact member - extract it. If not - it is the same class
         val identifier = if (modulePath.contains("::")) extractIdentifier(path) else clazz
-        return Location(url, file, clazz, identifier)
+        return Location(url, file, identifier)
     }
 
     private fun extractModule(path: String): Pair<String?, String> {

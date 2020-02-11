@@ -38,10 +38,8 @@ class InteractorParse {
 
     fun parseDecl(root: File, sourceUrl: URL, location: Location): List<Node> {
         val declarations = kotlinManager.extractDeclaration(location)
-        val withoutTabulation = mutableListOf<String>()
-        declarations.forEach { withoutTabulation.add(it.trimIndent()) }
-        val statements = mutableListOf<Node>()
-        declarations.forEach { statements.addAll(statementsManager.extractStatements(it)) }
+        val withoutTabulation = declarations.map { it.trimIndent() }
+        val statements = withoutTabulation.flatMap { statementsManager.extractStatements(it) }
         return renderNodes(root, sourceUrl, statements)
     }
 

@@ -209,10 +209,8 @@
 </h3>
     <p class="code_child">fun parseDecl(root: File, sourceUrl: URL, location: Location): List&lt;Node&gt; {
     val declarations = kotlinManager.extractDeclaration(location)
-    val withoutTabulation = mutableListOf&lt;String&gt;()
-    declarations.forEach { withoutTabulation.add(it.trimIndent()) }
-    val statements = mutableListOf&lt;Node&gt;()
-    declarations.forEach { statements.addAll(statementsManager.extractStatements(it)) }
+    val withoutTabulation = declarations.map { it.trimIndent() }
+    val statements = withoutTabulation.flatMap { statementsManager.extractStatements(it) }
     return renderNodes(root, sourceUrl, statements)
 }</p>
 

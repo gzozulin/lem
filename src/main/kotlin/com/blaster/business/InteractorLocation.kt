@@ -7,19 +7,7 @@ private val regexPath = """(\w+/)?\w+(\.\w+)+(::\w+)?""".toRegex()
 
 private const val kotlinSources = "src/main/kotlin"
 
-sealed class Location {
-    abstract val url: URL
-    abstract val file: File
-}
-
-data class LocationClass(override val url: URL, override val file: File, val clazz: String) : Location()
-data class LocationMember(override val url: URL, override val file: File, val clazz: String, val identifier: String) : Location()
-data class LocationGlobal(override val url: URL, override val file: File, val identifier: String) : Location()
-
-// global method:       com.blaster.platform.LemAppKt::main
-// member in class:     com.blaster.platform.LemApp::render
-// class:               com.blaster.platform.LemApp
-// class in module:     common_gl/com.blaster.gl.glState
+data class Location(val url: URL, val file: File, val clazz: String, val identifier: String)
 
 class InteractorLocation {
     // This routine helps us to locate pieces of code, pointed out by path parameter. It returns a class, which represents the location of the found snippet.
@@ -36,17 +24,9 @@ class InteractorLocation {
         val file = locateFile(module, root, filepath)
         // We also want to assemble the URL to the location based source url on Github
         val url = constructUrl(sourceUrl, module, filepath)
-        // Now we can choose if this is a path to a whole class or to one of its members. We can be sure that the it is a global function or property if the class name ends with Kt according to a Kotlin notation. Else it is a path to a standalone class
-        return if (modulePath.contains("::")) {
-            val member = extractMember(path)
-            if (clazz.endsWith("Kt")) {
-                LocationGlobal(url, file, member)
-            } else {
-                LocationMember(url, file, clazz, member)
-            }
-        } else {
-            LocationClass(url, file, clazz)
-        }
+        // If the path contains exact member - extract it. If not - it is the same class
+        val identifier = if (modulePath.contains("::")) extractIdentifier(path) else clazz
+        return Location(url, file, clazz, identifier)
     }
 
     private fun extractModule(path: String): Pair<String?, String> {
@@ -63,7 +43,7 @@ class InteractorLocation {
         return path.substring(0, if (lastIndex >= 0) lastIndex - 1 else path.length)
     }
 
-    private fun extractMember(path: String): String {
+    private fun extractIdentifier(path: String): String {
         return path.substring(path.lastIndexOf(":") + 1, path.length)
     }
 

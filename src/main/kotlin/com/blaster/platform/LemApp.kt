@@ -51,5 +51,5 @@ class LemApp {
 fun main() {
     val lemApp = LemApp()
     lemApp.renderScenarios(".",          "/madeinsoviets/lem/blob/develop/",     "scenarios", "articles")
-    lemApp.renderScenarios("../blaster", "/madeinsoviets/blaster/blob/develop/", "scenarios", "articles")
+    lemApp.renderScenarios("../blaster", "/madeinsoviets/blaster/blob/master/",  "scenarios", "articles")
 }

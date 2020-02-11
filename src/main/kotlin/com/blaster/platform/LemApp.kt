@@ -29,20 +29,20 @@ class LemApp {
     private val interactorParse: InteractorParse by kodein.instance()
     private val interactorPrint: InteractorPrint by kodein.instance()
 
-    private fun render(sourceUrl: URL, sourceRoot: File, scenarioFile: File, outputfile: File) {
-        val parsed = interactorParse.parseScenario(sourceUrl, sourceRoot, scenarioFile)
+    private fun render(sourceUrl: URL, root: File, scenarioFile: File, outputfile: File) {
+        val parsed = interactorParse.parseScenario(root, sourceUrl, scenarioFile)
         interactorPrint.printArticle(outputfile, parsed)
     }
 
-    fun renderScenarios(url: String, sources: String, scenarios: String, output: String) {
-        val scenariosDir = File(scenarios)
-        val outputDir = File(output)
+    fun renderScenarios(root: String, url: String, scenarios: String, articles: String) {
+        val scenariosDir = File("$root/$scenarios")
+        val outputDir = File("$root/$articles")
         scenariosDir.list()!!.forEach { filename ->
             val sourcesUrl = URL("https", "github.com", url)
-            val sourcesRoot = File(sources)
+            val rootFile = File(root)
             val scenarioFile = File(scenariosDir, filename)
             val outputFile = File(outputDir, "$filename.html")
-            render(sourcesUrl, sourcesRoot, scenarioFile, outputFile)
+            render(sourcesUrl, rootFile, scenarioFile, outputFile)
         }
     }
 }
@@ -50,6 +50,6 @@ class LemApp {
 // This is an application main entry point. Here we define all the projects we want to process into the articles.
 fun main() {
     val lemApp = LemApp()
-    lemApp.renderScenarios("/madeinsoviets/lem/blob/develop/",      "src/main/kotlin",              "scenarios",            "articles")
-    lemApp.renderScenarios("/madeinsoviets/blaster/blob/develop/",  "../blaster/src/main/kotlin",   "../blaster/scenarios", "../blaster/articles")
+    lemApp.renderScenarios(".",          "/madeinsoviets/lem/blob/develop/",     "scenarios", "articles")
+    lemApp.renderScenarios("../blaster", "/madeinsoviets/blaster/blob/develop/", "scenarios", "articles")
 }

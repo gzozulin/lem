@@ -56,7 +56,7 @@
 </p><p class="text">
 </p><p class="text">Everything starts with an article. The article contains header, styles, and body declaration.
 </p><div class="child">
-    <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop/src/main/kotlin/com/blaster/business/InteractorPrint.kt" target="_blank">com.blaster.business.InteractorPrint::printArticle</a>
+    <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop//home/greg/lem/./src/main/kotlin/com/blaster/business/InteractorPrint.kt" target="_blank">com.blaster.business.InteractorPrint::printArticle</a>
 </h3>
     <p class="code_child"></p>
 <p class="text_child">Parameters of this function are: the source root, the output file and a list of nodes to be printed
@@ -71,7 +71,7 @@
 <p class="text">
 </p><p class="text">Internally, the article printing routine will call for a method to print paragraphs:
 </p><div class="child">
-    <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop/src/main/kotlin/com/blaster/business/InteractorPrint.kt" target="_blank">com.blaster.business.InteractorPrint::printParagraphs</a>
+    <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop//home/greg/lem/./src/main/kotlin/com/blaster/business/InteractorPrint.kt" target="_blank">com.blaster.business.InteractorPrint::printParagraphs</a>
 </h3>
     <p class="code_child"></p>
 <p class="text_child">This call allows us to print the body of the article - a list of nodes. One thing to note is that this routine can be called recursively. The style of the output will look slightly differently. This fact is reflected by the additional parameter <span style="font-weight:bold">child</span>. The result of this method is the HTML generated.
@@ -103,7 +103,7 @@
 </p><p class="text"><ul class="list_item"><li>Here is how we print the text nodes:
 </li></ul>
 </p><div class="child">
-    <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop/src/main/kotlin/com/blaster/business/InteractorPrint.kt" target="_blank">com.blaster.business.InteractorPrint::renderNodeText</a>
+    <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop//home/greg/lem/./src/main/kotlin/com/blaster/business/InteractorPrint.kt" target="_blank">com.blaster.business.InteractorPrint::renderNodeText</a>
 </h3>
     <p class="code_child"></p>
 <p class="text_child">This routine will print a text node
@@ -128,7 +128,7 @@
 </p><p class="text"><ul class="list_item"><li>Here is how to insert a code snippet:
 </li></ul>
 </p><div class="child">
-    <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop/src/main/kotlin/com/blaster/business/InteractorPrint.kt" target="_blank">com.blaster.business.InteractorPrint::renderNodeCode</a>
+    <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop//home/greg/lem/./src/main/kotlin/com/blaster/business/InteractorPrint.kt" target="_blank">com.blaster.business.InteractorPrint::renderNodeCode</a>
 </h3>
     <p class="code_child"></p>
 <p class="text_child">A relatively straightforward routine to render the code. We just pass the code into a template
@@ -141,19 +141,19 @@
 </p><p class="text"><ul class="list_item"><li>And here is how we handle the commands:
 </li></ul>
 </p><div class="child">
-    <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop/src/main/kotlin/com/blaster/business/InteractorPrint.kt" target="_blank">com.blaster.business.InteractorPrint::renderNodeCommand</a>
+    <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop//home/greg/lem/./src/main/kotlin/com/blaster/business/InteractorPrint.kt" target="_blank">com.blaster.business.InteractorPrint::renderNodeCommand</a>
 </h3>
     <p class="code_child"></p>
 <p class="text_child">With this routine we can include additions like headers, pictures and etc.
 </p><p class="code_child">private fun renderNodeCommand(node: NodeCommand, child: Boolean, references: MutableList&lt;NodeCommand&gt;): String {
     var result = &quot;&quot;
-    when (node.type) {</p>
+    when (node.cmdType) {</p>
 <p class="text_child">It can be something related to the attributes of the page
-</p><p class="code_child">        NodeCommand.Type.HEADER -&gt; result += printTemplateHeader(node.subcommand, node.argument) + &quot;\n&quot;</p>
+</p><p class="code_child">        CmdType.HEADER -&gt; result += printTemplateHeader(node.subcommand, node.argument) + &quot;\n&quot;</p>
 <p class="text_child">Or a picture insert
-</p><p class="code_child">        NodeCommand.Type.PICTURE -&gt; result += printTemplatePicture(node.subcommand, node.argument, child) + &quot;\n&quot;</p>
+</p><p class="code_child">        CmdType.PICTURE -&gt; result += printTemplatePicture(node.subcommand, node.argument, child) + &quot;\n&quot;</p>
 <p class="text_child">Or a cite reference
-</p><p class="code_child">        NodeCommand.Type.CITE -&gt; references.add(node)</p>
+</p><p class="code_child">        CmdType.CITE -&gt; references.add(node)</p>
 <p class="text_child">Else just continue
 </p><p class="code_child">        else -&gt; {}
     }</p>
@@ -168,7 +168,7 @@
 <p class="text">
 </p><p class="text">We are printing nodes by delegating pieces of the tasks to the helper methods, like this one:
 </p><div class="child">
-    <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop/src/main/kotlin/com/blaster/business/InteractorPrint.kt" target="_blank">com.blaster.business.InteractorPrint::printTemplateParagraph</a>
+    <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop//home/greg/lem/./src/main/kotlin/com/blaster/business/InteractorPrint.kt" target="_blank">com.blaster.business.InteractorPrint::printTemplateParagraph</a>
 </h3>
     <p class="code_child"></p>
 <p class="text_child">Here is how we print paragraph

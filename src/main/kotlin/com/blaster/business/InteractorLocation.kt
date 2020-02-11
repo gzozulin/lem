@@ -3,7 +3,9 @@ package com.blaster.business
 import java.io.File
 import java.net.URL
 
-private val regexPath = "\\w+(\\.\\w+)+(::\\w+)?".toRegex()
+private val regexPath = """(\w+/)?\w+(\.\w+)+(::\w+)?""".toRegex()
+
+private const val kotlinSources = "src/main/kotlin"
 
 interface Location {
     val url: URL
@@ -25,21 +27,23 @@ data class LocationGlobal(override val url: URL, override val file: File, val id
 // global method:       com.blaster.platform.LemAppKt::main
 // member in class:     com.blaster.platform.LemApp::render
 // class:               com.blaster.platform.LemApp
+// class in module:     common_gl/com.blaster.gl.glState
 
 class InteractorLocation {
-
     // This routine helps us to locate pieces of code, pointed out by path parameter. It returns a class, which represents the location of the found snippet.
-    fun locate(sourceUrl: URL, sourceRoot: File, path: String): Location {
+    fun locate(root: File, sourceUrl: URL, path: String): Location {
         // First of all we want to assert if the path is formatted properly. This allows to highlight errors early
         check(regexPath.find(path)!!.value.length == path.length) { "Wrong path for the location: $path" }
-        // We start by extracting the class from path string. It simply grabs everything before ':'
-        val clazz = extractClass(path)
-        // Next we want to retreive the actual file, containing the class. We do that by looking at the sources root and a package
-        val file = locateFile(sourceRoot, clazz)
+        // We start by extracting module from path if we have one.
+        val (module, modulePath) = extractModule(path)
+        // Then the class follows - we simply grabs everything before ':'
+        val clazz = extractClass(modulePath)
+        // Next we want to retrieve the actual file, containing the class. We do that by looking at the sources root and a package
+        val file = locateFile(module, root, clazz)
         // We also want to assemble the URL to the location based source url on Github
         val url = URL(sourceUrl.toString() + file.toString().replace("\\", "/"))
         // Now we can choose if this is a path to a whole class or to one of its members. We can be sure that the it is a global function or property if the class name ends with Kt according to a Kotlin notation. Else it is a path to a standalone class
-        return if (path.contains("::")) {
+        return if (modulePath.contains("::")) {
             val member = extractMember(path)
             if (clazz.endsWith("Kt")) {
                 LocationGlobal(url, file, member)
@@ -48,6 +52,15 @@ class InteractorLocation {
             }
         } else {
             LocationClass(url, file, clazz)
+        }
+    }
+
+    private fun extractModule(path: String): Pair<String?, String> {
+        return if (path.contains("/")) {
+            val index = path.indexOf("/")
+            path.substring(0, index) to path.substring(index + 1, path.length)
+        } else {
+            null to path
         }
     }
 
@@ -60,13 +73,17 @@ class InteractorLocation {
         return path.substring(path.lastIndexOf(":") + 1, path.length)
     }
 
-    private fun locateFile(sourceRoot: File, clazz: String): File {
+    private fun locateFile(module: String?, root: File, clazz: String): File {
         var filepath = clazz.replace(".", "/")
         if (filepath.endsWith("Kt")) {
             filepath = filepath.removeSuffix("Kt")
         }
         filepath += ".kt"
-        val result = File(sourceRoot, filepath)
+        val result = if (module != null) {
+            File("${root.absolutePath}/$module/$kotlinSources/$filepath")
+        } else {
+            File("${root.absolutePath}/$kotlinSources/$filepath")
+        }
         check(result.exists()) { "Provided class does not exists! $clazz" }
         return result
     }

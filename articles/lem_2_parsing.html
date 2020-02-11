@@ -59,21 +59,21 @@
 </p><p class="text">
 </p><p class="text">Let us start with a first step - parsing of the scenario file, passed from the input arguments.
 </p><div class="child">
-    <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop/src/main/kotlin/com/blaster/business/InteractorParse.kt" target="_blank">com.blaster.business.InteractorParse::parseScenario</a>
+    <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop//home/greg/lem/./src/main/kotlin/com/blaster/business/InteractorParse.kt" target="_blank">com.blaster.business.InteractorParse::parseScenario</a>
 </h3>
     <p class="code_child"></p>
 <p class="text_child">This call will convert a scenario file into a list of nodes. The parameters are self explanatory.
-</p><p class="code_child">fun parseScenario(sourceUrl: URL, sourceRoot: File, scenario: File): List&lt;Node&gt; {</p>
+</p><p class="code_child">fun parseScenario(root: File, sourceUrl: URL, scenario: File): List&lt;Node&gt; {</p>
 <p class="text_child">First operation of this method is to convert text in the scenario file into a distinct nodes. Paragraphs are separated by the new lines
 </p><p class="code_child">    val nodes = scenario.readText().lines().map { NodeText(it) }</p>
 <p class="text_child">The next task is to apply common procedures for the nodes: identification and application of commands, identification of the structures
-</p><p class="code_child">    return renderNodes(sourceUrl, sourceRoot, nodes)</p>
+</p><p class="code_child">    return renderNodes(root, sourceUrl, nodes)</p>
 <div class="child">
-    <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop/src/main/kotlin/com/blaster/business/InteractorParse.kt" target="_blank">com.blaster.business.InteractorParse::renderNodes</a>
+    <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop//home/greg/lem/./src/main/kotlin/com/blaster/business/InteractorParse.kt" target="_blank">com.blaster.business.InteractorParse::renderNodes</a>
 </h3>
-    <p class="code_child">private fun renderNodes(sourceUrl: URL, sourceRoot: File, nodes: List&lt;Node&gt;): List&lt;Node&gt; {
-    val withCommands = interactorCommands.identifyCommands(sourceUrl, sourceRoot, nodes)
-    val commandsApplied = interactorCommands.applyCommands(sourceUrl, sourceRoot, withCommands)
+    <p class="code_child">private fun renderNodes(root: File, sourceUrl: URL, nodes: List&lt;Node&gt;): List&lt;Node&gt; {
+    val withCommands = interactorCommands.identifyCommands(root, sourceUrl, nodes)
+    val commandsApplied = interactorCommands.applyCommands(root, sourceUrl, withCommands)
     return interactorStructs.identifyStructs(commandsApplied)
 }</p>
 
@@ -84,11 +84,11 @@
 <p class="text">
 </p><p class="text">The scenario will produce a list of nodes and commands, which were identified. Let's see how the identification of the commands works.
 </p><div class="child">
-    <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop/src/main/kotlin/com/blaster/business/InteractorCommands.kt" target="_blank">com.blaster.business.InteractorCommands::identifyCommand</a>
+    <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop//home/greg/lem/./src/main/kotlin/com/blaster/business/InteractorCommands.kt" target="_blank">com.blaster.business.InteractorCommands::identifyCommand</a>
 </h3>
     <p class="code_child"></p>
 <p class="text_child">Main commands identification routine. Will return a command if identified, or null if nothing found
-</p><p class="code_child">private fun identifyCommand(sourceUrl: URL, sourceRoot: File, command: String): NodeCommand? {</p>
+</p><p class="code_child">private fun identifyCommand(root: File, sourceUrl: URL, command: String): NodeCommand? {</p>
 <p class="text_child">We prefix all of the commands in the text with a <span style="font-weight:bold">#</span> symbol. If it is not found - it is not a command
 </p><p class="code_child">    if (!command.startsWith(COMMAND_IDENTIFIER)) {
         return null
@@ -100,10 +100,10 @@
     val subcmd = stack.subList(1, stack.size)</p>
 <p class="text_child">Then identifying each command family by command name. We remove the head of the stack each time when we go to the next level. Each command family will be parsed in the similar fashion, until nothing is left on the stack
 </p><p class="code_child">    return when {
-        cmd == COMMAND_INCLUDE -&gt; identifyIncludeCommand(sourceUrl, sourceRoot, subcmd)
+        cmd == COMMAND_INCLUDE -&gt; identifyIncludeCommand(root, sourceUrl, subcmd)
         cmd == COMMAND_HEADER -&gt; identifyHeaderCommand(subcmd)
         cmd == COMMAND_PICTURE -&gt; identifyPictureCommand(subcmd)
-        cmd == COMMAND_INLINE -&gt; identifyInlineCommand(sourceUrl, sourceRoot, subcmd)
+        cmd == COMMAND_INLINE -&gt; identifyInlineCommand(root, sourceUrl, subcmd)
         cmd == COMMAND_OMIT -&gt; identifyOmitCommand()
         cmd == COMMAND_CITE -&gt; identifyCiteCommand(subcmd)
         else -&gt; TODO()
@@ -114,11 +114,11 @@
 <p class="text">
 </p><p class="text">After the commands are identified, we can finally apply them.
 </p><div class="child">
-    <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop/src/main/kotlin/com/blaster/business/InteractorCommands.kt" target="_blank">com.blaster.business.InteractorCommands::applyCommands</a>
+    <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop//home/greg/lem/./src/main/kotlin/com/blaster/business/InteractorCommands.kt" target="_blank">com.blaster.business.InteractorCommands::applyCommands</a>
 </h3>
     <p class="code_child"></p>
 <p class="text_child">Commands application routine. It receives a source url and root and a list of nodes as a parameters. The result is a list of nodes modified by all of the commands in the original list.
-</p><p class="code_child">fun applyCommands(sourceUrl: URL, sourceRoot: File, nodes: List&lt;Node&gt;): List&lt;Node&gt; {</p>
+</p><p class="code_child">fun applyCommands(root: File, sourceUrl: URL, nodes: List&lt;Node&gt;): List&lt;Node&gt; {</p>
 <p class="text_child">Since we will do operations on the list, we want to convert it to a mutable one - the structure of the list can be changed this way
 </p><p class="code_child">    val mutableList = ArrayList(nodes)
     val iterator = mutableList.listIterator()</p>
@@ -127,11 +127,11 @@
         val node = iterator.next()</p>
 <p class="text_child">If the next item in the list is a command
 </p><p class="code_child">        if (node is NodeCommand) {
-            when (node.type) {</p>
+            when (node.cmdType) {</p>
 <p class="text_child">We apply the command accordingly
-</p><p class="code_child">                NodeCommand.Type.INCLUDE -&gt; applyIncludeCommand(sourceUrl, sourceRoot, iterator, node)
-                NodeCommand.Type.OMIT -&gt; applyOmitCommand(iterator)
-                NodeCommand.Type.INLINE -&gt; applyInlineCommand(sourceUrl, sourceRoot, iterator, node)</p>
+</p><p class="code_child">                CmdType.INCLUDE -&gt; applyIncludeCommand(root, sourceUrl, iterator, node)
+                CmdType.OMIT -&gt; applyOmitCommand(iterator)
+                CmdType.INLINE -&gt; applyInlineCommand(root, sourceUrl, iterator, node)</p>
 <p class="text_child">Some commands have meaning only for printing, so we do nothing right now
 </p><p class="code_child">                else -&gt; {}
             }
@@ -145,21 +145,22 @@
 <p class="text">
 </p><p class="text">As we already know, some commands will request to include the additional code to showcase the mechanics. Such a command will have a command name, command arguments, and the path of the code to be included. Here is the code, responsible for locating the snippets:
 </p><div class="child">
-    <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop/src/main/kotlin/com/blaster/business/InteractorLocation.kt" target="_blank">com.blaster.business.InteractorLocation::locate</a>
+    <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop//home/greg/lem/./src/main/kotlin/com/blaster/business/InteractorLocation.kt" target="_blank">com.blaster.business.InteractorLocation::locate</a>
 </h3>
-    <p class="code_child"></p>
-<p class="text_child">This routine helps us to locate pieces of code, pointed out by path parameter. It returns a class, which represents the location of the found snippet.
-</p><p class="code_child">fun locate(sourceUrl: URL, sourceRoot: File, path: String): Location {</p>
+    <p class="text_child">This routine helps us to locate pieces of code, pointed out by path parameter. It returns a class, which represents the location of the found snippet.
+</p><p class="code_child">fun locate(root: File, sourceUrl: URL, path: String): Location {</p>
 <p class="text_child">First of all we want to assert if the path is formatted properly. This allows to highlight errors early
 </p><p class="code_child">    check(regexPath.find(path)!!.value.length == path.length) { &quot;Wrong path for the location: $path&quot; }</p>
-<p class="text_child">We start by extracting the class from path string. It simply grabs everything before <span style="font-weight:bold">:</span>
-</p><p class="code_child">    val clazz = extractClass(path)</p>
-<p class="text_child">Next we want to retreive the actual file, containing the class. We do that by looking at the sources root and a package
-</p><p class="code_child">    val file = locateFile(sourceRoot, clazz)</p>
+<p class="text_child">We start by extracting module from path if we have one.
+</p><p class="code_child">    val (module, modulePath) = extractModule(path)</p>
+<p class="text_child">Then the class follows - we simply grabs everything before <span style="font-weight:bold">:</span>
+</p><p class="code_child">    val clazz = extractClass(modulePath)</p>
+<p class="text_child">Next we want to retrieve the actual file, containing the class. We do that by looking at the sources root and a package
+</p><p class="code_child">    val file = locateFile(module, root, clazz)</p>
 <p class="text_child">We also want to assemble the URL to the location based source url on Github
 </p><p class="code_child">    val url = URL(sourceUrl.toString() + file.toString().replace(&quot;\\&quot;, &quot;/&quot;))</p>
 <p class="text_child">Now we can choose if this is a path to a whole class or to one of its members. We can be sure that the it is a global function or property if the class name ends with Kt according to a Kotlin notation. Else it is a path to a standalone class
-</p><p class="code_child">    return if (path.contains(&quot;::&quot;)) {
+</p><p class="code_child">    return if (modulePath.contains(&quot;::&quot;)) {
         val member = extractMember(path)
         if (clazz.endsWith(&quot;Kt&quot;)) {
             LocationGlobal(url, file, member)
@@ -175,23 +176,23 @@
 <p class="text">
 </p><p class="text">The author of the scenario can choose how to include the code. We can either include definitions of declarations of methods and classes. The difference is that sometimes you want to include the body of the method, and sometimes you just want to mention it. Let us see how parsing of the requested definitions works.
 </p><div class="child">
-    <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop/src/main/kotlin/com/blaster/business/InteractorParse.kt" target="_blank">com.blaster.business.InteractorParse::parseDef</a>
+    <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop//home/greg/lem/./src/main/kotlin/com/blaster/business/InteractorParse.kt" target="_blank">com.blaster.business.InteractorParse::parseDef</a>
 </h3>
     <p class="code_child"></p>
 <p class="text_child">Routine for parsing of the definitions. Accepts the sources url and root and a location of the definition. Returns a list of nodes for this definition (commentaries, code, commands, etc.)
-</p><p class="code_child">fun parseDef(sourceUrl: URL, sourceRoot: File, location: Location): List&lt;Node&gt; {</p>
+</p><p class="code_child">fun parseDef(root: File, sourceUrl: URL, location: Location): List&lt;Node&gt; {</p>
 <p class="text_child">When the definition is located, we extract the code with the help of the ANTLR4
 </p><p class="code_child">    val definition = kotlinManager.extractDefinition(location)</p>
 <p class="text_child">Next step is to split this text onto the commentaries and code snippets. We also format them - removing unused lines, spaces, etc.
 </p><p class="code_child">    val withoutTabulation = definition.trimIndent()
     val statements = statementsManager.extractStatements(withoutTabulation)
-    return renderNodes(sourceUrl, sourceRoot, statements)</p>
+    return renderNodes(root, sourceUrl, statements)</p>
 <div class="child">
-    <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop/src/main/kotlin/com/blaster/business/InteractorParse.kt" target="_blank">com.blaster.business.InteractorParse::renderNodes</a>
+    <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop//home/greg/lem/./src/main/kotlin/com/blaster/business/InteractorParse.kt" target="_blank">com.blaster.business.InteractorParse::renderNodes</a>
 </h3>
-    <p class="code_child">private fun renderNodes(sourceUrl: URL, sourceRoot: File, nodes: List&lt;Node&gt;): List&lt;Node&gt; {
-    val withCommands = interactorCommands.identifyCommands(sourceUrl, sourceRoot, nodes)
-    val commandsApplied = interactorCommands.applyCommands(sourceUrl, sourceRoot, withCommands)
+    <p class="code_child">private fun renderNodes(root: File, sourceUrl: URL, nodes: List&lt;Node&gt;): List&lt;Node&gt; {
+    val withCommands = interactorCommands.identifyCommands(root, sourceUrl, nodes)
+    val commandsApplied = interactorCommands.applyCommands(root, sourceUrl, withCommands)
     return interactorStructs.identifyStructs(commandsApplied)
 }</p>
 
@@ -202,22 +203,22 @@
 <p class="text">
 </p><p class="text">Parsing of the requested declarations works very similarly to definitions.
 </p><div class="child">
-    <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop/src/main/kotlin/com/blaster/business/InteractorParse.kt" target="_blank">com.blaster.business.InteractorParse::parseDecl</a>
+    <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop//home/greg/lem/./src/main/kotlin/com/blaster/business/InteractorParse.kt" target="_blank">com.blaster.business.InteractorParse::parseDecl</a>
 </h3>
-    <p class="code_child">fun parseDecl(sourceUrl: URL, sourceRoot: File, location: Location): List&lt;Node&gt; {
+    <p class="code_child">fun parseDecl(root: File, sourceUrl: URL, location: Location): List&lt;Node&gt; {
     val declarations = kotlinManager.extractDeclaration(location)
     val withoutTabulation = mutableListOf&lt;String&gt;()
     declarations.forEach { withoutTabulation.add(it.trimIndent()) }
     val statements = mutableListOf&lt;Node&gt;()
     declarations.forEach { statements.addAll(statementsManager.extractStatements(it)) }
-    return renderNodes(sourceUrl, sourceRoot, statements)
+    return renderNodes(root, sourceUrl, statements)
 }</p>
 
 </div>
 <p class="text">
 </p><p class="text">Couple of words should be said about identifying the structures among the text. After all of the text pieces are located, we want to check if they contain any kind of lists, tables, links, spans and etc.:
 </p><div class="child">
-    <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop/src/main/kotlin/com/blaster/business/InteractorStructs.kt" target="_blank">com.blaster.business.InteractorStructs::identifyStructs</a>
+    <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop//home/greg/lem/./src/main/kotlin/com/blaster/business/InteractorStructs.kt" target="_blank">com.blaster.business.InteractorStructs::identifyStructs</a>
 </h3>
     <p class="text_child">This routine will kickstart the process of identification of formatting inside of the TextNode. The identification is based on the regular expressions checks. If a certain regular expression is found, we extract pieces of text with the appropriate formatting
 </p><p class="code_child">fun identifyStructs(nodes: List&lt;Node&gt;): List&lt;Node&gt; = nodes.map {
@@ -239,7 +240,7 @@
 </p><p class="text"><ul class="list_item"><li>We try to identify list items first
 </li></ul>
 </p><div class="child">
-    <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop/src/main/kotlin/com/blaster/business/InteractorStructs.kt" target="_blank">com.blaster.business.InteractorStructs::identifyListItems</a>
+    <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop//home/greg/lem/./src/main/kotlin/com/blaster/business/InteractorStructs.kt" target="_blank">com.blaster.business.InteractorStructs::identifyListItems</a>
 </h3>
     <p class="code_child">private fun identifyListItems(node: NodeText): List&lt;Node&gt; {
     val match = regexListItem.find(node.text)
@@ -257,7 +258,7 @@
 </p><p class="text"><ul class="list_item"><li>Then we go for the links
 </li></ul>
 </p><div class="child">
-    <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop/src/main/kotlin/com/blaster/business/InteractorStructs.kt" target="_blank">com.blaster.business.InteractorStructs::identifyLinks</a>
+    <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop//home/greg/lem/./src/main/kotlin/com/blaster/business/InteractorStructs.kt" target="_blank">com.blaster.business.InteractorStructs::identifyLinks</a>
 </h3>
     <p class="code_child">private fun identifyLinks(text: String): List&lt;Node&gt; {
     val result = mutableListOf&lt;Node&gt;()
@@ -278,7 +279,7 @@
 </p><p class="text"><ul class="list_item"><li>Then we check for the references marks
 </li></ul>
 </p><div class="child">
-    <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop/src/main/kotlin/com/blaster/business/InteractorStructs.kt" target="_blank">com.blaster.business.InteractorStructs::identifyCites</a>
+    <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop//home/greg/lem/./src/main/kotlin/com/blaster/business/InteractorStructs.kt" target="_blank">com.blaster.business.InteractorStructs::identifyCites</a>
 </h3>
     <p class="code_child">private fun identifyCites(text: String): List&lt;Node&gt; {
     val result = mutableListOf&lt;Node&gt;()
@@ -299,7 +300,7 @@
 </p><p class="text"><ul class="list_item"><li>And finally we are looking for formatting in the text
 </li></ul>
 </p><div class="child">
-    <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop/src/main/kotlin/com/blaster/business/InteractorStructs.kt" target="_blank">com.blaster.business.InteractorStructs::identifySpans</a>
+    <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop//home/greg/lem/./src/main/kotlin/com/blaster/business/InteractorStructs.kt" target="_blank">com.blaster.business.InteractorStructs::identifySpans</a>
 </h3>
     <p class="code_child">private fun identifySpans(text: String): List&lt;Node&gt; {
     val result = mutableListOf&lt;Node&gt;()

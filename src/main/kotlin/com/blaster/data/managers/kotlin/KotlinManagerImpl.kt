@@ -64,12 +64,12 @@ class KotlinManagerImpl : KotlinManager {
         return declarations.first()
     }
 
-    private fun findFirstToken(tokenStream: CommonTokenStream, member: ParserRuleContext): Int {
-        val prevDecl = findPrevDeclaration(tokenStream, member.start.tokenIndex)
+    private fun findFirstToken(tokenStream: CommonTokenStream, context: ParserRuleContext): Int {
+        val prevDecl = findPrevDeclaration(tokenStream, context)
         return if (prevDecl != null) {
             prevDecl.tokenIndex + 1
         } else {
-            member.start.tokenIndex
+            context.start.tokenIndex
         }
     }
 
@@ -91,7 +91,7 @@ class KotlinManagerImpl : KotlinManager {
             }
             is KotlinParser.PropertyDeclarationContext -> {
                 if (decl.text.contains("object")) {
-                    findBodyStart(tokenStream, decl.start.tokenIndex).tokenIndex - 2 // for objects before body begins
+                    findBodyStart(tokenStream, decl).tokenIndex - 2 // for objects before body begins
                 } else {
                     decl.stop.tokenIndex // full declaration
                 }
@@ -101,21 +101,22 @@ class KotlinManagerImpl : KotlinManager {
     }
 
     // todo: sloppy and ineffective
-    private fun findBodyStart(tokenStream: CommonTokenStream, from: Int): Token {
+    private fun findBodyStart(tokenStream: CommonTokenStream, context: ParserRuleContext): Token {
+        val (from, to) = context.start.tokenIndex to context.stop.tokenIndex
         var current = from + 1
-        while (current < tokenStream.tokens.size) {
+        while (current < to) {
             val token = tokenStream.get(current)
             if (token.text == "{") {
                 return token
             }
             current++
         }
-        throw IllegalStateException("Body of this object not found!")
+        throw IllegalStateException("Body of this object is not found! ${context.text}")
     }
 
     // todo: sloppy and ineffective
-    private fun findPrevDeclaration(tokenStream: CommonTokenStream, to: Int): Token? {
-        var current = to - 1
+    private fun findPrevDeclaration(tokenStream: CommonTokenStream, member: ParserRuleContext): Token? {
+        var current = member.start.tokenIndex - 1
         while(current >= 0) {
             val token = tokenStream.get(current)
             val text = token.text

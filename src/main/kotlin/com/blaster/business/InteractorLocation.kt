@@ -25,7 +25,7 @@ class InteractorLocation {
         // We also want to assemble the URL to the location based source url on Github
         val url = constructUrl(sourceUrl, module, filepath)
         // If the path contains exact member - extract it. If not - it is the same class
-        val identifier = if (modulePath.contains("::")) extractIdentifier(path) else clazz
+        val identifier = extractIdentifier(path)
         return Location(url, file, identifier)
     }
 
@@ -44,7 +44,11 @@ class InteractorLocation {
     }
 
     private fun extractIdentifier(path: String): String {
-        return path.substring(path.lastIndexOf(":") + 1, path.length)
+        return if (path.contains("::")) {
+            path.substring(path.lastIndexOf(":") + 1, path.length)
+        } else {
+            path.substring(path.lastIndexOf(".") + 1, path.length)
+        }
     }
 
     private fun extractFilepath(clazz: String): String {

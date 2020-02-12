@@ -68,7 +68,7 @@
 <p class="text_child">The next task is to apply common procedures for the nodes: identification and application of commands, identification of the structures
 </p><p class="code_child">    return renderNodes(root, sourceUrl, nodes)</p>
 <div class="child">
-    <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop//src/main/kotlin/com/blaster/business/InteractorParse.kt#L48" target="_blank">com.blaster.business.InteractorParse::renderNodes</a>
+    <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop//src/main/kotlin/com/blaster/business/InteractorParse.kt#L47" target="_blank">com.blaster.business.InteractorParse::renderNodes</a>
 </h3>
     <p class="code_child">private fun renderNodes(root: File, sourceUrl: URL, nodes: List&lt;Node&gt;): List&lt;Node&gt; {
     val withCommands = interactorCommands.identifyCommands(root, sourceUrl, nodes)
@@ -112,7 +112,7 @@
 <p class="text">
 </p><p class="text">After the commands are identified, we can finally apply them.
 </p><div class="child">
-    <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop//src/main/kotlin/com/blaster/business/InteractorCommands.kt#L93" target="_blank">com.blaster.business.InteractorCommands::applyCommands</a>
+    <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop//src/main/kotlin/com/blaster/business/InteractorCommands.kt#L94" target="_blank">com.blaster.business.InteractorCommands::applyCommands</a>
 </h3>
     <p class="text_child">Commands application routine. It receives a source url and root and a list of nodes as a parameters. The result is a list of nodes modified by all of the commands in the original list.
 </p><p class="code_child">fun applyCommands(root: File, sourceUrl: URL, nodes: List&lt;Node&gt;): List&lt;Node&gt; {</p>
@@ -159,7 +159,7 @@
 <p class="text_child">We also want to assemble the URL to the location based source url on Github
 </p><p class="code_child">    val url = constructUrl(sourceUrl, module, filepath)</p>
 <p class="text_child">If the path contains exact member - extract it. If not - it is the same class
-</p><p class="code_child">    val identifier = if (modulePath.contains(&quot;::&quot;)) extractIdentifier(path) else clazz
+</p><p class="code_child">    val identifier = extractIdentifier(path)
     return Location(url, file, identifier)
 }</p>
 
@@ -178,7 +178,7 @@
     val statements = statementsManager.extractStatements(withoutTabulation)
     return renderNodes(root, sourceUrl, statements)</p>
 <div class="child">
-    <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop//src/main/kotlin/com/blaster/business/InteractorParse.kt#L48" target="_blank">com.blaster.business.InteractorParse::renderNodes</a>
+    <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop//src/main/kotlin/com/blaster/business/InteractorParse.kt#L47" target="_blank">com.blaster.business.InteractorParse::renderNodes</a>
 </h3>
     <p class="code_child">private fun renderNodes(root: File, sourceUrl: URL, nodes: List&lt;Node&gt;): List&lt;Node&gt; {
     val withCommands = interactorCommands.identifyCommands(root, sourceUrl, nodes)
@@ -193,10 +193,9 @@
 <p class="text">
 </p><p class="text">Parsing of the requested declarations works very similarly to definitions.
 </p><div class="child">
-    <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop//src/main/kotlin/com/blaster/business/InteractorParse.kt#L41" target="_blank">com.blaster.business.InteractorParse::parseDecl</a>
+    <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop//src/main/kotlin/com/blaster/business/InteractorParse.kt#L40" target="_blank">com.blaster.business.InteractorParse::parseDecl</a>
 </h3>
-    <p class="text_child">todo: very same as above
-</p><p class="code_child">fun parseDecl(root: File, sourceUrl: URL, location: Location): List&lt;Node&gt; {
+    <p class="code_child">fun parseDecl(root: File, sourceUrl: URL, location: Location): List&lt;Node&gt; {
     val declaration = kotlinManager.extractDeclaration(location)
     val withoutTabulation = declaration.clearCode()
     val statements = statementsManager.extractStatements(withoutTabulation)

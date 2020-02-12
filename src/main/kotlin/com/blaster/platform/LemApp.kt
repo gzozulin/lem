@@ -50,6 +50,6 @@ class LemApp {
 // This is an application main entry point. Here we define all the projects we want to process into the articles.
 fun main() {
     val lemApp = LemApp()
-    //lemApp.renderScenarios("./",         "/madeinsoviets/lem/blob/develop/")
+    lemApp.renderScenarios("./",         "/madeinsoviets/lem/blob/develop/")
     lemApp.renderScenarios("../blaster", "/madeinsoviets/blaster/blob/master/")
 }

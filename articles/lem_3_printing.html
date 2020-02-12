@@ -61,7 +61,9 @@
     <p class="text_child">Parameters of this function are: the source root, the output file and a list of nodes to be printed
 </p><p class="code_child">fun printArticle(output: File, nodes: List&lt;Node&gt;) {</p>
 <p class="text_child">After receiving a list of nodes, we wrap them into an article template
-</p><p class="code_child">    val article = printingManager.renderTemplate(            &quot;template_article.ftlh&quot;, hashMapOf(&quot;article&quot; to printParagraphs(nodes))        )</p>
+</p><p class="code_child">    val article = printingManager.renderTemplate(
+        &quot;template_article.ftlh&quot;, hashMapOf(&quot;article&quot; to printParagraphs(nodes))
+    )</p>
 <p class="text_child">The result is sent to printing manager to be put into a file
 </p><p class="code_child">    printingManager.printArticle(output, article)
 }</p>

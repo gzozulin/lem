@@ -100,7 +100,7 @@ class KotlinManagerImpl : KotlinManager {
         }
     }
 
-    // todo: sloppy and ineffective
+    // todo: sloppy and innacurate
     private fun findBodyStart(tokenStream: CommonTokenStream, context: ParserRuleContext): Token {
         val (from, to) = context.start.tokenIndex to context.stop.tokenIndex
         var current = from + 1
@@ -114,14 +114,13 @@ class KotlinManagerImpl : KotlinManager {
         throw IllegalStateException("Body of this object is not found! ${context.text}")
     }
 
-    // todo: sloppy and ineffective
+    // todo: sloppy and innacurate
     private fun findPrevDeclaration(tokenStream: CommonTokenStream, member: ParserRuleContext): Token? {
         var current = member.start.tokenIndex - 1
         while(current >= 0) {
             val token = tokenStream.get(current)
-            val text = token.text
             // not hidden, not blank, not new line
-            if (token.channel != 1 && !text.isBlank()) {
+            if (token.channel != 1 && !token.text.isBlank()) {
                 return token
             }
             current--

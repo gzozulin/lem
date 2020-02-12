@@ -13,6 +13,7 @@ const val COMMAND_CITE          = "cite"
 
 const val SUBCOMMAND_DECL       = "decl"
 const val SUBCOMMAND_DEF        = "def"
+const val SUBCOMMAND_GLSL       = "glsl"
 const val SUBCOMMAND_H1         = "h1"
 const val SUBCOMMAND_H2         = "h2"
 

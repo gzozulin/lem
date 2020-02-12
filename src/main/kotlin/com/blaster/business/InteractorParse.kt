@@ -49,4 +49,11 @@ class InteractorParse {
         val commandsApplied = interactorCommands.applyCommands(root, sourceUrl, withCommands)
         return interactorStructs.identifyStructs(commandsApplied)
     }
+
+    fun parseGlsl(root: File, sourceUrl: URL, location: Location): List<Node> {
+        val glsl = location.file.readText()
+        val withoutTabulation = glsl.clearCode()
+        val statements = statementsManager.extractStatements(withoutTabulation)
+        return renderNodes(root, sourceUrl, statements)
+    }
 }

@@ -44,11 +44,12 @@ class InteractorCommands {
     }
 
     private fun identifyIncludeCommand(root: File, sourceUrl: URL, stack: List<String>): NodeCommand? {
-        val location = interactorLocation.locate(root, sourceUrl, stack[1])
         val subcmd = stack[0]
+        val path = stack[1]
         val cmd = when {
-            subcmd == SUBCOMMAND_DECL -> NodeCommand(CmdType.INCLUDE, listOf(SUBCOMMAND_DECL, stack[1]), location)
-            subcmd == SUBCOMMAND_DEF -> NodeCommand(CmdType.INCLUDE, listOf(SUBCOMMAND_DEF, stack[1]), location)
+            subcmd == SUBCOMMAND_DECL -> NodeCommand(CmdType.INCLUDE, listOf(SUBCOMMAND_DECL, path), interactorLocation.locate(root, sourceUrl, path))
+            subcmd == SUBCOMMAND_DEF -> NodeCommand(CmdType.INCLUDE, listOf(SUBCOMMAND_DEF, path), interactorLocation.locate(root, sourceUrl, path))
+            subcmd == SUBCOMMAND_GLSL -> NodeCommand(CmdType.INCLUDE, listOf(SUBCOMMAND_GLSL, path), interactorLocation.locateGlsl(root, sourceUrl, path))
             else -> TODO()
         }
         return cmd
@@ -133,6 +134,7 @@ class InteractorCommands {
         val children = when (insert.subcommand) {
             SUBCOMMAND_DECL -> interactorParse.parseDecl(root, sourceUrl, insert.location!!)
             SUBCOMMAND_DEF -> interactorParse.parseDef(root, sourceUrl, insert.location!!)
+            SUBCOMMAND_GLSL -> interactorParse.parseGlsl(root, sourceUrl, insert.location!!)
             else -> TODO()
         }
         iterator.add(insert.copy(children = children))

@@ -29,6 +29,13 @@ class InteractorLocation {
         return Location(url, file, identifier)
     }
 
+    // todo: this eventually can be used for all paths
+    fun locateGlsl(root: File, sourceUrl: URL, path: String): Location {
+        val file = File(root, path)
+        check(file.exists()) { "Provided glsl does not exists! $path" }
+        return Location(URL("$sourceUrl/$path"), file, "glsl")
+    }
+
     private fun extractModule(path: String): Pair<String?, String> {
         return if (path.contains("/")) {
             val index = path.indexOf("/")

@@ -39,7 +39,12 @@
                 .link {}
                 .link_child {}
 
-                .picture {}
+                .picture {
+                    display: block;
+                    margin-left: auto;
+                    margin-right: auto;
+                    width: 40%;
+                }
                 .picture_child {}
 
                 .list_item {}

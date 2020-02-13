@@ -39,6 +39,7 @@ class InteractorCommands {
             cmd == COMMAND_INLINE -> identifyInlineCommand(root, sourceUrl, subcmd)
             cmd == COMMAND_OMIT -> identifyOmitCommand()
             cmd == COMMAND_CITE -> identifyCiteCommand(subcmd)
+            cmd == COMMAND_CONTENT -> identifyContentCommand(subcmd)
             else -> TODO()
         }
     }
@@ -67,13 +68,7 @@ class InteractorCommands {
     }
 
     private fun identifyHeaderCommand(stack: List<String>): NodeCommand? {
-        val subcmd = stack[0]
-        val cmd = when {
-            subcmd == SUBCOMMAND_H1 -> NodeCommand(CmdType.HEADER, listOf(SUBCOMMAND_H1, stack[1]))
-            subcmd == SUBCOMMAND_H2 -> NodeCommand(CmdType.HEADER, listOf(SUBCOMMAND_H2, stack[1]))
-            else -> TODO()
-        }
-        return cmd
+        return NodeCommand(CmdType.HEADER, listOf(stack[0]))
     }
 
     private fun identifyPictureCommand(subcmd: List<String>): NodeCommand? {
@@ -88,6 +83,10 @@ class InteractorCommands {
     private fun identifyCiteCommand(stack: List<String>): NodeCommand? {
         check(stack.size == 3) { "Cite command has to have 3 parameters! ${stack.joinToString { "" }}" }
         return NodeCommand(CmdType.CITE, listOf(stack[0], stack[1], stack[2]))
+    }
+
+    private fun identifyContentCommand(stack: List<String>): NodeCommand? {
+        return NodeCommand(CmdType.CONTENT, listOf(stack[0]))
     }
 
     // Commands application routine. It receives a source url and root and a list of nodes as a parameters. The result is a list of nodes modified by all of the commands in the original list.

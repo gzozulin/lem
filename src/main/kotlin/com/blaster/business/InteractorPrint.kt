@@ -8,6 +8,11 @@ import org.kodein.di.generic.instance
 import java.io.File
 import java.net.URL
 
+private val nonAlphaNumeric = """\W""".toRegex()
+private fun String.headerId() = this.replace(nonAlphaNumeric, "-")
+
+const val contentPlaceholder = "###ContentTableGoesHere###"
+
 class InteractorPrint {
     private val printingManager: PrintingManager by kodein.instance()
 
@@ -25,20 +30,46 @@ class InteractorPrint {
     private fun printParagraphs(nodes: List<Node>, child: Boolean = false): String {
         // We create the variable to hold the result and then we go through the nodes one by one
         var result = ""
-        // We also want to keep track of references, which we accumulated while rendering
-        val references = mutableListOf<NodeCommand>()
+        // We also want to keep track of headers and references, which we accumulated while rendering, we will place them before and after the article
+        var contentHeader = "Contents"
+        val headers = mutableListOf<NodeCommand>()
+        val cites = mutableListOf<NodeCommand>()
         for (node in nodes) {
             result += when (node) {
                 // For each type we call the appropriate template
                 is NodeText -> renderNodeText(node, child)
                 is NodeCode -> renderNodeCode(node, child)
-                is NodeCommand -> renderNodeCommand(node, child, references)
+                is NodeCommand -> {
+                    if (node.cmdType == CmdType.CONTENT) {
+                        contentHeader = node.subcommand
+                    }
+                    renderNodeCommand(node, child, headers, cites)
+                }
                 else -> TODO()
             }
         }
+        // Now we can replace content placeholder with the actual table of contents
+        if (headers.isNotEmpty()) {
+            var contents = printTemplateHeader(contentHeader)
+            headers.forEach {
+                contents += printTemplateListItem(
+                    printTemplateLink(it.subcommand, "#${it.subcommand.headerId()}", child = false, newWindow = false), false)
+            }
+            result = if (result.contains(contentPlaceholder)) {
+                result.replace(contentPlaceholder, contents)
+            } else {
+                contents + result
+            }
+        }
         // After all of the nodes are rendered, we can add our references
-        references.forEach { node ->
-            result += printTemplateListItem(printTemplateLink("&#8593;[${node.subcommand}]: ", "#${node.subcommand}_origin", child, false) + printTemplateCite(node.subcommand, node.argument, node.argument1, child), child)
+        if (cites.isNotEmpty()) {
+            result += printTemplateHeader("References")
+            cites.forEach { node ->
+                result += printTemplateListItem(
+                    printTemplateLink(
+                        "&#8593;[${node.subcommand}]: ", "#${node.subcommand}_origin", child, false) +
+                            printTemplateCite(node.subcommand, node.argument, node.argument1, child), child)
+            }
         }
         // The final result is returned from the call
         return result
@@ -80,15 +111,21 @@ class InteractorPrint {
     }
 
     // With this routine we can include additions like headers, pictures and etc.
-    private fun renderNodeCommand(node: NodeCommand, child: Boolean, references: MutableList<NodeCommand>): String {
+    private fun renderNodeCommand(node: NodeCommand, child: Boolean,
+                                  headers: MutableList<NodeCommand>, cites: MutableList<NodeCommand>): String {
         var result = ""
         when (node.cmdType) {
             // It can be something related to the attributes of the page
-            CmdType.HEADER -> result += printTemplateHeader(node.subcommand, node.argument) + "\n"
+            CmdType.HEADER -> {
+                headers.add(node)
+                result += printTemplateHeader(node.subcommand) + "\n"
+            }
             // Or a picture insert
             CmdType.PICTURE -> result += printTemplatePicture(node.subcommand, node.argument, child) + "\n"
             // Or a cite reference
-            CmdType.CITE -> references.add(node)
+            CmdType.CITE -> cites.add(node)
+            // Content placeholder
+            CmdType.CONTENT -> result += contentPlaceholder
             // Else just continue
             else -> {}
         }
@@ -128,8 +165,8 @@ class InteractorPrint {
         return printingManager.renderTemplate("template_code.ftlh", hashMapOf("class" to clz, "code" to code))
     }
 
-    private fun printTemplateHeader(type: String, text: String): String {
-        return printingManager.renderTemplate("template_header.ftlh", hashMapOf("type" to type, "header" to text))
+    private fun printTemplateHeader(text: String): String {
+        return printingManager.renderTemplate("template_header.ftlh", hashMapOf("id" to text.headerId(), "header" to text))
     }
 
     private fun printTemplateLink(label: String, link: String, child: Boolean, newWindow: Boolean = true): String {

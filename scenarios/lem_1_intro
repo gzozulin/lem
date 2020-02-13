@@ -1,4 +1,4 @@
-#header; h2; Why? What?
+#header; Why? What?
 Many of us have a hobby or an art or a craft of some sort. But how to showcase it to the like-minded audience? There are many ways out there: you can write an article, you can create a video on YouTube, you can maintain a page on Wikipedia. You can even create your podcast series. Each of those approaches has its advantages and disadvantages. Some are a bit more entertaining, and the others are easier to produce. In my opinion, my craft - the art of programming - requires a unique approach.
 #picture; Stanislaw Lem; http://gzozulin.com/wp-content/uploads/2019/12/lem.jpg
 
@@ -16,7 +16,7 @@ I decided to call this tool Lem in the memory of one of my favorite authors - St
 
 Let's now start discussing the internal construction of the tool. We will dive deep into the application by explaining the foundations - the architecture of the application.
 
-#header; h2; The CLEAN architecture of the app
+#header; The CLEAN architecture of the app
 Every application should have some meaningful structure behind it. This structure, commonly known as the application architecture, is the primary reference while reading and understanding the code. The common fallacy behind the application architectures is to exist just for the sake of existing. A good sign of it is when the design is too restrictive and rigid when it is hard to add use cases, which were not evident during the designing stage. To avoid this common pitfall, I am usually trying to use something as flexible as possible. The most important part of the design is to do not restrict yourself. As we all know, premature optimization is the root of all evil.
 
 That is why I often employ a so-called CLEAN design\3\. This approach was created and formalized by "Uncle" Bob Martin based on several other architectural designs. I like the flexibility and fundamental ideas behind this design.
@@ -39,7 +39,7 @@ In the code of the application, each layer is represented by its package. "platf
 
 In the next chapter, we will talk about additional auxiliary facilities, which serve as a typical boilerplate for the rest of the code.
 
-#header; h2; Dependencies boilerplate
+#header; Dependencies boilerplate
 The key to managing the complexity of a growing project is the modularization. Modularization is a division of a system or a product into physically and functionally distinct units to allow removal and replacement. Those units have to reference each other somehow. And also we would like to allow ourselves some control and flexibility over those references. Wouldn't it be cool to be able to just remove and replace parts of the system without interrupting others?
 
 All of that is possible with a Dependency Injection system. In software engineering, Dependency Injection is a technique, whereby one object supplies the dependencies of another object \5\. With such system you control the creation, the destruction and a lifecycle of every component. For example you can decide if you will have only one instance of the component and therefore it will be marked as a singleton, or it will be created every time when it is required.
@@ -52,7 +52,7 @@ This particular project uses Kodein to facilitate DI \6\.
 
 In the next chapter we will discuss a general overview of the application pipeline.
 
-#header; h2; The pipeline overview
+#header; The pipeline overview
 Let us start by briefly defining what we want to achieve with this application. My original idea was to have a tool that allows you to process the code into a readable article. Since this processing can be done every time the code is updated, we can maintain parity between the codebase and the material. The process can be dissected into distinct stages. In this chapter, we will overview those stages and define a goal for each of those.
 
 The application starts its lifecycle, similarly to most of the JVM-based applications, with the main entry point. The main task at this stage is to handle the parameters and parse the properties of the following operation.
@@ -85,5 +85,3 @@ So, to summarize:
 ~ And finally, we will print the result all together with the help of the HTML templates
 
 In the next chapter, we will have a closer look at how things are parsed.
-
-#header; h2; References

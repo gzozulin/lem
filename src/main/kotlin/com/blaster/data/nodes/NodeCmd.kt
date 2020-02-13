@@ -10,14 +10,13 @@ const val COMMAND_PICTURE       = "picture"
 const val COMMAND_OMIT          = "omit"
 const val COMMAND_INLINE        = "inline"
 const val COMMAND_CITE          = "cite"
+const val COMMAND_CONTENT       = "content"
 
 const val SUBCOMMAND_DECL       = "decl"
 const val SUBCOMMAND_DEF        = "def"
 const val SUBCOMMAND_GLSL       = "glsl"
-const val SUBCOMMAND_H1         = "h1"
-const val SUBCOMMAND_H2         = "h2"
 
-enum class CmdType { INCLUDE, OMIT, HEADER, PICTURE, INLINE, CITE }
+enum class CmdType { INCLUDE, OMIT, HEADER, PICTURE, INLINE, CITE, CONTENT }
 
 data class NodeCommand(val cmdType: CmdType, val arguments: List<String>,
                        val location: Location? = null, val children: List<Node> = listOf()) : Node {

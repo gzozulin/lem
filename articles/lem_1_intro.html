@@ -39,15 +39,23 @@
                 .link {}
                 .link_child {}
 
-                .picture {}
+                .picture {
+                    display: block;
+                    margin-left: auto;
+                    margin-right: auto;
+                    width: 40%;
+                }
                 .picture_child {}
 
                 .list_item {}
                 .list_item_child {}
     </style>
     <body>
-            <h2>Why? What?</h2>
-
+        <h2 id="Contents">Contents</h2><ul class="list_item"><li>    <a class="link" href="#Why--What-">Why? What?</a>
+</li></ul><ul class="list_item"><li>    <a class="link" href="#The-CLEAN-architecture-of-the-app">The CLEAN architecture of the app</a>
+</li></ul><ul class="list_item"><li>    <a class="link" href="#Dependencies-boilerplate">Dependencies boilerplate</a>
+</li></ul><ul class="list_item"><li>    <a class="link" href="#The-pipeline-overview">The pipeline overview</a>
+</li></ul><h2 id="Why--What-">Why? What?</h2>
 <p class="text">Many of us have a hobby or an art or a craft of some sort. But how to showcase it to the like-minded audience? There are many ways out there: you can write an article, you can create a video on YouTube, you can maintain a page on Wikipedia. You can even create your podcast series. Each of those approaches has its advantages and disadvantages. Some are a bit more entertaining, and the others are easier to produce. In my opinion, my craft - the art of programming - requires a unique approach.
 </p><img class="picture" src="http://gzozulin.com/wp-content/uploads/2019/12/lem.jpg" alt="Stanislaw Lem" align="middle">
 <p class="text">
@@ -63,8 +71,7 @@
 </p><p class="text">
 </p><p class="text">Let's now start discussing the internal construction of the tool. We will dive deep into the application by explaining the foundations - the architecture of the application.
 </p><p class="text">
-</p>    <h2>The CLEAN architecture of the app</h2>
-
+</p><h2 id="The-CLEAN-architecture-of-the-app">The CLEAN architecture of the app</h2>
 <p class="text">Every application should have some meaningful structure behind it. This structure, commonly known as the application architecture, is the primary reference while reading and understanding the code. The common fallacy behind the application architectures is to exist just for the sake of existing. A good sign of it is when the design is too restrictive and rigid when it is hard to add use cases, which were not evident during the designing stage. To avoid this common pitfall, I am usually trying to use something as flexible as possible. The most important part of the design is to do not restrict yourself. As we all know, premature optimization is the root of all evil.
 </p><p class="text">
 </p><p class="text">That is why I often employ a so-called CLEAN design<sup id="3_origin"><a href="#3">&#91;3&#93;</a></sup>. This approach was created and formalized by "Uncle" Bob Martin based on several other architectural designs. I like the flexibility and fundamental ideas behind this design.
@@ -88,8 +95,7 @@
 </p><p class="text">
 </p><p class="text">In the next chapter, we will talk about additional auxiliary facilities, which serve as a typical boilerplate for the rest of the code.
 </p><p class="text">
-</p>    <h2>Dependencies boilerplate</h2>
-
+</p><h2 id="Dependencies-boilerplate">Dependencies boilerplate</h2>
 <p class="text">The key to managing the complexity of a growing project is the modularization. Modularization is a division of a system or a product into physically and functionally distinct units to allow removal and replacement. Those units have to reference each other somehow. And also we would like to allow ourselves some control and flexibility over those references. Wouldn't it be cool to be able to just remove and replace parts of the system without interrupting others?
 </p><p class="text">
 </p><p class="text">All of that is possible with a Dependency Injection system. In software engineering, Dependency Injection is a technique, whereby one object supplies the dependencies of another object <sup id="5_origin"><a href="#5">&#91;5&#93;</a></sup>. With such system you control the creation, the destruction and a lifecycle of every component. For example you can decide if you will have only one instance of the component and therefore it will be marked as a singleton, or it will be created every time when it is required.
@@ -100,8 +106,7 @@
 </p><p class="text">
 </p><p class="text">In the next chapter we will discuss a general overview of the application pipeline.
 </p><p class="text">
-</p>    <h2>The pipeline overview</h2>
-
+</p><h2 id="The-pipeline-overview">The pipeline overview</h2>
 <p class="text">Let us start by briefly defining what we want to achieve with this application. My original idea was to have a tool that allows you to process the code into a readable article. Since this processing can be done every time the code is updated, we can maintain parity between the codebase and the material. The process can be dissected into distinct stages. In this chapter, we will overview those stages and define a goal for each of those.
 </p><p class="text">
 </p><p class="text">The application starts its lifecycle, similarly to most of the JVM-based applications, with the main entry point. The main task at this stage is to handle the parameters and parse the properties of the following operation.
@@ -153,10 +158,7 @@
 </li></ul>
 </p><p class="text">
 </p><p class="text">In the next chapter, we will have a closer look at how things are parsed.
-</p><p class="text">
-</p>    <h2>References</h2>
-
-<ul class="list_item"><li>    <a class="link" href="#1_origin">&#8593;[1]: </a>
+</p><h2 id="References">References</h2><ul class="list_item"><li>    <a class="link" href="#1_origin">&#8593;[1]: </a>
 <a id="1" class="link" href="http://www.literateprogramming.com/" target="_blank">Literate Programming</a></li></ul><ul class="list_item"><li>    <a class="link" href="#2_origin">&#8593;[2]: </a>
 <a id="2" class="link" href="https://en.wikipedia.org/wiki/Stanis%C5%82aw_Lem" target="_blank">Stanislaw Lem on Wikipedia</a></li></ul><ul class="list_item"><li>    <a class="link" href="#3_origin">&#8593;[3]: </a>
 <a id="3" class="link" href="https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html" target="_blank">The Clean Architecture</a></li></ul><ul class="list_item"><li>    <a class="link" href="#4_origin">&#8593;[4]: </a>

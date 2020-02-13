@@ -1,4 +1,4 @@
-#header; h2; The Printing stage
+#header; The Printing stage
 The target destination of our article is an HTML file. We want to create those by parsing the codebase and executing steps required by the commands.
 
 But how to render the actual HTML? Without a proper tool, that can be a very challenging task. For our purposes, we will use a library called FreeMarker\1\.
@@ -29,7 +29,7 @@ Each of those will handle its piece of the overall article accordingly.
 
 At this point, we had a look at all steps required for processing the article - starting from the scenario and until the actual HTML output. Of course, we did not cover everything. The best place to find each and every detail is the source code. But I hope, at this point, most of the high-level concepts are explained.
 
-#header; h2; What's next?
+#header; What's next?
 Any craftsman can say that there is no tool, which works equally well for every job. The idea behind Lem is to be versatile enough to showcase some of the projects on which I am working.
 
 In this series of articles, I have shown a full pipeline of the project: from the preparation of the material to the printing stage.
@@ -37,5 +37,3 @@ In this series of articles, I have shown a full pipeline of the project: from th
 The main target for Lem is to be a handy tool in explaining the Blaster - an offline renderer, on which I am currently working. I hope this article was interesting enough and will be glad to see you soon on the pages dedicated to the actual hobby - the Blaster engine - Poyekhali!\2\
 
 #cite; 2; Gagarin's "Poyekhali" on Wikipedia; https://en.wikipedia.org/wiki/File:Gagarin-Poyekhali.ogg
-
-#header; h2; References

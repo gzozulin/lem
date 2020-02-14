@@ -16,6 +16,9 @@ class StatementsManagerImpl : StatementsManager {
         val statements = locateStatements(parser)
         val result = mutableListOf<Node>()
         for (statement in statements) {
+            if (statement.text.contains("todo:")) {
+                continue
+            }
             when (statement) {
                 is StatementsParser.DelimitedCommentContext -> {
                     result.add(NodeText(statement.text.removePrefix("/*").removeSuffix("*/").trim()))

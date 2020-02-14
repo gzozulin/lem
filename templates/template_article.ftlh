@@ -43,7 +43,7 @@
                     display: block;
                     margin-left: auto;
                     margin-right: auto;
-                    width: 40%;
+                    max-height: 50%;
                 }
                 .picture_child {}
 

@@ -72,7 +72,7 @@ class InteractorCommands {
     }
 
     private fun identifyPictureCommand(subcmd: List<String>): NodeCommand? {
-        check(subcmd.size == 2) { "Wrong amount of parameters for a picture command!" }
+        check(subcmd.size >= 2) { "Wrong amount of parameters for a picture command!" }
         return NodeCommand(CmdType.PICTURE, listOf(subcmd[0], subcmd[1]))
     }
 

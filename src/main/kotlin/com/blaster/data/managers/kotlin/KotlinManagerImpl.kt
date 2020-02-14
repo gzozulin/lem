@@ -60,7 +60,6 @@ class KotlinManagerImpl : KotlinManager {
         }
         visitor.visitKotlinFile(parser.kotlinFile())
         check(declarations.size != 0) { "Location not found: $location" }
-        check(declarations.size == 1) { "Multiple items with the same name: $location" }
         return declarations.first()
     }
 

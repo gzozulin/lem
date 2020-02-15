@@ -43,7 +43,7 @@
                     display: block;
                     margin-left: auto;
                     margin-right: auto;
-                    width: 40%;
+                    max-height: 50%;
                 }
                 .picture_child {}
 
@@ -114,11 +114,11 @@
     <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop//src/main/kotlin/com/blaster/platform/LemApp.kt#L51" target="_blank">com.blaster.platform.LemAppKt::main</a>
 </h3>
     <p class="text_child">This is an application main entry point. Here we define all the projects we want to process into the articles.
-</p><p class="code_child">fun main() {
+</p><pre><code>fun main() {
     val lemApp = LemApp()
     lemApp.renderScenarios(&quot;./&quot;,         &quot;/madeinsoviets/lem/blob/develop/&quot;)
     lemApp.renderScenarios(&quot;../blaster&quot;, &quot;/madeinsoviets/blaster/blob/master/&quot;)
-}</p>
+}</code></pre>
 
 </div>
 <p class="text">After the main classes are created, and the parameters are consumed, we can move to the Scenario Stage.
@@ -165,5 +165,6 @@
 <a id="4" class="link" href="https://en.wikipedia.org/wiki/Separation_of_concerns" target="_blank">Separation of Concerns on Wikipedia</a></li></ul><ul class="list_item"><li>    <a class="link" href="#5_origin">&#8593;[5]: </a>
 <a id="5" class="link" href="https://en.wikipedia.org/wiki/Dependency_injection" target="_blank">Dependency injection on Wikipedia</a></li></ul><ul class="list_item"><li>    <a class="link" href="#6_origin">&#8593;[6]: </a>
 <a id="6" class="link" href="https://kodein.org/" target="_blank">Kodein Framework</a></li></ul>
+        <br>
     </body>
 </html>

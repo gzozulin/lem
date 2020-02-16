@@ -32,7 +32,7 @@ class InteractorParse {
         val definition = kotlinManager.extractDefinition(location)
         // Next step is to split this text onto the commentaries and code snippets. We also format them - removing unused lines, spaces, etc.
         val withoutTabulation = definition.clearCode()
-        val statements = statementsManager.extractStatements(withoutTabulation)
+        val statements = statementsManager.extractStatements(withoutTabulation, "kotlin")
         return renderNodes(root, sourceUrl, statements)
         // #include; def; com.blaster.business.InteractorParse::renderNodes
     }
@@ -40,7 +40,7 @@ class InteractorParse {
     fun parseDecl(root: File, sourceUrl: URL, location: Location): List<Node> {
         val declaration = kotlinManager.extractDeclaration(location)
         val withoutTabulation = declaration.clearCode()
-        val statements = statementsManager.extractStatements(withoutTabulation)
+        val statements = statementsManager.extractStatements(withoutTabulation, "kotlin")
         return renderNodes(root, sourceUrl, statements)
     }
 
@@ -53,7 +53,7 @@ class InteractorParse {
     fun parseGlsl(root: File, sourceUrl: URL, location: Location): List<Node> {
         val glsl = location.file.readText()
         val withoutTabulation = glsl.clearCode()
-        val statements = statementsManager.extractStatements(withoutTabulation)
+        val statements = statementsManager.extractStatements(withoutTabulation, "c")
         return renderNodes(root, sourceUrl, statements)
     }
 }

@@ -10,7 +10,7 @@ import org.antlr.v4.runtime.ParserRuleContext
 class StatementsManagerImpl : StatementsManager {
     private val statementsCache = HashMap<String, Pair<CommonTokenStream, StatementsParser>>()
 
-    override fun extractStatements(code: String): List<Node> {
+    override fun extractStatements(code: String, lang: String): List<Node> {
         val (_, parser) = provideParserForStatememts(code)
         parser.reset()
         val statements = locateStatements(parser)
@@ -28,7 +28,7 @@ class StatementsManagerImpl : StatementsManager {
                 }
                 is StatementsParser.CodeContext -> {
                     // todo: unfortunately, Statements grammar considers everything, not included into a comment being a part of the code, that includes newlines of the comments as well
-                    result.add(NodeCode(statement.text.removePrefix("\n").trimEnd()))
+                    result.add(NodeCode(statement.text.removePrefix("\n").trimEnd(), lang))
                 }
                 else -> throw IllegalStateException("Unknown statement!")
             }

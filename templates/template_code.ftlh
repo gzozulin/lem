@@ -1,1 +1,1 @@
-<pre><code>${code}</code></pre>
+<pre><code class="lang-${lang}">${code}</code></pre>

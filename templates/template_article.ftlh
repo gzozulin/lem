@@ -41,8 +41,7 @@
 
                 .picture {
                     display: block;
-                    margin-left: auto;
-                    margin-right: auto;
+                    margin: 30px auto 45px auto;
                     max-height: 50%;
                 }
                 .picture_child {}

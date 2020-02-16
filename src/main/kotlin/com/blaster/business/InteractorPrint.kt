@@ -107,7 +107,7 @@ class InteractorPrint {
 
     // A relatively straightforward routine to render the code. We just pass the code into a template
     private fun renderNodeCode(node: NodeCode, child: Boolean): String {
-        return printTemplateCode(node.code, child) + "\n"
+        return printTemplateCode(node.code, node.lang, child) + "\n"
     }
 
     // With this routine we can include additions like headers, pictures and etc.
@@ -160,9 +160,9 @@ class InteractorPrint {
         return printingManager.renderTemplate("template_paragraph.ftlh", hashMapOf("class" to clz, "paragraph" to paragraph))
     }
 
-    private fun printTemplateCode(code: String, child: Boolean): String {
+    private fun printTemplateCode(code: String, lang: String, child: Boolean): String {
         val clz = if (child) "code_child" else "code"
-        return printingManager.renderTemplate("template_code.ftlh", hashMapOf("class" to clz, "code" to code))
+        return printingManager.renderTemplate("template_code.ftlh", hashMapOf("class" to clz, "lang" to lang, "code" to code))
     }
 
     private fun printTemplateHeader(text: String): String {

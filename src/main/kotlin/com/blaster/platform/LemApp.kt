@@ -46,7 +46,6 @@ private fun fetchScenarios(root: String, url: String, scenarios: String = "scena
 }
 
 private suspend fun renderScenario(scenario: Scenario) = withContext(Dispatchers.Default) {
-    println(Thread.currentThread().name)
     val parsed = interactorParse.parseScenario(scenario.root, scenario.sourceUrl, scenario.scenarioFile)
     interactorPrint.printArticle(scenario.outputfile, parsed)
 }

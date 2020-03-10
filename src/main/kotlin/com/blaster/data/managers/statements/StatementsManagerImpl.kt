@@ -8,11 +8,9 @@ import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.ParserRuleContext
 
 class StatementsManagerImpl : StatementsManager {
-    private val statementsCache = HashMap<String, Pair<CommonTokenStream, StatementsParser>>()
-
     override fun extractStatements(code: String, lang: String): List<Node> {
-        val (_, parser) = provideParserForStatememts(code)
-        parser.reset()
+        val stream = CommonTokenStream(StatementsLexer(CharStreams.fromString(code)))
+        val parser = StatementsParser(stream)
         val statements = locateStatements(parser)
         val result = mutableListOf<Node>()
         for (statement in statements) {
@@ -32,23 +30,6 @@ class StatementsManagerImpl : StatementsManager {
                 }
                 else -> throw IllegalStateException("Unknown statement!")
             }
-        }
-        return result
-    }
-
-    private fun provideParserForStatememts(key: String): Pair<CommonTokenStream, StatementsParser> {
-        var result = statementsCache[key]
-        if (result == null) {
-            val stream = CommonTokenStream(
-                StatementsLexer(
-                    CharStreams.fromString(
-                        key
-                    )
-                )
-            )
-            val parser = StatementsParser(stream)
-            result = stream to parser
-            statementsCache[key] = result
         }
         return result
     }

@@ -41,8 +41,7 @@
 
                 .picture {
                     display: block;
-                    margin-left: auto;
-                    margin-right: auto;
+                    margin: 30px auto 45px auto;
                     max-height: 50%;
                 }
                 .picture_child {}
@@ -111,13 +110,21 @@
 </p><p class="text">
 </p><p class="text">The application starts its lifecycle, similarly to most of the JVM-based applications, with the main entry point. The main task at this stage is to handle the parameters and parse the properties of the following operation.
 </p><div class="child">
-    <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop//src/main/kotlin/com/blaster/platform/LemApp.kt#L51" target="_blank">com.blaster.platform.LemAppKt::main</a>
+    <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop//src/main/kotlin/com/blaster/platform/LemApp.kt#L55" target="_blank">com.blaster.platform.LemAppKt::main</a>
 </h3>
-    <p class="text_child">This is an application main entry point. Here we define all the projects we want to process into the articles.
-</p><pre><code>fun main() {
-    val lemApp = LemApp()
-    lemApp.renderScenarios(&quot;./&quot;,         &quot;/madeinsoviets/lem/blob/develop/&quot;)
-    lemApp.renderScenarios(&quot;../blaster&quot;, &quot;/madeinsoviets/blaster/blob/master/&quot;)
+    <pre><code class="lang-kotlin"></code></pre>
+<p class="text_child">This is an application main entry point. Here we define all the projects we want to process into the articles.
+</p><pre><code class="lang-kotlin">fun main() {
+    val scenarios = mutableListOf&lt;Scenario&gt;()
+    scenarios.addAll(fetchScenarios(&quot;./&quot;,         &quot;/madeinsoviets/lem/blob/develop/&quot;))
+    scenarios.addAll(fetchScenarios(&quot;../blaster&quot;, &quot;/madeinsoviets/blaster/blob/master/&quot;))
+    runBlocking {
+        val awaits = mutableListOf&lt;Deferred&lt;Unit&gt;&gt;()
+        for (scenario in scenarios) {
+            awaits.add(async { renderScenario(scenario) })
+        }
+        awaits.awaitAll()
+    }
 }</code></pre>
 
 </div>

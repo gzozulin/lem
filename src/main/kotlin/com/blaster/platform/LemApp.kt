@@ -7,6 +7,7 @@ import com.blaster.data.managers.printing.PrintingManager
 import com.blaster.data.managers.printing.PrintingManagerImpl
 import com.blaster.data.managers.statements.StatementsManager
 import com.blaster.data.managers.statements.StatementsManagerImpl
+import kotlinx.coroutines.*
 import org.kodein.di.Kodein
 import org.kodein.di.generic.bind
 import org.kodein.di.generic.instance
@@ -25,31 +26,41 @@ val kodein = Kodein {
     bind<InteractorStructs>()   with singleton { InteractorStructs() }
 }
 
-class LemApp {
-    private val interactorParse: InteractorParse by kodein.instance()
-    private val interactorPrint: InteractorPrint by kodein.instance()
+private val interactorParse: InteractorParse by kodein.instance()
+private val interactorPrint: InteractorPrint by kodein.instance()
 
-    private fun render(sourceUrl: URL, root: File, scenarioFile: File, outputfile: File) {
-        val parsed = interactorParse.parseScenario(root, sourceUrl, scenarioFile)
-        interactorPrint.printArticle(outputfile, parsed)
-    }
+private data class Scenario(val sourceUrl: URL, val root: File, val scenarioFile: File, val outputfile: File)
 
-    fun renderScenarios(root: String, url: String, scenarios: String = "scenarios", articles: String = "articles") {
-        val scenariosDir = File("$root/$scenarios")
-        val outputDir = File("$root/$articles")
-        scenariosDir.list()!!.forEach { filename ->
-            val sourcesUrl = URL("https", "github.com", url)
-            val rootFile = File(root)
-            val scenarioFile = File(scenariosDir, filename)
-            val outputFile = File(outputDir, "$filename.html")
-            render(sourcesUrl, rootFile, scenarioFile, outputFile)
-        }
+private fun fetchScenarios(root: String, url: String, scenarios: String = "scenarios", articles: String = "articles"): List<Scenario> {
+    val result = mutableListOf<Scenario>()
+    val scenariosDir = File("$root/$scenarios")
+    val outputDir = File("$root/$articles")
+    scenariosDir.list()!!.forEach { filename ->
+        val sourcesUrl = URL("https", "github.com", url)
+        val rootFile = File(root)
+        val scenarioFile = File(scenariosDir, filename)
+        val outputFile = File(outputDir, "$filename.html")
+        result.add(Scenario(sourcesUrl, rootFile, scenarioFile, outputFile))
     }
+    return result
+}
+
+private suspend fun renderScenario(scenario: Scenario) = withContext(Dispatchers.Default) {
+    println(Thread.currentThread().name)
+    val parsed = interactorParse.parseScenario(scenario.root, scenario.sourceUrl, scenario.scenarioFile)
+    interactorPrint.printArticle(scenario.outputfile, parsed)
 }
 
 // This is an application main entry point. Here we define all the projects we want to process into the articles.
 fun main() {
-    val lemApp = LemApp()
-    //lemApp.renderScenarios("./",         "/madeinsoviets/lem/blob/develop/")
-    lemApp.renderScenarios("../blaster", "/madeinsoviets/blaster/blob/master/")
+    val scenarios = mutableListOf<Scenario>()
+    scenarios.addAll(fetchScenarios("./",         "/madeinsoviets/lem/blob/develop/"))
+    scenarios.addAll(fetchScenarios("../blaster", "/madeinsoviets/blaster/blob/master/"))
+    runBlocking {
+        val awaits = mutableListOf<Deferred<Unit>>()
+        for (scenario in scenarios) {
+            awaits.add(async { renderScenario(scenario) })
+        }
+        awaits.awaitAll()
+    }
 }

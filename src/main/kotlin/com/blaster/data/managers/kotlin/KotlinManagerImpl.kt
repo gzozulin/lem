@@ -8,13 +8,13 @@ import org.antlr.v4.runtime.Token
 import java.io.File
 import java.lang.IllegalStateException
 import java.net.URL
+import java.util.concurrent.TimeUnit
+import kotlin.system.measureNanoTime
 
 class KotlinManagerImpl : KotlinManager {
-    private val parsers = HashMap<File, Pair<CommonTokenStream, KotlinParser>>()
-
     override fun extractDefinition(location: Location): String {
-        val (stream, parser) = provideParserForKotlin(location.file)
-        val definition = locateCode(parser, location)
+        val stream = CommonTokenStream(KotlinLexer(CharStreams.fromFileName(location.file.absolutePath)))
+        val definition = locateCode(stream, location)
         location.url = URL(location.url.toString() + "#L${definition.start.line}") // todo: ugly shortcut
         val firstToken = findFirstToken(stream, definition)
         val lastToken = definition.stop.tokenIndex
@@ -23,8 +23,8 @@ class KotlinManagerImpl : KotlinManager {
     }
 
     override fun extractDeclaration(location: Location): String {
-        val (stream, parser) = provideParserForKotlin(location.file)
-        val declaration = locateCode(parser, location)
+        val stream = CommonTokenStream(KotlinLexer(CharStreams.fromFileName(location.file.absolutePath)))
+        val declaration = locateCode(stream, location)
         location.url = URL(location.url.toString() + "#L${declaration.start.line}") // todo: ugly shortcut
         val firstToken = findFirstToken(stream, declaration)
         val lastToken = findLastToken(stream, declaration)
@@ -32,8 +32,8 @@ class KotlinManagerImpl : KotlinManager {
         return tokensToText(tokens)
     }
 
-    private fun locateCode(parser: KotlinParser, location: Location): ParserRuleContext {
-        parser.reset()
+    private fun locateCode(stream: CommonTokenStream, location: Location): ParserRuleContext {
+        val parser = KotlinParser(stream)
         val declarations = mutableListOf<ParserRuleContext>()
         val visitor = object : KotlinParserBaseVisitor<Unit>() {
             override fun visitClassDeclaration(ctx: KotlinParser.ClassDeclarationContext?) {
@@ -125,17 +125,6 @@ class KotlinManagerImpl : KotlinManager {
             current--
         }
         return null
-    }
-
-    private fun provideParserForKotlin(file: File): Pair<CommonTokenStream, KotlinParser> {
-        var result = parsers[file]
-        if (result == null) {
-            val stream = CommonTokenStream(KotlinLexer(CharStreams.fromFileName(file.absolutePath)))
-            val parser = KotlinParser(stream)
-            result = stream to parser
-            parsers[file] = result
-        }
-        return result
     }
 
     private fun tokensToText(tokens: List<Token>): String {

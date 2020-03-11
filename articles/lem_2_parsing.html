@@ -66,8 +66,7 @@
 </p><div class="child">
     <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop//src/main/kotlin/com/blaster/business/InteractorParse.kt#L21" target="_blank">com.blaster.business.InteractorParse::parseScenario</a>
 </h3>
-    <pre><code class="lang-kotlin"></code></pre>
-<p class="text_child">This call will convert a scenario file into a list of nodes. The parameters are self explanatory.
+    <p class="text_child">This call will convert a scenario file into a list of nodes. The parameters are self explanatory.
 </p><pre><code class="lang-kotlin">fun parseScenario(root: File, sourceUrl: URL, scenario: File): List&lt;Node&gt; {</code></pre>
 <p class="text_child">First operation of this method is to convert text in the scenario file into a distinct nodes. Paragraphs are separated by the new lines
 </p><pre><code class="lang-kotlin">    val nodes = scenario.readText().lines().map { NodeText(it) }</code></pre>
@@ -91,8 +90,7 @@
 </p><div class="child">
     <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop//src/main/kotlin/com/blaster/business/InteractorCommands.kt#L24" target="_blank">com.blaster.business.InteractorCommands::identifyCommand</a>
 </h3>
-    <pre><code class="lang-kotlin"></code></pre>
-<p class="text_child">Main commands identification routine. Will return a command if identified, or null if nothing found
+    <p class="text_child">Main commands identification routine. Will return a command if identified, or null if nothing found
 </p><pre><code class="lang-kotlin">private fun identifyCommand(root: File, sourceUrl: URL, command: String): NodeCommand? {</code></pre>
 <p class="text_child">We prefix all of the commands in the text with a <span style="font-weight:bold">#</span> symbol. If it is not found - it is not a command
 </p><pre><code class="lang-kotlin">    if (!command.startsWith(COMMAND_IDENTIFIER)) {
@@ -122,8 +120,7 @@
 </p><div class="child">
     <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop//src/main/kotlin/com/blaster/business/InteractorCommands.kt#L93" target="_blank">com.blaster.business.InteractorCommands::applyCommands</a>
 </h3>
-    <pre><code class="lang-kotlin"></code></pre>
-<p class="text_child">Commands application routine. It receives a source url and root and a list of nodes as a parameters. The result is a list of nodes modified by all of the commands in the original list.
+    <p class="text_child">Commands application routine. It receives a source url and root and a list of nodes as a parameters. The result is a list of nodes modified by all of the commands in the original list.
 </p><pre><code class="lang-kotlin">fun applyCommands(root: File, sourceUrl: URL, nodes: List&lt;Node&gt;): List&lt;Node&gt; {</code></pre>
 <p class="text_child">Since we will do operations on the list, we want to convert it to a mutable one - the structure of the list can be changed this way
 </p><pre><code class="lang-kotlin">    val mutableList = ArrayList(nodes)
@@ -178,8 +175,7 @@
 </p><div class="child">
     <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop//src/main/kotlin/com/blaster/business/InteractorParse.kt#L30" target="_blank">com.blaster.business.InteractorParse::parseDef</a>
 </h3>
-    <pre><code class="lang-kotlin"></code></pre>
-<p class="text_child">Routine for parsing of the definitions. Accepts the sources url and root and a location of the definition. Returns a list of nodes for this definition (commentaries, code, commands, etc.)
+    <p class="text_child">Routine for parsing of the definitions. Accepts the sources url and root and a location of the definition. Returns a list of nodes for this definition (commentaries, code, commands, etc.)
 </p><pre><code class="lang-kotlin">fun parseDef(root: File, sourceUrl: URL, location: Location): List&lt;Node&gt; {</code></pre>
 <p class="text_child">When the definition is located, we extract the code with the help of the ANTLR4
 </p><pre><code class="lang-kotlin">    val definition = kotlinManager.extractDefinition(location)</code></pre>

@@ -5,11 +5,7 @@ import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.ParserRuleContext
 import org.antlr.v4.runtime.Token
-import java.io.File
-import java.lang.IllegalStateException
 import java.net.URL
-import java.util.concurrent.TimeUnit
-import kotlin.system.measureNanoTime
 
 class KotlinManagerImpl : KotlinManager {
     override fun extractDefinition(location: Location): String {

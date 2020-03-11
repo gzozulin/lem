@@ -14,6 +14,8 @@ import org.kodein.di.generic.instance
 import org.kodein.di.generic.singleton
 import java.io.File
 import java.net.URL
+import java.util.concurrent.TimeUnit
+import kotlin.system.measureNanoTime
 
 val kodein = Kodein {
     bind<InteractorParse>()     with singleton { InteractorParse() }
@@ -55,11 +57,14 @@ fun main() {
     val scenarios = mutableListOf<Scenario>()
     scenarios.addAll(fetchScenarios("./",         "/madeinsoviets/lem/blob/develop/"))
     scenarios.addAll(fetchScenarios("../blaster", "/madeinsoviets/blaster/blob/master/"))
-    runBlocking {
-        val awaits = mutableListOf<Deferred<Unit>>()
-        for (scenario in scenarios) {
-            awaits.add(async { renderScenario(scenario) })
+    val seconds = TimeUnit.NANOSECONDS.toMillis(measureNanoTime {
+        runBlocking {
+            val awaits = mutableListOf<Deferred<Unit>>()
+            for (scenario in scenarios) {
+                awaits.add(async { renderScenario(scenario) })
+            }
+            awaits.awaitAll()
         }
-        awaits.awaitAll()
-    }
+    }) / 1000f
+    println("Done in $seconds seconds")
 }

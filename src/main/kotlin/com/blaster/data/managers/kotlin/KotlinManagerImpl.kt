@@ -1,11 +1,11 @@
 package com.blaster.data.managers.kotlin
 
 import com.blaster.business.Location
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
-import org.antlr.v4.runtime.*
-
+import com.blaster.data.managers.ParserCache
+import org.antlr.v4.runtime.CharStreams
+import org.antlr.v4.runtime.CommonTokenStream
+import org.antlr.v4.runtime.ParserRuleContext
+import org.antlr.v4.runtime.Token
 import java.io.File
 import java.net.URL
 
@@ -13,51 +13,36 @@ typealias ClassContext = KotlinParser.ClassDeclarationContext
 typealias FunctionContext = KotlinParser.FunctionDeclarationContext
 typealias PropertyContext = KotlinParser.PropertyDeclarationContext
 
-private data class CacheEntry(var parser: KotlinParser? = null, val mutex: Mutex = Mutex())
-
 class KotlinManagerImpl : KotlinManager {
-    private val cache = mutableMapOf<File, CacheEntry>()
-    private fun useParser(file: File, action: (parser: KotlinParser, stream: CommonTokenStream) -> String): String {
-        var entry: CacheEntry
-        synchronized(cache) {
-           if (!cache.containsKey(file)) {
-               cache[file] = CacheEntry()
-           }
-            entry = cache[file]!!
-        }
-        return runBlocking {
-            entry.mutex.withLock {
-                if (entry.parser == null) {
-                    entry.parser = KotlinParser(CommonTokenStream(KotlinLexer(CharStreams.fromFileName(file.absolutePath))))
-                }
-                val parser = entry.parser!!
-                val stream = parser.tokenStream as CommonTokenStream
-                parser.reset()
-                return@runBlocking action.invoke(parser, stream)
-            }
-        }
+    private val parserCache = object : ParserCache<File, KotlinParser>() {
+        override fun createParser(key: File) =
+            KotlinParser(CommonTokenStream(KotlinLexer(CharStreams.fromFileName(key.absolutePath))))
     }
 
     override fun extractDefinition(location: Location): String {
-        return useParser(location.file) { parser, stream ->
+        var result = ""
+        parserCache.useParser(location.file) { parser, stream ->
             val definition = locateCode(parser, location)
             location.url = URL(location.url.toString() + "#L${definition.start.line}") // todo: ugly shortcut
             val firstToken = findFirstToken(stream, definition)
             val lastToken = definition.stop.tokenIndex
             val tokens = stream.get(firstToken, lastToken)
-            return@useParser tokensToText(tokens)
+            result = tokensToText(tokens)
         }
+        return result
     }
 
     override fun extractDeclaration(location: Location): String {
-        return useParser(location.file) { parser, stream ->
+        var result = ""
+        parserCache.useParser(location.file) { parser, stream ->
             val declaration = locateCode(parser, location)
             location.url = URL(location.url.toString() + "#L${declaration.start.line}") // todo: ugly shortcut
             val firstToken = findFirstToken(stream, declaration)
             val lastToken = findLastToken(stream, declaration)
             val tokens = stream.get(firstToken, lastToken)
-            return@useParser tokensToText(tokens)
+            result = tokensToText(tokens)
         }
+        return result
     }
 
     private fun locateCode(parser: KotlinParser, location: Location): ParserRuleContext {

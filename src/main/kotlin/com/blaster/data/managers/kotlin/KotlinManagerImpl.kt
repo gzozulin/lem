@@ -3,12 +3,8 @@ package com.blaster.data.managers.kotlin
 import com.blaster.business.Location
 import com.blaster.data.managers.ParserCache
 import org.antlr.v4.runtime.*
-import org.antlr.v4.runtime.atn.ATNConfigSet
-import org.antlr.v4.runtime.dfa.DFA
 import java.io.File
 import java.net.URL
-import java.util.*
-import kotlin.collections.HashSet
 
 
 typealias ClassContext = KotlinParser.ClassDeclarationContext
@@ -39,7 +35,10 @@ private class AccumulatingErrorListener(val file: File): BaseErrorListener() {
 class KotlinManagerImpl : KotlinManager {
     private val parserCache = object : ParserCache<File, KotlinParser>() {
         override fun createParser(key: File): KotlinParser {
-            val parser = KotlinParser(CommonTokenStream(KotlinLexer(CharStreams.fromFileName(key.absolutePath))))
+            val lexer = KotlinLexer(CharStreams.fromFileName(key.absolutePath))
+            lexer.removeErrorListeners()
+            val parser = KotlinParser(CommonTokenStream(lexer))
+            parser.removeErrorListeners()
             parser.addErrorListener(AccumulatingErrorListener(key))
             return parser
         }

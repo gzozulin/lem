@@ -69,6 +69,7 @@ fun main() {
     }) / 1000f
     println("Done in $seconds seconds")
     for (accumulatedError in accumulatedErrors) {
+        println("--------------------------------------------------------------")
         println("For file ${accumulatedError.key} found following:")
         for (err in accumulatedError.value) {
             println(err)

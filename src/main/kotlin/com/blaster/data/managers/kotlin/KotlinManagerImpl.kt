@@ -2,21 +2,47 @@ package com.blaster.data.managers.kotlin
 
 import com.blaster.business.Location
 import com.blaster.data.managers.ParserCache
-import org.antlr.v4.runtime.CharStreams
-import org.antlr.v4.runtime.CommonTokenStream
-import org.antlr.v4.runtime.ParserRuleContext
-import org.antlr.v4.runtime.Token
+import org.antlr.v4.runtime.*
+import org.antlr.v4.runtime.atn.ATNConfigSet
+import org.antlr.v4.runtime.dfa.DFA
 import java.io.File
 import java.net.URL
+import java.util.*
+import kotlin.collections.HashSet
+
 
 typealias ClassContext = KotlinParser.ClassDeclarationContext
 typealias FunctionContext = KotlinParser.FunctionDeclarationContext
 typealias PropertyContext = KotlinParser.PropertyDeclarationContext
 
+// todo: do normally
+val accumulatedErrors = mutableMapOf<File, HashSet<String>>()
+
+private class AccumulatingErrorListener(val file: File): BaseErrorListener() {
+    override fun syntaxError(
+        recognizer: Recognizer<*, *>?,
+        offendingSymbol: Any?,
+        line: Int,
+        charPositionInLine: Int,
+        msg: String,
+        e: RecognitionException?
+    ) {
+        synchronized(accumulatedErrors) {
+            if (!accumulatedErrors.containsKey(file)) {
+                accumulatedErrors[file] = HashSet()
+            }
+            accumulatedErrors[file]!!.add("line $line:$charPositionInLine $msg")
+        }
+    }
+}
+
 class KotlinManagerImpl : KotlinManager {
     private val parserCache = object : ParserCache<File, KotlinParser>() {
-        override fun createParser(key: File) =
-            KotlinParser(CommonTokenStream(KotlinLexer(CharStreams.fromFileName(key.absolutePath))))
+        override fun createParser(key: File): KotlinParser {
+            val parser = KotlinParser(CommonTokenStream(KotlinLexer(CharStreams.fromFileName(key.absolutePath))))
+            parser.addErrorListener(AccumulatingErrorListener(key))
+            return parser
+        }
     }
 
     override fun extractDefinition(location: Location): String {
@@ -46,6 +72,7 @@ class KotlinManagerImpl : KotlinManager {
     }
 
     private fun locateCode(parser: KotlinParser, location: Location): ParserRuleContext {
+        var lastDeclaration: ParserRuleContext? = null
         val declarations = mutableListOf<ParserRuleContext>()
         val visitor = object : KotlinParserBaseVisitor<Unit>() {
             override fun visitClassDeclaration(ctx: ClassContext?) {
@@ -53,6 +80,7 @@ class KotlinManagerImpl : KotlinManager {
                 if (ctx!!.simpleIdentifier().text == location.identifier) {
                     declarations.add(ctx)
                 }
+                lastDeclaration = ctx
             }
 
             override fun visitFunctionDeclaration(ctx: FunctionContext?) {
@@ -60,6 +88,7 @@ class KotlinManagerImpl : KotlinManager {
                 if (ctx!!.identifier().text == location.identifier) {
                     declarations.add(ctx)
                 }
+                lastDeclaration = ctx
             }
 
             override fun visitPropertyDeclaration(ctx: PropertyContext?) {
@@ -68,10 +97,18 @@ class KotlinManagerImpl : KotlinManager {
                 if (variableDeclaration.simpleIdentifier().text == location.identifier) {
                     declarations.add(ctx)
                 }
+                lastDeclaration = ctx
             }
         }
-        visitor.visitKotlinFile(parser.kotlinFile())
-        check(declarations.size != 0) { "Location not found: $location" }
+        try {
+            visitor.visitKotlinFile(parser.kotlinFile())
+        } catch (err: AssertionError) {
+
+        }
+        if (declarations.isEmpty()) {
+            throw AssertionError("Location not found: $location\n" +
+                    "File was not fully parsed?! Last declaration: ${lastDeclaration?.text}")
+        }
         return declarations.first()
     }
 

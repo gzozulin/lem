@@ -7,7 +7,11 @@ private val regexPath = """(\w+/)?\w+(\.\w+)+(::\w+)?""".toRegex()
 
 private const val kotlinSources = "src/main/kotlin"
 
-data class Location(val file: File, val identifier: String, var url: URL)
+data class Location(val file: File, val identifier: String, var url: URL) {
+    override fun toString(): String {
+        return "{ identifier: $identifier file: $file url: $url }"
+    }
+}
 
 class InteractorLocation {
     // This routine helps us to locate pieces of code, pointed out by path parameter. It returns a class, which represents the location of the found snippet.

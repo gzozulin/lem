@@ -3,7 +3,7 @@ package com.blaster.platform
 import com.blaster.business.*
 import com.blaster.data.managers.kotlin.KotlinManager
 import com.blaster.data.managers.kotlin.KotlinManagerImpl
-import com.blaster.data.managers.kotlin.accumulatedErrors
+import com.blaster.data.managers.kotlin.ReportedError
 import com.blaster.data.managers.printing.PrintingManager
 import com.blaster.data.managers.printing.PrintingManagerImpl
 import com.blaster.data.managers.statements.StatementsManager
@@ -31,8 +31,9 @@ val kodein = Kodein {
 
 private val interactorParse: InteractorParse by kodein.instance()
 private val interactorPrint: InteractorPrint by kodein.instance()
+private val kotlinManager: KotlinManager by kodein.instance()
 
-private data class Scenario(val sourceUrl: URL, val root: File, val scenarioFile: File, val outputfile: File)
+private data class Scenario(val root: File, val scenarioFile: File, val outputFile: File, val sourceUrl: URL)
 
 private fun fetchScenarios(root: String, url: String, scenarios: String = "scenarios", articles: String = "articles"): List<Scenario> {
     val result = mutableListOf<Scenario>()
@@ -43,20 +44,21 @@ private fun fetchScenarios(root: String, url: String, scenarios: String = "scena
         val rootFile = File(root)
         val scenarioFile = File(scenariosDir, filename)
         val outputFile = File(outputDir, "$filename.html")
-        result.add(Scenario(sourcesUrl, rootFile, scenarioFile, outputFile))
+        result.add(Scenario(rootFile, scenarioFile, outputFile, sourcesUrl))
     }
     return result
 }
 
 private suspend fun renderScenario(scenario: Scenario) = withContext(Dispatchers.Default) {
     val parsed = interactorParse.parseScenario(scenario.root, scenario.sourceUrl, scenario.scenarioFile)
-    interactorPrint.printArticle(scenario.outputfile, parsed)
+    interactorPrint.printArticle(scenario.outputFile, parsed)
+    println("Scenario parsed: $scenario")
 }
 
 // This is an application main entry point. Here we define all the projects we want to process into the articles.
 fun main() {
     val scenarios = mutableListOf<Scenario>()
-    //scenarios.addAll(fetchScenarios("./",         "/madeinsoviets/lem/blob/develop/"))
+    scenarios.addAll(fetchScenarios("./",         "/madeinsoviets/lem/blob/develop/"))
     scenarios.addAll(fetchScenarios("../blaster", "/madeinsoviets/blaster/blob/master/"))
     val seconds = TimeUnit.NANOSECONDS.toMillis(measureNanoTime {
         runBlocking {
@@ -66,13 +68,15 @@ fun main() {
             }
             awaits.awaitAll()
         }
+        for (reported in kotlinManager.reportErrors()) {
+            println("--------------------------------------------------------------")
+            println("For file ${reported.key} found following errors:")
+            val errors = reported.value.sortedWith(compareBy<ReportedError> { it.line }.thenBy { it.char })
+            for (err in errors) {
+                println(err)
+            }
+        }
+        println("--------------------------------------------------------------")
     }) / 1000f
     println("Done in $seconds seconds")
-    for (accumulatedError in accumulatedErrors) {
-        println("--------------------------------------------------------------")
-        println("For file ${accumulatedError.key} found following:")
-        for (err in accumulatedError.value) {
-            println(err)
-        }
-    }
 }

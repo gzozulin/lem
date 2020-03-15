@@ -110,7 +110,7 @@
 </p><p class="text">
 </p><p class="text">The application starts its lifecycle, similarly to most of the JVM-based applications, with the main entry point. The main task at this stage is to handle the parameters and parse the properties of the following operation.
 </p><div class="child">
-    <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop//src/main/kotlin/com/blaster/platform/LemApp.kt#L56" target="_blank">com.blaster.platform.LemAppKt::main</a>
+    <h3>    <a class="link_child" href="https://github.com/madeinsoviets/lem/blob/develop//src/main/kotlin/com/blaster/platform/LemApp.kt#L59" target="_blank">com.blaster.platform.LemAppKt::main</a>
 </h3>
     <p class="text_child">This is an application main entry point. Here we define all the projects we want to process into the articles.
 </p><pre><code class="lang-kotlin">fun main() {
@@ -125,6 +125,15 @@
             }
             awaits.awaitAll()
         }
+        for (reported in kotlinManager.reportErrors()) {
+            println(&quot;--------------------------------------------------------------&quot;)
+            println(&quot;For file ${reported.key} found following errors:&quot;)
+            val errors = reported.value.sortedWith(compareBy&lt;ReportedError&gt; { it.line }.thenBy { it.char })
+            for (err in errors) {
+                println(err)
+            }
+        }
+        println(&quot;--------------------------------------------------------------&quot;)
     }) / 1000f</code></pre>
 
 </div>

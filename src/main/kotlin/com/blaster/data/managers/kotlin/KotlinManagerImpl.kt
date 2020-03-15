@@ -6,33 +6,31 @@ import org.antlr.v4.runtime.*
 import java.io.File
 import java.net.URL
 
-
 typealias ClassContext = KotlinParser.ClassDeclarationContext
 typealias FunctionContext = KotlinParser.FunctionDeclarationContext
 typealias PropertyContext = KotlinParser.PropertyDeclarationContext
 
-// todo: do normally
-val accumulatedErrors = mutableMapOf<File, HashSet<String>>()
+class KotlinManagerImpl : KotlinManager {
+    private val accumulatedErrors = mutableMapOf<File, HashSet<ReportedError>>()
 
-private class AccumulatingErrorListener(val file: File): BaseErrorListener() {
-    override fun syntaxError(
-        recognizer: Recognizer<*, *>?,
-        offendingSymbol: Any?,
-        line: Int,
-        charPositionInLine: Int,
-        msg: String,
-        e: RecognitionException?
-    ) {
-        synchronized(accumulatedErrors) {
-            if (!accumulatedErrors.containsKey(file)) {
-                accumulatedErrors[file] = HashSet()
+    private inner class AccumulatingErrorListener(val file: File): BaseErrorListener() {
+        override fun syntaxError(
+            recognizer: Recognizer<*, *>?,
+            offendingSymbol: Any?,
+            line: Int,
+            charPositionInLine: Int,
+            msg: String,
+            e: RecognitionException?
+        ) {
+            synchronized(accumulatedErrors) {
+                if (!accumulatedErrors.containsKey(file)) {
+                    accumulatedErrors[file] = HashSet()
+                }
+                accumulatedErrors[file]!!.add(ReportedError(line, charPositionInLine, msg))
             }
-            accumulatedErrors[file]!!.add("line $line:$charPositionInLine $msg")
         }
     }
-}
 
-class KotlinManagerImpl : KotlinManager {
     private val parserCache = object : ParserCache<File, KotlinParser>() {
         override fun createParser(key: File): KotlinParser {
             val lexer = KotlinLexer(CharStreams.fromFileName(key.absolutePath))
@@ -68,6 +66,10 @@ class KotlinManagerImpl : KotlinManager {
             result = tokensToText(tokens)
         }
         return result
+    }
+
+    override fun reportErrors(): Map<File, Set<ReportedError>> {
+        return accumulatedErrors
     }
 
     private fun locateCode(parser: KotlinParser, location: Location): ParserRuleContext {

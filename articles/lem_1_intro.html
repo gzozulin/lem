@@ -118,22 +118,27 @@
     scenarios.addAll(fetchScenarios(&quot;./&quot;,         &quot;/madeinsoviets/lem/blob/develop/&quot;))
     scenarios.addAll(fetchScenarios(&quot;../blaster&quot;, &quot;/madeinsoviets/blaster/blob/master/&quot;))
     val seconds = TimeUnit.NANOSECONDS.toMillis(measureNanoTime {
-        runBlocking {
-            val awaits = mutableListOf&lt;Deferred&lt;Unit&gt;&gt;()
-            for (scenario in scenarios) {
-                awaits.add(async { renderScenario(scenario) })
+        try {
+            runBlocking {
+                val awaits = mutableListOf&lt;Deferred&lt;Unit&gt;&gt;()
+                for (scenario in scenarios) {
+                    awaits.add(async { renderScenario(scenario) })
+                }
+                awaits.awaitAll()
             }
-            awaits.awaitAll()
-        }
-        for (reported in kotlinManager.reportErrors()) {
+        } catch (th : Throwable) {
+            th.printStackTrace()
+        } finally {
+            for (reported in kotlinManager.reportErrors()) {
+                println(&quot;--------------------------------------------------------------&quot;)
+                println(&quot;For file ${reported.key} found following errors:&quot;)
+                val errors = reported.value.sortedWith(compareBy&lt;ReportedError&gt; { it.line }.thenBy { it.char })
+                for (err in errors) {
+                    println(err)
+                }
+            }
             println(&quot;--------------------------------------------------------------&quot;)
-            println(&quot;For file ${reported.key} found following errors:&quot;)
-            val errors = reported.value.sortedWith(compareBy&lt;ReportedError&gt; { it.line }.thenBy { it.char })
-            for (err in errors) {
-                println(err)
-            }
         }
-        println(&quot;--------------------------------------------------------------&quot;)
     }) / 1000f</code></pre>
 
 </div>

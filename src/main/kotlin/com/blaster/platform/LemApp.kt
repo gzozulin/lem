@@ -61,22 +61,27 @@ fun main() {
     scenarios.addAll(fetchScenarios("./",         "/madeinsoviets/lem/blob/develop/"))
     scenarios.addAll(fetchScenarios("../blaster", "/madeinsoviets/blaster/blob/master/"))
     val seconds = TimeUnit.NANOSECONDS.toMillis(measureNanoTime {
-        runBlocking {
-            val awaits = mutableListOf<Deferred<Unit>>()
-            for (scenario in scenarios) {
-                awaits.add(async { renderScenario(scenario) })
+        try {
+            runBlocking {
+                val awaits = mutableListOf<Deferred<Unit>>()
+                for (scenario in scenarios) {
+                    awaits.add(async { renderScenario(scenario) })
+                }
+                awaits.awaitAll()
             }
-            awaits.awaitAll()
-        }
-        for (reported in kotlinManager.reportErrors()) {
+        } catch (th : Throwable) {
+            th.printStackTrace()
+        } finally {
+            for (reported in kotlinManager.reportErrors()) {
+                println("--------------------------------------------------------------")
+                println("For file ${reported.key} found following errors:")
+                val errors = reported.value.sortedWith(compareBy<ReportedError> { it.line }.thenBy { it.char })
+                for (err in errors) {
+                    println(err)
+                }
+            }
             println("--------------------------------------------------------------")
-            println("For file ${reported.key} found following errors:")
-            val errors = reported.value.sortedWith(compareBy<ReportedError> { it.line }.thenBy { it.char })
-            for (err in errors) {
-                println(err)
-            }
         }
-        println("--------------------------------------------------------------")
     }) / 1000f
     println("Done in $seconds seconds")
 }

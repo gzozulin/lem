@@ -18,6 +18,8 @@ import java.net.URL
 import java.util.concurrent.TimeUnit
 import kotlin.system.measureNanoTime
 
+private const val LAST_ONLY = false
+
 val kodein = Kodein {
     bind<InteractorParse>()     with singleton { InteractorParse() }
     bind<StatementsManager>()   with singleton { StatementsManagerImpl() }
@@ -33,7 +35,7 @@ private val interactorParse: InteractorParse by kodein.instance()
 private val interactorPrint: InteractorPrint by kodein.instance()
 private val kotlinManager: KotlinManager by kodein.instance()
 
-private data class Scenario(val root: File, val scenarioFile: File, val outputFile: File, val sourceUrl: URL)
+private data class Scenario(val scenarioFile: File, val root: File, val outputFile: File, val sourceUrl: URL)
 
 private fun fetchScenarios(root: String, url: String, scenarios: String = "scenarios", articles: String = "articles"): List<Scenario> {
     val result = mutableListOf<Scenario>()
@@ -44,7 +46,7 @@ private fun fetchScenarios(root: String, url: String, scenarios: String = "scena
         val rootFile = File(root)
         val scenarioFile = File(scenariosDir, filename)
         val outputFile = File(outputDir, "$filename.html")
-        result.add(Scenario(rootFile, scenarioFile, outputFile, sourcesUrl))
+        result.add(Scenario(scenarioFile, rootFile, outputFile, sourcesUrl))
     }
     return result
 }
@@ -60,6 +62,12 @@ fun main() {
     val scenarios = mutableListOf<Scenario>()
     scenarios.addAll(fetchScenarios("./",         "/madeinsoviets/lem/blob/develop/"))
     scenarios.addAll(fetchScenarios("../blaster", "/madeinsoviets/blaster/blob/master/"))
+    if (LAST_ONLY) {
+        scenarios.sortBy { it.scenarioFile.lastModified() }
+        while (scenarios.size != 1) {
+            scenarios.removeAt(0)
+        }
+    }
     val seconds = TimeUnit.NANOSECONDS.toMillis(measureNanoTime {
         try {
             runBlocking {

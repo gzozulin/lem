@@ -86,7 +86,7 @@ class KotlinManagerImpl : KotlinManager {
 
             override fun visitFunctionDeclaration(ctx: FunctionContext?) {
                 super.visitFunctionDeclaration(ctx)
-                if (ctx!!.identifier().text == location.identifier) {
+                if (ctx!!.simpleIdentifier().text == location.identifier) {
                     declarations.add(ctx)
                 }
                 lastDeclaration = ctx

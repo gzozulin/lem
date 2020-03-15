@@ -52,7 +52,7 @@ private fun fetchScenarios(root: String, url: String, scenarios: String = "scena
 private suspend fun renderScenario(scenario: Scenario) = withContext(Dispatchers.Default) {
     val parsed = interactorParse.parseScenario(scenario.root, scenario.sourceUrl, scenario.scenarioFile)
     interactorPrint.printArticle(scenario.outputFile, parsed)
-    println("Scenario parsed: $scenario")
+    println("${Thread.currentThread().name} > scenario parsed: $scenario")
 }
 
 // This is an application main entry point. Here we define all the projects we want to process into the articles.
